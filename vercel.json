@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/frontend/index.blade.php" },
+    { "source": "/index.blade.php", "destination": "/frontend/index.blade.php" },
+    { "source": "/login", "destination": "/frontend/admin/login.blade.php" },
+    { "source": "/login.blade.php", "destination": "/frontend/admin/login.blade.php" },
+    { "source": "/tabayyun", "destination": "/frontend/tabayyun.blade.php" },
+    { "source": "/tabayyun.blade.php", "destination": "/frontend/tabayyun.blade.php" },
+    { "source": "/etika", "destination": "/frontend/etika.blade.php" },
+    { "source": "/etika.blade.php", "destination": "/frontend/etika.blade.php" },
+    { "source": "/cyber-guard", "destination": "/frontend/cyber-guard.blade.php" },
+    { "source": "/cyber-guard.blade.php", "destination": "/frontend/cyber-guard.blade.php" },
+    { "source": "/lapor", "destination": "/frontend/lapor.blade.php" },
+    { "source": "/lapor.blade.php", "destination": "/frontend/lapor.blade.php" },
+    { "source": "/admin", "destination": "/frontend/admin/index.blade.php" },
+    { "source": "/admin/index", "destination": "/frontend/admin/index.blade.php" },
+    { "source": "/admin/login", "destination": "/frontend/admin/login.blade.php" },
+    { "source": "/admin/artikel", "destination": "/frontend/admin/artikel.blade.php" },
+    { "source": "/admin/studi-kasus", "destination": "/frontend/admin/studi-kasus.blade.php" },
+    { "source": "/admin/laporan", "destination": "/frontend/admin/laporan.blade.php" },
+    { "source": "/admin/integrasi-ai", "destination": "/frontend/admin/integrasi-ai.blade.php" },
+    { "source": "/admin/akun", "destination": "/frontend/admin/akun.blade.php" },
+    { "source": "/admin/:page.blade.php", "destination": "/frontend/admin/:page.blade.php" },
+    { "source": "/admin/:page", "destination": "/frontend/admin/:page.blade.php" },
+    { "source": "/artikel/:slug.blade.php", "destination": "/frontend/artikel/:slug.blade.php" },
+    { "source": "/artikel/:slug", "destination": "/frontend/artikel/:slug.blade.php" }
+  ]
+}

@@ -1,0 +1,15 @@
+# ====================================================================
+# ASWAJA CYBERSHIELD - SURICATA NIDS RULES (JUDOL & INVESTASI BODONG)
+# 3-Tier Keyword Matching: Kuat (P1), Menengah (P2), Kontekstual (P3)
+# ====================================================================
+
+pass http any any -> any any (msg:"ASWAJA-IDS: Domain Resmi Pengawas Pemerintah (OJK/Bappebti/Kominfo)"; pcre:"/\.(ojk|bappebti|bi|kominfo|go)\.id/i"; classtype:not-suspicious; priority:4; sid:1000000; rev:1;)
+alert dns any any -> any any (msg:"SUSPICIOUS DOMAIN - JUDI ONLINE [TINGKAT KUAT]"; dns.query; pcre:"/(slot[-_]?gacor|situs[-_]?togel|casino[-_]?online|judi[-_]?slot|bandar[-_]?togel|slot88|slot777|gacor777)/i"; classtype:policy-violation; priority:1; sid:1000001; rev:2; metadata:fiqih_aswaja maysir_sharih tier_strong;)
+alert http any any -> any any (msg:"SUSPICIOUS URL - JUDI ONLINE [TINGKAT MENENGAH: MAXWIN/JACKPOT/SCATTER/FREE SPIN]"; flow:established,to_server; http.uri; pcre:"/(maxwin|jackpot|scatter|free[-_]?spin|rtp[-_]?live|pragmatic|pgsoft)/i"; classtype:policy-violation; priority:2; sid:1000002; rev:2; metadata:fiqih_aswaja maysir_sharih tier_medium;)
+alert http any any -> any any (msg:"CONTEXTUAL CHECK - TEMA MITOLOGI [TINGKAT KONTEKSTUAL: ZEUS/DEWA/THOR/DRAGON]"; flow:established,to_server; http.uri; pcre:"/(?<![a-z])(zeus|dewa|thor|dragon|olympus)(?![a-z])/i"; classtype:misc-activity; priority:3; sid:1000003; rev:2; metadata:fiqih_aswaja contextual_check tier_contextual;)
+alert tls any any -> any any (msg:"SUSPICIOUS TLS DOMAIN - JUDI ONLINE"; tls.sni; content:"gacor"; nocase; priority:1; sid:1000004; rev:1; metadata:fiqih_aswaja maysir_sharih;)
+alert http any any -> any any (msg:"SUSPICIOUS TLD - FAST FLUX JUDOL"; pcre:"/\.(vip|cc|xyz|top|fun|click|site|live|club|icu|monster)(\/|$|\?)/i"; classtype:suspicious-filename; priority:2; sid:1000005; rev:1;)
+alert http any any -> any any (msg:"SUSPICIOUS PROMO - INVESTASI MENYESATKAN / ROBOT TRADING BODONG"; pcre:"/(robot-trading|profit-pasti|cuan-harian|balik-modal-cepat|auto-profit)/i"; classtype:bad-unknown; priority:1; sid:1000006; rev:1; metadata:fiqih_aswaja aklu_amwal_bil_bathil;)
+alert http any any -> any any (msg:"SUSPICIOUS TRAFFIC - AFILIASI SINDIKAT JUDOL"; pcre:"/(\?|&)(ref|aff|affiliate|agent|referral)=[a-zA-Z0-9_-]+/i"; classtype:suspicious-traffic; priority:3; sid:1000007; rev:1;)
+alert http any any -> any any (msg:"SUSPICIOUS PARAMETER - DEPOSIT JUDOL"; pcre:"/(deposit-(dana|gopay|qris|pulsa)|depo-pulsa|depo-10k)/i"; classtype:suspicious-traffic; priority:1; sid:1000008; rev:1;)
+

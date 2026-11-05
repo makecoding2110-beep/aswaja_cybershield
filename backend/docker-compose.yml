@@ -1,0 +1,28 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aswajacyber_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      APP_NAME: "Aswaja CyberShield"
+      APP_ENV: local
+      APP_KEY: base64:wX+M2zFjXqKzYd7Vp9G5R8n4T1e2w3Q4a5S6d7F8g9H=
+      APP_DEBUG: "true"
+      APP_URL: "http://127.0.0.1:8000"
+      LOG_CHANNEL: stack
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/vendor
+    networks:
+      - aswaja_network
+
+networks:
+  aswaja_network:
+    driver: bridge
+

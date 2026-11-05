@@ -1,0 +1,23 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Jangan rewrite jika file atau direktori fisik memang ada (css/, js/, gambar, dll.)
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Rute Login & Panel Admin Tanpa Ekstensi .php / .blade.php
+    RewriteRule ^login/?$ frontend/admin/login.blade.php [L,QSA]
+    RewriteRule ^admin/?$ frontend/admin/index.blade.php [L,QSA]
+    RewriteRule ^admin/([a-zA-Z0-9_-]+)\.blade\.php$ frontend/admin/$1.blade.php [L,QSA]
+    RewriteRule ^admin/([a-zA-Z0-9_-]+)/?$ frontend/admin/$1.blade.php [L,QSA]
+
+    # Rute Artikel Detail Tanpa Ekstensi .php / .blade.php
+    RewriteRule ^artikel/([a-zA-Z0-9_-]+)\.blade\.php$ frontend/artikel/$1.blade.php [L,QSA]
+    RewriteRule ^artikel/([a-zA-Z0-9_-]+)/?$ frontend/artikel/$1.blade.php [L,QSA]
+
+    # Rute Halaman Publik Utama Tanpa Ekstensi .php / .blade.php
+    RewriteRule ^(index|tabayyun|etika|cyber-guard|lapor)\.blade\.php$ frontend/$1.blade.php [L,QSA]
+    RewriteRule ^(tabayyun|etika|cyber-guard|lapor)/?$ frontend/$1.blade.php [L,QSA]
+</IfModule>
+

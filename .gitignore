@@ -1,0 +1,14 @@
+# System files
+.DS_Store
+Thumbs.db
+# Gemini & Agent Artifacts
+.gemini/
+.system_generated/
+*.log
+# Optional: stitch raw reference if needed
+# stitch_aswaja_cybershield_ui_design/
+dist/
+document/
+# Backend secrets
+backend/.env
+aswajaCyber.zip

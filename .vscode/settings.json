@@ -1,0 +1,26 @@
+{
+  "css.lint.unknownAtRules": "ignore",
+  "editor.wordWrap": "on",
+  "editor.tabSize": 2,
+  "html.validate.scripts": false,
+  "indentRainbow.ignoreErrorLanguages": [
+    "html",
+    "php"
+  ],
+  "tailwindCSS.includeLanguages": {
+    "html": "html",
+    "javascript": "javascript"
+  },
+  "tailwindCSS.emmetCompletions": true,
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "files.exclude": {
+    "**/*.phar": true
+  },
+  "intelephense.files.exclude": [
+    "**/.git/**",
+    "**/node_modules/**",
+    "**/*.phar"
+  ]
+}

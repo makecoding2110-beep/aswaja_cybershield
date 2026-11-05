@@ -1,0 +1,49 @@
+<?php
+
+return [
+
+    'postmark' => [
+        'key' => env('POSTMARK_API_KEY'),
+    ],
+
+    'resend' => [
+        'key' => env('RESEND_API_KEY'),
+    ],
+
+    'ses' => [
+        'key' => env('AWS_ACCESS_KEY_ID'),
+        'secret' => env('AWS_SECRET_ACCESS_KEY'),
+        'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+    ],
+
+    'slack' => [
+        'notifications' => [
+            'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
+            'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
+        ],
+    ],
+
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+        'model' => env('GEMINI_MODEL', 'gemini-1.5-flash'),
+        'timeout' => (int) env('GEMINI_TIMEOUT', 15),
+    ],
+
+    'deepseek' => [
+        'api_key' => env('DEEPSEEK_API_KEY'),
+        'model' => env('DEEPSEEK_MODEL', 'deepseek-chat'),
+        'timeout' => (int) env('DEEPSEEK_TIMEOUT', 20),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Suricata NIDS Configuration (EVE JSON Log & Rules)
+    |--------------------------------------------------------------------------
+    */
+    'suricata' => [
+        'eve_log_path' => env('SURICATA_EVE_PATH', storage_path('logs/suricata/eve.json')),
+        'enabled' => env('SURICATA_ENABLED', true),
+        'rules_path' => env('SURICATA_RULES_PATH', base_path('../suricata.rules')),
+    ],
+
+];
