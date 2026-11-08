@@ -262,7 +262,7 @@
               <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Identifikasi</span>
             </div>
             <h3 class="font-display font-bold text-xl text-slate-900 dark:text-white mb-3">1. Recognize (Kenali)</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" align="justify">
               Membantu pengguna mendeteksi dan menguji tautan mencurigakan secara mandiri. Mengidentifikasi ciri khas domain penipuan, skema robot trading bodong, dan jebakan tautan slot online sebelum terlanjur diklik.
             </p>
           </div>
@@ -285,7 +285,7 @@
               <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Literasi</span>
             </div>
             <h3 class="font-display font-bold text-xl text-slate-900 dark:text-white mb-3">2. Learn (Edukasi)</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" align="justify">
               Memberikan wawasan fiqih muamalah maaliyah, hukum maysir &amp; gharar modern, serta membedah psikologi rekayasa sosial di balik iming-iming cuan instan agar masyarakat memiliki imunitas digital.
             </p>
           </div>
@@ -308,7 +308,7 @@
               <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Aksi Nyata</span>
             </div>
             <h3 class="font-display font-bold text-xl text-slate-900 dark:text-white mb-3">3. Act (Tindakan)</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" align="justify">
               Mengarahkan pengguna untuk melaporkan tautan mencurigakan ke portal aduan siber yang terhubung dengan mekanisme verifikasi, rekomendasi pemblokiran domain, dan langkah perlindungan rekening warga.
             </p>
           </div>
@@ -350,7 +350,7 @@
               <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/70 px-2 py-0.5 rounded border border-emerald-100 dark:border-emerald-800">Recognize</span>
             </div>
             <h3 class="font-display font-bold text-lg text-slate-900 dark:text-white mb-2 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">Analisis Tautan Tabayyun</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" align="justify">
               Pemeriksaan format URL dan indikasi situs investasi bodong, kloning domain, serta jebakan setoran taruhan judi online.
             </p>
           </div>
@@ -372,7 +372,7 @@
               <span class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded">Learn</span>
             </div>
             <h3 class="font-display font-bold text-lg text-slate-900 dark:text-white mb-2 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">Edukasi Fiqih Siber</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" align="justify">
               Kajian mendalam bahaya maysir dan gharar digital, tips mengenali skema ponzi, serta adab bermuamalah secara amanah di ruang maya.
             </p>
           </div>
@@ -394,7 +394,7 @@
               <span class="text-xs font-bold uppercase tracking-wider text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/70 px-2 py-0.5 rounded border border-purple-100 dark:border-purple-800">Simulasi</span>
             </div>
             <h3 class="font-display font-bold text-lg text-slate-900 dark:text-white mb-2 group-hover:text-purple-700 dark:group-hover:text-purple-400 transition-colors">Studi Kasus &amp; Latihan</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" align="justify">
               Simulasi interaktif menghadapi modus tawaran trading palsu, spin reward, dan manipulasi pencairan saldo taruhan.
             </p>
           </div>
@@ -416,7 +416,7 @@
               <span class="text-xs font-bold uppercase tracking-wider text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-950/70 px-2 py-0.5 rounded border border-red-100 dark:border-red-800">Act</span>
             </div>
             <h3 class="font-display font-bold text-lg text-slate-900 dark:text-white mb-2 group-hover:text-red-700 dark:group-hover:text-red-400 transition-colors">Portal Lapor Judol</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" align="justify">
               Formulir pengaduan masyarakat untuk melaporkan tautan investasi mencurigakan yang mengarah pada perjudian daring.
             </p>
           </div>
@@ -461,13 +461,13 @@
             </div>
             <h3 class="font-display font-bold text-lg text-slate-900 mb-1 group-hover:text-emerald-700 transition-colors">Tawasuth (Jalan Tengah)</h3>
             <span class="text-xs font-semibold text-emerald-700 block mb-2">Objektivitas &amp; Tolak Spekulasi Buta</span>
-            <p class="text-xs text-slate-600 leading-relaxed">
+            <p class="text-xs text-slate-600 leading-relaxed" align="justify">
               Menganalisis keabsahan tautan secara objektif berbasis data sanad domain, tanpa terjebak kepanikan maupun iming-iming cuan instan yang menjerumuskan ke perjudian daring.
             </p>
           </div>
           <div class="mt-6 pt-4 border-t border-slate-100">
             <a href="tabayyun.blade.php" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 group-hover:text-emerald-700 transition-colors">
-              <span>Uji Tautan di AI Tabayyun</span>
+              <span>Uji Tautan</span>
               <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </a>
           </div>
@@ -484,13 +484,13 @@
             </div>
             <h3 class="font-display font-bold text-lg text-slate-900 dark:text-white mb-1 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">Tawazun (Keseimbangan)</h3>
             <span class="text-xs font-semibold text-blue-700 dark:text-blue-400 block mb-2">Inovasi Teknologi &amp; Moral Fiqih</span>
-            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed" align="justify">
               Menyeimbangkan adopsi instrumen finansial modern dengan etika moral syariah, adab bermuamalah, dan pemahaman fiqih atas larangan spekulasi maysir serta gharar.
             </p>
           </div>
           <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700">
             <a href="etika.blade.php" class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
-              <span>Buka Materi Fiqih Muamalah</span>
+              <span>Buka Materi Edukasi</span>
               <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </a>
           </div>
@@ -507,7 +507,7 @@
             </div>
             <h3 class="font-display font-bold text-lg text-slate-900 dark:text-white mb-1 group-hover:text-red-700 dark:group-hover:text-red-400 transition-colors">I'tidal (Keadilan &amp; Tegas)</h3>
             <span class="text-xs font-semibold text-red-700 dark:text-red-400 block mb-2">Tegak Lurus Melawan Kebatilan</span>
-            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed" align="justify">
               Bersikap adil dan tegas menolak kebatilan digital secara transparan dengan melaporkan tautan investasi palsu dan sindikat judol demi melindungi hak sesama warga.
             </p>
           </div>
@@ -530,13 +530,13 @@
             </div>
             <h3 class="font-display font-bold text-lg text-slate-900 dark:text-white mb-1 group-hover:text-purple-700 dark:group-hover:text-purple-400 transition-colors">Tasamuh (Kebijaksanaan)</h3>
             <span class="text-xs font-semibold text-purple-700 dark:text-purple-400 block mb-2">Edukasi Empatik Tanpa Menghakimi</span>
-            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              Membangun kewaspadaan melalui simulasi skenario interaktif secara santun, persuasif, dan mendidik tanpa merendahkan korban yang pernah terperangkap tipuan.
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed" align="justify">
+              Membangun kewaspadaan digital lewat simulasi skenario yang santun, persuasif, dan mendidik, guna merangkul serta mengedukasi korban yang pernah terperangkap tipuan siber.
             </p>
           </div>
           <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700">
             <a href="cyber-guard.blade.php" class="inline-flex items-center gap-1.5 text-xs font-bold text-purple-600 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">
-              <span>Uji Refleks di Cyber Guard</span>
+              <span>Uji Pemahaman</span>
               <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </a>
           </div>
@@ -561,7 +561,7 @@
           <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tight leading-tight">
             Tradisi Sanad &amp; Validasi Presisi di Era Siber
           </h2>
-          <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-base sm:text-lg">
+          <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-base sm:text-lg" align="justify">
             Dalam tradisi keilmuan Ahlussunnah wal Jama'ah, setiap riwayat wajib diaudit mata rantai transmisinya (<em class="text-emerald-700 dark:text-emerald-400 font-semibold not-italic">sanad</em>), integritas moral pembawanya (<em class="text-emerald-700 dark:text-emerald-400 font-semibold not-italic">rawi</em>), serta kesesuaian kontennya (<em class="text-emerald-700 dark:text-emerald-400 font-semibold not-italic">matan</em>). Aswaja CyberShield mengangkat kearifan klasik ini menjadi metodologi verifikasi digital modern untuk melindungi masyarakat dari manipulasi siber dan jebakan investasi bodong atau judi online.
           </p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 stagger-children">
@@ -571,7 +571,7 @@
               </div>
               <div>
                 <span class="font-display font-bold text-slate-900 dark:text-white block text-base mb-1">Tradisi Tabayyun</span>
-                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Prinsip Fiqih Informasi &bull; Cermat, tenang, dan tidak tergesa-gesa menyebarkan atau mempercayai tautan.</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed" align="justify">Prinsip Fiqih Informasi &bull; Cermat, tenang, dan tidak tergesa-gesa menyebarkan atau mempercayai tautan.</p>
               </div>
             </div>
             <div class="card-hover-effect p-5 rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 shadow-sm flex items-start gap-3.5">
@@ -580,7 +580,7 @@
               </div>
               <div>
                 <span class="font-display font-bold text-slate-900 dark:text-white block text-base mb-1">Verifikasi Terpadu</span>
-                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Pemeriksaan struktur domain, pola rekayasa sosial, dan indikasi manipulasi situs taruhan digital.</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed" align="justify">Pemeriksaan struktur domain, pola rekayasa sosial, dan indikasi manipulasi situs taruhan digital.</p>
               </div>
             </div>
           </div>
@@ -604,19 +604,15 @@
               </p>
             </div>
 
-            <blockquote class="text-base text-slate-700 dark:text-slate-200 font-serif italic mb-6 leading-relaxed bg-slate-50/80 dark:bg-slate-900/60 p-4 rounded-xl border-l-4 border-emerald-500">
-              “Wahai orang-orang yang beriman! Jika seseorang yang fasik datang kepadamu membawa suatu berita, maka telitilah kebenarannya (ber-tabayyun-lah)...”
+            <blockquote class="text-base text-slate-700 dark:text-slate-200 font-serif italic mb-6 leading-relaxed bg-slate-50/80 dark:bg-slate-900/60 p-4 rounded-xl border-l-4 border-emerald-500" align="justify">
+              <i align="center">“Wahai orang-orang yang beriman! Jika seseorang yang fasik datang kepadamu membawa suatu berita, maka telitilah kebenarannya (ber-tabayyun-lah)...”</i>
             </blockquote>
 
             <div class="pt-2 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
               <span class="inline-flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                Landasan Etika Fiqih Informasi
+                Dalil Etika Fiqih Informasi
               </span>
-              <a href="etika.blade.php" class="inline-flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors">
-                <span>Baca Modul</span>
-                <span class="material-symbols-outlined text-[15px]">arrow_forward</span>
-              </a>
             </div>
           </div>
         </div>

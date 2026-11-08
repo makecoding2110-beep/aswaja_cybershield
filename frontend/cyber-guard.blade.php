@@ -117,13 +117,13 @@
         <!-- Emergency Report CTA Button -->
         <a href="lapor.blade.php" class="inline-flex items-center gap-1.5 xl:gap-2 px-3 xl:px-4 py-2 rounded-xl bg-red-50 text-red-700 whitespace-nowrap shrink-0 dark:bg-red-950/50 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/50 border border-red-200/70 dark:border-red-800 text-sm font-semibold transition-all duration-200 shadow-sm active:scale-95">
           <span class="material-symbols-outlined text-[18px] text-red-600 dark:text-red-400">emergency</span>
-          <span class="hidden sm:inline whitespace-nowrap">Lapor Darurat</span>
+          <span class="hidden sm:inline whitespace-nowrap">Lapor</span>
         </a>
 
         <!-- Primary CTA Button (Desktop) -->
         <a href="tabayyun.blade.php" class="hidden sm:inline-flex items-center gap-1.5 xl:gap-2 px-3 xl:px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs xl:text-sm font-semibold whitespace-nowrap shadow-sm shrink-0 shadow-emerald-600/20 transition-all duration-200 active:scale-95">
           <span class="material-symbols-outlined text-[18px]">bolt</span>
-          <span class="whitespace-nowrap">Cek Fakta</span>
+          <span class="whitespace-nowrap">Cek Tautan</span>
         </a>
 
         <!-- Dark Mode Toggle -->
