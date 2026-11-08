@@ -424,7 +424,7 @@
           <img src="../logo-shield.png" alt="Logo Resmi Aswaja CyberShield" class="w-9 h-9 object-contain">
           <span class="font-display font-bold text-xl text-white tracking-tight">Aswaja CyberShield</span>
         </div>
-        <p class="text-sm text-emerald-100/80 dark:text-slate-400 leading-relaxed max-w-md">
+        <p class="text-sm text-emerald-100/80 dark:text-slate-400 leading-relaxed max-w-md" align="justify">
           Inisiatif ketahanan digital berbasis prinsip Tabayyun dan nilai Ahlussunnah wal Jama'ah untuk mendeteksi serta membentengi masyarakat dari bahaya judi online, penipuan finansial, dan jebakan investasi ilegal.
         </p>
         <div class="pt-2 text-xs text-emerald-300 dark:text-emerald-400 font-medium">
@@ -443,13 +443,11 @@
         </ul>
       </div>
 
-      <!-- Column 3: Layanan Aduan -->
+      <!-- Column 3: Layanan -->
       <div class="md:col-span-3 space-y-3">
-        <h4 class="font-display font-semibold text-sm text-white uppercase tracking-wider">Layanan Terpadu</h4>
+        <h4 class="font-display font-semibold text-sm text-white uppercase tracking-wider">Layanan</h4>
         <ul class="space-y-2 text-sm">
-          <li><a href="lapor.blade.php" class="text-rose-300 hover:text-white dark:text-rose-400 dark:hover:text-rose-300 transition-colors">Portal Lapor</a></li>
-          <li><a href="etika.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Pedoman Literasi</a></li>
-          <li><span class="text-emerald-300/60 dark:text-slate-500">Protokol Fiqih Informasi Digital</span></li>
+          <li><a href="lapor.blade.php" class="text-rose-300 hover:text-white dark:text-rose-400 dark:hover:text-rose-300 transition-colors">Lapor</a></li>
         </ul>
       </div>
 

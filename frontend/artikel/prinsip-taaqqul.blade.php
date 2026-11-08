@@ -256,10 +256,9 @@
           </ul>
         </div>
         <div class="md:col-span-3 space-y-3">
-          <h4 class="font-display font-semibold text-sm text-white uppercase tracking-wider">Layanan Terpadu</h4>
+          <h4 class="font-display font-semibold text-sm text-white uppercase tracking-wider">Layanan</h4>
           <ul class="space-y-2 text-sm">
-            <li><a href="../lapor.blade.php" class="text-rose-300 hover:text-white dark:text-rose-400 dark:hover:text-rose-300 transition-colors">Portal Lapor</a></li>
-            <li><a href="../etika.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Pedoman Literasi</a></li>
+            <li><a href="../lapor.blade.php" class="text-rose-300 hover:text-white dark:text-rose-400 dark:hover:text-rose-300 transition-colors">Lapor</a></li>
           </ul>
         </div>
       </div>
