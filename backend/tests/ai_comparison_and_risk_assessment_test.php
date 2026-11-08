@@ -51,8 +51,8 @@ function makeAiResult(string $provider, ?string $category, int $riskScore, array
     );
 }
 
-// 1. Skenario Matriks 1: Suricata Alert + Gemini Judol + DeepSeek Judol -> Terindikasi Judi Online
-runTest("Matriks 1: Suricata Alert + Gemini Judol + DeepSeek Judol => Terindikasi Judi Online (Kritis/Tinggi)", function () use ($urlValidator, $comparisonService, $riskAssessmentService) {
+// 1. Skenario Matriks 1: Suricata Alert + Gemini Judol + Model Sekunder Judol -> Terindikasi Judi Online
+runTest("Matriks 1: Suricata Alert + Gemini Judol + Model Sekunder Judol => Terindikasi Judi Online (Kritis/Tinggi)", function () use ($urlValidator, $comparisonService, $riskAssessmentService) {
     $urlAnalysis = $urlValidator->analyze('https://slot-gacor777.top/deposit');
 
     $suricataResult = [
@@ -66,12 +66,12 @@ runTest("Matriks 1: Suricata Alert + Gemini Judol + DeepSeek Judol => Terindikas
         ['name' => 'keyword_slot', 'evidence' => 'slot gacor', 'severity' => 'critical', 'explanation' => 'Istilah judi mesin slot']
     ]);
 
-    $deepseek = makeAiResult('deepseek', 'judol', 95, [
+    $secondaryAi = makeAiResult('secondary_ai', 'judol', 95, [
         ['name' => 'deposit_flow', 'evidence' => 'deposit dana 10k', 'severity' => 'critical', 'explanation' => 'Pola setoran taruhan']
     ]);
 
-    $comparison = $comparisonService->compare($gemini, $deepseek);
-    $assessment = $riskAssessmentService->evaluate($urlAnalysis, $suricataResult, $gemini, $deepseek, $comparison);
+    $comparison = $comparisonService->compare($gemini, $secondaryAi);
+    $assessment = $riskAssessmentService->evaluate($urlAnalysis, $suricataResult, $gemini, $secondaryAi, $comparison);
 
     return $comparison->isMatch
         && $assessment->finalCategory === 'terindikasi_judol'
@@ -80,8 +80,8 @@ runTest("Matriks 1: Suricata Alert + Gemini Judol + DeepSeek Judol => Terindikas
         && $assessment->riskScore >= 85;
 }, $passed, $failed);
 
-// 2. Skenario Matriks 2: Suricata Alert + Gemini Investasi + DeepSeek Investasi -> Terindikasi Investasi Menyesatkan
-runTest("Matriks 2: Suricata Alert + Gemini Investasi + DeepSeek Investasi => Terindikasi Investasi Menyesatkan", function () use ($urlValidator, $comparisonService, $riskAssessmentService) {
+// 2. Skenario Matriks 2: Suricata Alert + Gemini Investasi + Model Sekunder Investasi -> Terindikasi Investasi Menyesatkan
+runTest("Matriks 2: Suricata Alert + Gemini Investasi + Model Sekunder Investasi => Terindikasi Investasi Menyesatkan", function () use ($urlValidator, $comparisonService, $riskAssessmentService) {
     $urlAnalysis = $urlValidator->analyze('https://investasi-cuan2026.com/robot-trading');
 
     $suricataResult = [
@@ -95,12 +95,12 @@ runTest("Matriks 2: Suricata Alert + Gemini Investasi + DeepSeek Investasi => Te
         ['name' => 'unrealistic_profit', 'evidence' => 'cuan 20% harian', 'severity' => 'high', 'explanation' => 'Janji profit tidak masuk akal']
     ]);
 
-    $deepseek = makeAiResult('deepseek', 'investasi_menyesatkan', 85, [
+    $secondaryAi = makeAiResult('secondary_ai', 'investasi_menyesatkan', 85, [
         ['name' => 'ponzi_scheme', 'evidence' => 'bonus referral berjenjang', 'severity' => 'high', 'explanation' => 'Skema piramida penipuan']
     ]);
 
-    $comparison = $comparisonService->compare($gemini, $deepseek);
-    $assessment = $riskAssessmentService->evaluate($urlAnalysis, $suricataResult, $gemini, $deepseek, $comparison);
+    $comparison = $comparisonService->compare($gemini, $secondaryAi);
+    $assessment = $riskAssessmentService->evaluate($urlAnalysis, $suricataResult, $gemini, $secondaryAi, $comparison);
 
     return $comparison->isMatch
         && $assessment->finalCategory === 'terindikasi_investasi'
@@ -108,17 +108,17 @@ runTest("Matriks 2: Suricata Alert + Gemini Investasi + DeepSeek Investasi => Te
         && in_array($assessment->riskLevel, ['kritis', 'tinggi'], true);
 }, $passed, $failed);
 
-// 3. Skenario Matriks 3: Suricata Normal + Gemini Judol + DeepSeek Judol -> Perlu Pemeriksaan Bukti Tambahan
-runTest("Matriks 3: Suricata Normal + Gemini Judol + DeepSeek Judol => Mencurigakan / Perlu Pemeriksaan Bukti Tambahan", function () use ($urlValidator, $comparisonService, $riskAssessmentService) {
+// 3. Skenario Matriks 3: Suricata Normal + Gemini Judol + Model Sekunder Judol -> Perlu Pemeriksaan Bukti Tambahan
+runTest("Matriks 3: Suricata Normal + Gemini Judol + Model Sekunder Judol => Mencurigakan / Perlu Pemeriksaan Bukti Tambahan", function () use ($urlValidator, $comparisonService, $riskAssessmentService) {
     $urlAnalysis = $urlValidator->analyze('https://portal-game-taruhan.com');
 
     $suricataResult = ['available' => true, 'matched' => false, 'alerts' => [], 'indicators' => []];
 
     $gemini = makeAiResult('gemini', 'judol', 80);
-    $deepseek = makeAiResult('deepseek', 'judol', 82);
+    $secondaryAi = makeAiResult('secondary_ai', 'judol', 82);
 
-    $comparison = $comparisonService->compare($gemini, $deepseek);
-    $assessment = $riskAssessmentService->evaluate($urlAnalysis, $suricataResult, $gemini, $deepseek, $comparison);
+    $comparison = $comparisonService->compare($gemini, $secondaryAi);
+    $assessment = $riskAssessmentService->evaluate($urlAnalysis, $suricataResult, $gemini, $secondaryAi, $comparison);
 
     return $assessment->finalCategory === 'mencurigakan'
         && $assessment->decisionSource === 'dual_ai_only';
@@ -136,26 +136,26 @@ runTest("Matriks 4: Suricata Alert + AI Normal + AI Normal => Mencurigakan / Per
     ];
 
     $gemini = makeAiResult('gemini', 'normal', 15);
-    $deepseek = makeAiResult('deepseek', 'normal', 10);
+    $secondaryAi = makeAiResult('secondary_ai', 'normal', 10);
 
-    $comparison = $comparisonService->compare($gemini, $deepseek);
-    $assessment = $riskAssessmentService->evaluate($urlAnalysis, $suricataResult, $gemini, $deepseek, $comparison);
+    $comparison = $comparisonService->compare($gemini, $secondaryAi);
+    $assessment = $riskAssessmentService->evaluate($urlAnalysis, $suricataResult, $gemini, $secondaryAi, $comparison);
 
     return $assessment->finalCategory === 'mencurigakan'
         && $assessment->decisionSource === 'suricata_discrepancy';
 }, $passed, $failed);
 
-// 5. Skenario Matriks 5: Suricata Normal + Gemini Normal + DeepSeek Normal -> Normal
-runTest("Matriks 5: Suricata Normal + Gemini Normal + DeepSeek Normal => Normal (Aman Terverifikasi)", function () use ($urlValidator, $comparisonService, $riskAssessmentService) {
+// 5. Skenario Matriks 5: Suricata Normal + Gemini Normal + Model Sekunder Normal -> Normal
+runTest("Matriks 5: Suricata Normal + Gemini Normal + Model Sekunder Normal => Normal (Aman Terverifikasi)", function () use ($urlValidator, $comparisonService, $riskAssessmentService) {
     $urlAnalysis = $urlValidator->analyze('https://ojk.go.id/id/berita-dan-kegiatan');
 
     $suricataResult = ['available' => true, 'matched' => false, 'alerts' => [], 'indicators' => []];
 
     $gemini = makeAiResult('gemini', 'normal', 5);
-    $deepseek = makeAiResult('deepseek', 'normal', 5);
+    $secondaryAi = makeAiResult('secondary_ai', 'normal', 5);
 
-    $comparison = $comparisonService->compare($gemini, $deepseek);
-    $assessment = $riskAssessmentService->evaluate($urlAnalysis, $suricataResult, $gemini, $deepseek, $comparison);
+    $comparison = $comparisonService->compare($gemini, $secondaryAi);
+    $assessment = $riskAssessmentService->evaluate($urlAnalysis, $suricataResult, $gemini, $secondaryAi, $comparison);
 
     return $assessment->finalCategory === 'normal'
         && $assessment->alertClass === 'emerald'
@@ -163,17 +163,17 @@ runTest("Matriks 5: Suricata Normal + Gemini Normal + DeepSeek Normal => Normal 
         && $assessment->riskScore <= 25;
 }, $passed, $failed);
 
-// 6. Skenario Matriks 6: Suricata Alert + Gemini Judol + DeepSeek Investasi -> Belum Dapat Disimpulkan
-runTest("Matriks 6: Suricata Alert + Gemini Judol vs DeepSeek Investasi (Disparitas AI) => Belum Dapat Disimpulkan", function () use ($urlValidator, $comparisonService, $riskAssessmentService) {
+// 6. Skenario Matriks 6: Suricata Alert + Gemini Judol + Model Sekunder Investasi -> Belum Dapat Disimpulkan
+runTest("Matriks 6: Suricata Alert + Gemini Judol vs Model Sekunder Investasi (Disparitas AI) => Belum Dapat Disimpulkan", function () use ($urlValidator, $comparisonService, $riskAssessmentService) {
     $urlAnalysis = $urlValidator->analyze('https://cuan-trading-vip88.vip');
 
     $suricataResult = ['available' => true, 'matched' => true, 'alerts' => [], 'indicators' => []];
 
     $gemini = makeAiResult('gemini', 'judol', 85);
-    $deepseek = makeAiResult('deepseek', 'investasi_menyesatkan', 80);
+    $secondaryAi = makeAiResult('secondary_ai', 'investasi_menyesatkan', 80);
 
-    $comparison = $comparisonService->compare($gemini, $deepseek);
-    $assessment = $riskAssessmentService->evaluate($urlAnalysis, $suricataResult, $gemini, $deepseek, $comparison);
+    $comparison = $comparisonService->compare($gemini, $secondaryAi);
+    $assessment = $riskAssessmentService->evaluate($urlAnalysis, $suricataResult, $gemini, $secondaryAi, $comparison);
 
     return $assessment->finalCategory === 'belum_dapat_disimpulkan'
         && $comparison->hasDiscrepancy === true
@@ -181,16 +181,16 @@ runTest("Matriks 6: Suricata Alert + Gemini Judol vs DeepSeek Investasi (Dispari
 }, $passed, $failed);
 
 // 7. Pengujian Deduplikasi Bukti Gabungan (Combined Indicators)
-runTest("Deduplikasi bukti: Evidence identik dari Gemini dan DeepSeek tidak digandakan", function () use ($comparisonService) {
+runTest("Deduplikasi bukti: Evidence identik dari Gemini dan Model Sekunder tidak digandakan", function () use ($comparisonService) {
     $gemini = makeAiResult('gemini', 'judol', 90, [
         ['name' => 'slot_kw', 'evidence' => 'slot gacor 777', 'severity' => 'critical', 'explanation' => 'Kata kunci mesin slot']
     ]);
 
-    $deepseek = makeAiResult('deepseek', 'judol', 90, [
+    $secondaryAi = makeAiResult('secondary_ai', 'judol', 90, [
         ['name' => 'slot_kw', 'evidence' => 'slot gacor 777', 'severity' => 'critical', 'explanation' => 'Penalaran taruhan slot']
     ]);
 
-    $comparison = $comparisonService->compare($gemini, $deepseek);
+    $comparison = $comparisonService->compare($gemini, $secondaryAi);
 
     // Harus terdeduplikasi menjadi 1 bukti utama
     return count($comparison->combinedIndicators) === 1;

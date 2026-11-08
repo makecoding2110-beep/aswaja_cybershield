@@ -23,3 +23,10 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
     })->create();
+
+// Support for Vercel Serverless read-only filesystem
+if ($storagePath = env('APP_STORAGE')) {
+    $app->useStoragePath($storagePath);
+}
+
+return $app;

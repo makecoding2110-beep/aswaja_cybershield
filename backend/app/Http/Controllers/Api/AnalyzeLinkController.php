@@ -13,6 +13,8 @@ class AnalyzeLinkController extends Controller
 
     public function __invoke(Request $request): JsonResponse
     {
+        @set_time_limit(60);
+
         $request->validate([
             'url' => 'required|string|max:2048'
         ], [

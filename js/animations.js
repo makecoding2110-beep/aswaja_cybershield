@@ -163,6 +163,8 @@
   if (!counters.length) return;
   function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
   function animateCounter(el) {
+    if (el.dataset.counterActive === '1') return;
+    el.dataset.counterActive = '1';
     var raw = el.getAttribute('data-counter');
     var suffix = el.getAttribute('data-counter-suffix') || '';
     var prefix = el.getAttribute('data-counter-prefix') || '';
@@ -232,24 +234,45 @@
   }, { passive: true });
 })();
 
-/* 6. SECTION AMBIENT PARTICLES (Disetiap Blok Beranda) */
+/* 6. SECTION AMBIENT PARTICLES (Kaya & Hidup di Seluruh Halaman Publik) */
 (function initSectionParticles() {
+  if (typeof window !== 'undefined') {
+    var path = window.location.pathname || '';
+    if (path.startsWith('/admin') || path.includes('/admin/')) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  }
+
   var containers = document.querySelectorAll('.section-particles');
+  if (!containers.length) {
+    var main = document.querySelector('main');
+    if (main) {
+      var autoCont = document.createElement('div');
+      autoCont.className = 'section-particles absolute inset-0 pointer-events-none overflow-hidden';
+      autoCont.setAttribute('aria-hidden', 'true');
+      main.style.position = main.style.position || 'relative';
+      main.prepend(autoCont);
+      containers = [autoCont];
+    }
+  }
   if (!containers.length) return;
+
   containers.forEach(function(container) {
-    var count = 10;
+    // Jumlah partikel ditingkatkan (20-25 per container) agar halaman tampak aktif & elegan
+    var count = 22;
     for (var i = 0; i < count; i++) {
       var p = document.createElement('div');
       p.className = 'ambient-particle';
-      var isRing = (i % 3 === 0);
-      var size = isRing ? (5 + Math.random() * 4) : (3 + Math.random() * 5);
-      var x = Math.random() * 92 + 4; // 4% to 96%
-      var y = Math.random() * 84 + 8; // 8% to 92% across block height
+      var mod = i % 4;
+      var isRing = (mod === 0);
+      var isLargeDot = (mod === 1);
+      var size = isRing ? (6 + Math.random() * 6) : (isLargeDot ? (5 + Math.random() * 4) : (3 + Math.random() * 3));
+      var x = Math.random() * 94 + 3; // 3% - 97%
+      var y = Math.random() * 88 + 6; // 6% - 94%
       var delay = Math.random() * 6;
-      var duration = 5 + Math.random() * 6;
-      var opacity = 0.2 + Math.random() * 0.4;
-      var dx = (Math.random() - 0.5) * 35;
-      var dy = (Math.random() - 0.5) * 30;
+      var duration = 4.5 + Math.random() * 5.5; // 4.5s - 10s
+      var opacity = 0.22 + Math.random() * 0.45;
+      var dx = (Math.random() - 0.5) * 40;
+      var dy = (Math.random() - 0.5) * 35;
       p.style.cssText = 'left:' + x + '%;top:' + y + '%;width:' + size + 'px;height:' + size + 'px;opacity:' + opacity + ';animation:particleHoverDrift ' + duration + 's ' + delay + 's infinite ease-in-out;';
       p.style.setProperty('--dx', dx + 'px');
       p.style.setProperty('--dy', dy + 'px');
@@ -404,4 +427,130 @@ window.AgyToast = (function() {
     window.location.href = destination;
   });
 })();
+
+/* 13. HERO CYBER ATMOSPHERE & AMBIENT GLOW ORBS (Halaman Publik Hidup & Berdimensi) */
+(function initHeroAtmosphere() {
+  if (typeof window !== 'undefined') {
+    var path = window.location.pathname || '';
+    if (path.startsWith('/admin') || path.includes('/admin/')) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  }
+
+  function applyAtmosphere() {
+    var heroTargets = document.querySelectorAll('.hero-ambient-target, main > div:first-child, main > section:first-child');
+    if (!heroTargets.length) return;
+
+    heroTargets.forEach(function(target) {
+      if (target.querySelector('.ambient-glow-orb') || target.closest('header') || target.closest('footer')) return;
+
+      var currentPos = window.getComputedStyle(target).position;
+      if (currentPos === 'static') {
+        target.style.position = 'relative';
+      }
+      target.style.overflow = target.style.overflow || 'hidden';
+
+      // 1. Grid Mesh
+      var mesh = document.createElement('div');
+      mesh.className = 'cyber-mesh-grid';
+      mesh.setAttribute('aria-hidden', 'true');
+      target.prepend(mesh);
+
+      // 2. Orb 1 (Emerald Glow Top Left)
+      var orb1 = document.createElement('div');
+      orb1.className = 'ambient-glow-orb ambient-orb-emerald';
+      orb1.style.cssText = 'width: 320px; height: 320px; top: -60px; left: -40px;';
+      orb1.setAttribute('aria-hidden', 'true');
+      target.prepend(orb1);
+
+      // 3. Orb 2 (Teal Glow Bottom Right)
+      var orb2 = document.createElement('div');
+      orb2.className = 'ambient-glow-orb ambient-orb-teal';
+      orb2.style.cssText = 'width: 280px; height: 280px; bottom: -40px; right: 5%;';
+      orb2.setAttribute('aria-hidden', 'true');
+      target.prepend(orb2);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyAtmosphere);
+  } else {
+    applyAtmosphere();
+  }
+})();
+
+/* 14. CTA BUTTON SHIMMER SWEEPS (Kemilau Halus Tombol Penting) */
+(function initButtonShimmers() {
+  if (typeof window !== 'undefined') {
+    var path = window.location.pathname || '';
+    if (path.startsWith('/admin') || path.includes('/admin/')) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  }
+
+  function applyShimmer() {
+    var ctaButtons = document.querySelectorAll(
+      '#btn-submit-tabayyun, #btn-mulai-tabayyun, .btn-primary, ' +
+      'a.bg-emerald-600, button.bg-emerald-600, ' +
+      'a[href*="tabayyun.blade.php"].bg-emerald-600, ' +
+      'a[href*="cyber-guard.blade.php"].bg-emerald-600'
+    );
+
+    ctaButtons.forEach(function(btn) {
+      if (!btn.classList.contains('btn-shimmer-sweep') && !btn.closest('#admin-nav')) {
+        btn.classList.add('btn-shimmer-sweep');
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyShimmer);
+  } else {
+    applyShimmer();
+  }
+})();
+
+/* 15. ICON MICRO-INTERACTIONS (Animasi Pop Ikon saat Kartu Disorot) */
+(function initIconPops() {
+  function applyIconPops() {
+    var cardIcons = document.querySelectorAll(
+      '.card-hover-effect .material-symbols-outlined, ' +
+      '.module-item .material-symbols-outlined, ' +
+      '.clickable-card .material-symbols-outlined, ' +
+      '.ui-card .material-symbols-outlined'
+    );
+
+    cardIcons.forEach(function(icon) {
+      if (!icon.classList.contains('icon-micro-pop')) {
+        icon.classList.add('icon-micro-pop');
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyIconPops);
+  } else {
+    applyIconPops();
+  }
+})();
+
+/* 16. LIVE RADAR STATUS DOTS */
+(function initRadarDots() {
+  function applyRadar() {
+    var greenBadges = document.querySelectorAll(
+      'span.bg-emerald-500, span.bg-emerald-400, .status-live-dot, [data-live-status]'
+    );
+
+    greenBadges.forEach(function(badge) {
+      if (badge.offsetWidth <= 12 && badge.offsetHeight <= 12 && !badge.classList.contains('live-status-dot')) {
+        badge.classList.add('live-status-dot');
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyRadar);
+  } else {
+    applyRadar();
+  }
+})();
+
 

@@ -6,12 +6,11 @@ $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 
 use App\Services\GeminiService;
-use App\Services\DeepSeekService;
 use App\Services\AiOrchestratorService;
 use App\DTO\AiAnalysisResultDTO;
 use Illuminate\Support\Facades\Http;
 
-echo "=== UNIT TEST: DUAL AI STANDARDIZATION & PARALLEL PROCESSING (TAHAP 2) ===\n\n";
+echo "=== UNIT TEST: AI ENGINE & ORCHESTRATION (GOOGLE GEMINI AI) ===\n\n";
 
 $passed = 0;
 $failed = 0;
@@ -34,17 +33,11 @@ function runTest(string $description, callable $fn, int &$passed, int &$failed):
 }
 
 $geminiService = app(GeminiService::class);
-$deepSeekService = app(DeepSeekService::class);
 $orchestrator = app(AiOrchestratorService::class);
 
 // 1. Validasi DTO Unconfigured (Anti-Data Tiruan / Aturan 7 & 8)
 runTest("Gemini DTO Unconfigured mengembalikan status unconfigured tanpa data palsu", function () use ($geminiService) {
     $dto = AiAnalysisResultDTO::unconfigured('gemini', $geminiService->getModel());
-    return $dto->status === 'unconfigured' && $dto->category === null && $dto->riskScore === 0 && !$dto->isSuccess();
-}, $passed, $failed);
-
-runTest("DeepSeek DTO Unconfigured mengembalikan status unconfigured tanpa data palsu", function () use ($deepSeekService) {
-    $dto = AiAnalysisResultDTO::unconfigured('deepseek', $deepSeekService->getModel());
     return $dto->status === 'unconfigured' && $dto->category === null && $dto->riskScore === 0 && !$dto->isSuccess();
 }, $passed, $failed);
 
@@ -87,42 +80,7 @@ runTest("GeminiService mem-parsing dan memvalidasi JSON terstruktur (Judol)", fu
         && $dto->confidence === 0.96;
 }, $passed, $failed);
 
-// 3. Parser Output JSON DeepSeek sesuai Spesifikasi Bagian 5.4
-runTest("DeepSeekService mem-parsing dan memvalidasi JSON terstruktur (Investasi Menyesatkan)", function () use ($deepSeekService) {
-    $rawDeepSeekJson = json_encode([
-        'choices' => [
-            [
-                'message' => [
-                    'content' => json_encode([
-                        'category' => 'investasi_menyesatkan',
-                        'risk_level' => 'high',
-                        'risk_score' => 88,
-                        'indicators' => [
-                            [
-                                'name' => 'unrealistic_return',
-                                'evidence' => 'profit pasti 20% mingguan',
-                                'severity' => 'high',
-                                'explanation' => 'Klaim return pasti tanpa risiko melanggar kaidah pasar finansial'
-                            ]
-                        ],
-                        'reasoning' => 'Ditemukan skema ponzi berkedok arisan digital dengan jaminan keuntungan pasti.',
-                        'confidence' => 0.92
-                    ])
-                ]
-            ]
-        ]
-    ]);
-
-    $dto = $deepSeekService->parseResponse($rawDeepSeekJson, 200, 'https://investasi-cuan2026.com');
-    return $dto->isSuccess()
-        && $dto->category === 'investasi_menyesatkan'
-        && $dto->riskLevel === 'high'
-        && $dto->riskScore === 88
-        && count($dto->indicators) === 1
-        && $dto->confidence === 0.92;
-}, $passed, $failed);
-
-// 4. Sanitasi Markdown Triple Backticks pada respon AI
+// 3. Sanitasi Markdown Triple Backticks pada respon AI
 runTest("Sanitasi keluaran AI jika membungkus JSON dengan ```json markdown", function () use ($geminiService) {
     $rawWithMarkdown = json_encode([
         'candidates' => [
@@ -149,8 +107,8 @@ runTest("Sanitasi keluaran AI jika membungkus JSON dengan ```json markdown", fun
     return $dto->isSuccess() && $dto->category === 'normal' && $dto->riskScore === 5;
 }, $passed, $failed);
 
-// 5. Eksekusi Paralel Dual AI via Http::pool
-runTest("Eksekusi Paralel Http::pool memanggil Gemini & DeepSeek secara serentak", function () use ($orchestrator) {
+// 4. Eksekusi Analisis Gemini via Mock
+runTest("Eksekusi Analisis Gemini via HTTP Mock", function () {
     Http::fake([
         'generativelanguage.googleapis.com/*' => Http::response([
             'candidates' => [
@@ -178,68 +136,33 @@ runTest("Eksekusi Paralel Http::pool memanggil Gemini & DeepSeek secara serentak
                     ]
                 ]
             ]
-        ], 200),
-        'api.deepseek.com/*' => Http::response([
-            'choices' => [
-                [
-                    'message' => [
-                        'content' => json_encode([
-                            'category' => 'judol',
-                            'risk_level' => 'critical',
-                            'risk_score' => 92,
-                            'indicators' => [
-                                [
-                                    'name' => 'deepseek_reasoning',
-                                    'evidence' => 'pola taruhan berulang',
-                                    'severity' => 'critical',
-                                    'explanation' => 'Pola penarikan dana judol'
-                                ]
-                            ],
-                            'reasoning' => 'DeepSeek mengidentifikasi indikasi perjudian.',
-                            'confidence' => 0.94
-                        ])
-                    ]
-                ]
-            ]
         ], 200)
     ]);
 
-    // Simulasikan API key sementara untuk pengujian paralel
-    config([
-        'services.gemini.api_key' => 'fake-gemini-key',
-        'services.deepseek.api_key' => 'fake-deepseek-key'
-    ]);
+    config(['services.gemini.api_key' => 'fake-gemini-key']);
 
     $geminiSvc = new GeminiService();
-    $deepSeekSvc = new DeepSeekService();
-    $orch = new AiOrchestratorService($geminiSvc, $deepSeekSvc);
+    $orch = new AiOrchestratorService($geminiSvc);
 
     $results = $orch->executeParallelAi('https://slot-gacor777.top');
-
     $gemini = $results['gemini'];
-    $deepseek = $results['deepseek'];
 
     return $gemini->isSuccess()
-        && $deepseek->isSuccess()
         && $gemini->category === 'judol'
-        && $deepseek->category === 'judol'
-        && $gemini->provider === 'gemini'
-        && $deepseek->provider === 'deepseek';
+        && $gemini->provider === 'gemini';
 }, $passed, $failed);
 
-// 6. Integrasi Hasil Paralel ke AnalyzeLink
-runTest("Orkestrator menggabungkan hasil Dual AI paralel dan Suricata", function () {
+// 5. Integrasi Hasil Analisis Gemini ke AnalyzeLink
+runTest("Orkestrator menjalankan analisis Gemini dan mendeteksi ancaman", function () {
     $geminiSvc = new GeminiService();
-    $deepSeekSvc = new DeepSeekService();
-    $orch = new AiOrchestratorService($geminiSvc, $deepSeekSvc);
+    $orch = new AiOrchestratorService($geminiSvc);
 
     $result = $orch->analyzeLink('https://slot-gacor777.top');
 
-    return $result->source === 'parallel_dual_ai'
-        && $result->alertClass === 'red'
+    return $result->alertClass === 'red'
         && count($result->findings) >= 2;
 }, $passed, $failed);
 
-echo "\nHASIL PENGUJIAN TAHAP 2: {$passed} PASS, {$failed} FAIL\n";
+echo "\nHASIL PENGUJIAN AI: {$passed} PASS, {$failed} FAIL\n";
 exit($failed > 0 ? 1 : 0);
 

@@ -10,7 +10,7 @@ class RequireSuperAdmin
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $user = $request->get('auth_user') ?: (array) $request->user();
+        $user = $request->input('auth_user') ?: (array) $request->user();
 
         $role = $user['role'] ?? '';
         if ($role !== 'Super Admin' && $role !== 'Superadmin') {

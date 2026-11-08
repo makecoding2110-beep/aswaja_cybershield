@@ -1,0 +1,11 @@
+{
+  "name": "aswaja-cybershield",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aswaja CyberShield - Platform Literasi Digital, Deteksi Tautan Judol & Fiqih Siber",
+  "scripts": {
+    "build": "cd backend && composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction",
+    "vercel-build": "cd backend && composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction"
+  }
+}
+

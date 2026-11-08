@@ -8,7 +8,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <script src="../../js/admin-guard.js"></script>
-  <title>Integrasi Dual AI (Gemini & DeepSeek) - Aswaja CyberShield Admin</title>
+  <title>Integrasi AI (Google Gemini AI) - Aswaja CyberShield Admin</title>
   <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 
   <!-- Google Fonts: Inter & Plus Jakarta Sans -->
@@ -49,6 +49,7 @@
       }
     }
   </script>
+  <link rel="stylesheet" href="../../css/ui-kit.css">
 </head>
 
 <body class="h-full text-slate-800 antialiased flex bg-slate-50 font-sans">
@@ -70,19 +71,19 @@
         <p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Menu Utama</p>
         <div class="space-y-1">
           <!-- 1. Dashboard -->
-          <a href="index.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
+          <a href="/admin" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
             <i class="bi bi-speedometer2 text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
             <span>Dashboard</span>
           </a>
 
           <!-- 2. Artikel -->
-          <a href="artikel.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
+          <a href="/admin/artikel" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
             <i class="bi bi-file-earmark-text text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
             <span>Artikel</span>
           </a>
 
           <!-- 3. Riwayat Pelaporan -->
-          <a href="laporan.blade.php" class="flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
+          <a href="/admin/laporan" class="flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
             <span class="flex items-center gap-3">
               <i class="bi bi-shield-exclamation text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
               <span>Laporan</span>
@@ -91,19 +92,13 @@
           </a>
 
           <!-- 4. Studi Kasus -->
-          <a href="studi-kasus.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
+          <a href="/admin/studi-kasus" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
             <i class="bi bi-journal-check text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
             <span>Studi Kasus</span>
           </a>
 
-          <!-- 5. Integrasi Dual AI (Active) -->
-          <a href="integrasi-ai.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-950/30 transition-all">
-            <i class="bi bi-cpu text-base text-white"></i>
-            <span>Integrasi Dual AI</span>
-          </a>
-
           <!-- 6. Kelola Akun -->
-          <a href="akun.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
+          <a href="/admin/akun" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
             <i class="bi bi-people text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
             <span>Kelola Akun</span>
           </a>
@@ -112,7 +107,7 @@
       </div>
 
     <!-- Sidebar Bottom / User Bar -->
-    <div class="p-3 border-t border-slate-800/80 bg-slate-950/40">
+    <div class="p-3 mt-auto border-t border-slate-800/80 bg-slate-950/40">
       <div class="flex items-center justify-between px-2.5 py-2 rounded-xl bg-slate-800/60 border border-slate-700/50">
         <div class="flex items-center gap-2.5 min-w-0">
           <div id="sidebar-avatar" class="w-8 h-8 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
@@ -145,7 +140,7 @@
       <div class="flex items-center gap-2 sm:gap-3">
         <div class="hidden xl:flex items-center gap-1.5 text-xs text-slate-600 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 font-mono">
           <i class="bi bi-clock text-slate-400"></i>
-          <span id="live-clock">--:--:-- WIB</span>
+          <span id="live-clock"><?php date_default_timezone_set('Asia/Makassar'); echo date('H:i:s'); ?> WITA</span>
         </div>
 
         <button type="button" id="btn-refresh-status" class="p-2 rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" title="Segarkan Status">
@@ -171,7 +166,7 @@
               <p id="dropdown-user-email" class="text-xs font-semibold text-slate-800 truncate">admin@aswajacyber.id</p>
             </div>
             <div class="py-1">
-              <a href="akun.blade.php" class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+              <a href="/admin/akun" class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">
                 <i class="bi bi-person-gear text-slate-400"></i>
                 <span>Kelola Akun &amp; Profil</span>
               </a>
@@ -195,9 +190,9 @@
         <div>
           <h1 class="text-2xl font-display font-extrabold text-slate-900 tracking-tight flex items-center gap-2.5">
             <i class="bi bi-cpu text-emerald-600"></i>
-            <span>Integrasi Dual AI (Gemini &amp; DeepSeek)</span>
+            <span>Integrasi AI (Google Gemini AI)</span>
           </h1>
-          <p class="text-sm text-slate-500 mt-0.5">Monitoring status orkestrasi Multi-Agent AI (Google Gemini + DeepSeek) untuk Tabayyun tautan dan audit laporan siber.</p>
+          <p class="text-sm text-slate-500 mt-0.5">Monitoring status orkestrasi AI (Google Gemini AI + Suricata IDS &amp; UrlThreatAnalyzer) untuk Tabayyun tautan dan audit laporan siber.</p>
         </div>
         <div id="super-admin-badge">
           <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300">
@@ -221,59 +216,59 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         
         <!-- 1. Status Integrasi -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all">
+        <div onclick="runProbeTest()" role="button" tabindex="0" class="bg-white rounded-2xl p-5 border border-slate-200/80 hover:border-emerald-500/50 hover:shadow-md transition-all cursor-pointer active:scale-[0.99] group" title="Klik untuk menguji probe orkestrasi AI">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status Integrasi</span>
-            <div id="icon-status-box" class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider group-hover:text-emerald-700 transition-colors">Status Integrasi</span>
+            <div id="icon-status-box" class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors">
               <i class="bi bi-link-45deg text-xl"></i>
             </div>
           </div>
           <div class="flex items-baseline gap-2">
-            <span id="stat-integration-status" class="text-lg font-display font-extrabold text-slate-900">Memeriksa...</span>
+            <span id="stat-integration-status" class="text-lg font-display font-extrabold text-slate-900 group-hover:text-emerald-700 transition-colors">Memeriksa...</span>
           </div>
           <p id="stat-integration-sub" class="text-xs text-slate-400 mt-1">Multi-Agent Orchestrator</p>
         </div>
 
         <!-- 2. Agen 1: Gemini -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all">
+        <div onclick="runProbeTest()" role="button" tabindex="0" class="bg-white rounded-2xl p-5 border border-slate-200/80 hover:border-emerald-500/50 hover:shadow-md transition-all cursor-pointer active:scale-[0.99] group" title="Klik untuk menguji probe Agen Gemini">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Agen 1 (Gemini)</span>
-            <div id="icon-webhook-box" class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider group-hover:text-emerald-700 transition-colors">Agen 1 (Gemini)</span>
+            <div id="icon-webhook-box" class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors">
               <i class="bi bi-lightning-charge text-lg"></i>
             </div>
           </div>
           <div class="flex items-baseline gap-2">
-            <span id="stat-webhook-status" class="text-lg font-display font-extrabold text-slate-900">Siaga</span>
+            <span id="stat-webhook-status" class="text-lg font-display font-extrabold text-slate-900 group-hover:text-emerald-700 transition-colors">Siaga</span>
           </div>
           <p id="stat-webhook-sub" class="text-xs text-slate-400 mt-1">Spesialis Cek URL Tabayyun</p>
         </div>
 
-        <!-- 3. Agen 2: DeepSeek -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all">
+        <!-- 3. Sensor Suricata NIDS -->
+        <div onclick="runProbeTest()" role="button" tabindex="0" class="bg-white rounded-2xl p-5 border border-slate-200/80 hover:border-emerald-500/50 hover:shadow-md transition-all cursor-pointer active:scale-[0.99] group" title="Klik untuk menguji probe Sensor NIDS">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Agen 2 (DeepSeek)</span>
-            <div id="icon-ai-box" class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
-              <i class="bi bi-shield-shaded text-lg"></i>
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider group-hover:text-emerald-700 transition-colors">Sensor NIDS</span>
+            <div id="icon-ai-box" class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+              <i class="bi bi-shield-check text-lg"></i>
             </div>
           </div>
           <div class="flex items-baseline gap-2">
-            <span id="stat-ai-status" class="text-lg font-display font-extrabold text-slate-900">Siaga</span>
+            <span id="stat-ai-status" class="text-lg font-display font-extrabold text-slate-900 group-hover:text-emerald-700 transition-colors">Aktif</span>
           </div>
-          <p id="stat-ai-sub" class="text-xs text-slate-400 mt-1">Spesialis Forensik Laporan</p>
+          <p id="stat-ai-sub" class="text-xs text-slate-400 mt-1">Suricata IDS &amp; Threat Analyzer</p>
         </div>
 
         <!-- 4. Pengujian Terakhir -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all">
+        <div onclick="runProbeTest()" role="button" tabindex="0" class="bg-white rounded-2xl p-5 border border-slate-200/80 hover:border-emerald-500/50 hover:shadow-md transition-all cursor-pointer active:scale-[0.99] group" title="Klik untuk memperbarui uji probe">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pengujian Terakhir</span>
-            <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider group-hover:text-emerald-700 transition-colors">Pengujian Terakhir</span>
+            <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors">
               <i class="bi bi-clock-history text-lg"></i>
             </div>
           </div>
           <div class="flex items-baseline gap-2">
-            <span id="stat-last-checked" class="text-xs font-mono font-semibold text-slate-700">--</span>
+            <span id="stat-last-checked" class="text-xs font-mono font-semibold text-slate-700 group-hover:text-emerald-700 transition-colors">--</span>
           </div>
-          <p class="text-xs text-slate-400 mt-1">Waktu Probe Terakhir</p>
+          <p class="text-xs text-slate-400 mt-1">Klik untuk Uji Probe Ulang</p>
         </div>
 
       </div>
@@ -282,8 +277,8 @@
       <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm space-y-5">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
           <div>
-            <h2 class="text-base font-display font-bold text-slate-900">Pengujian Probe Koneksi Dual AI</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Kirimkan paket probe ringan (*health-check payload*) untuk memastikan Google Gemini &amp; DeepSeek API aktif dan siap menerima data tanpa latensi.</p>
+            <h2 class="text-base font-display font-bold text-slate-900">Pengujian Probe Koneksi AI</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Kirimkan paket probe ringan (*health-check payload*) untuk memastikan Google Gemini AI aktif dan siap menerima data tanpa latensi.</p>
           </div>
           <button type="button" id="btn-test-connection" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-sm shadow-emerald-600/20 transition-all shrink-0">
             <span id="test-btn-spinner" class="hidden">
@@ -320,14 +315,14 @@
 
           <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1.5">
             <div class="flex items-center justify-between">
-              <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">DeepSeek AI (Forensik Laporan)</span>
-              <span class="text-[10px] px-2 py-0.5 rounded-md bg-purple-100 text-purple-800 font-semibold font-mono">deepseek-chat</span>
+              <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">Suricata IDS &amp; Threat Analyzer</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-semibold font-mono">SID 1000101-103</span>
             </div>
             <div class="flex items-center justify-between gap-2">
-              <span id="config-api-key" class="font-mono text-xs font-semibold text-slate-800">sk-... (DeepSeek API)</span>
-              <span class="text-[10px] px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-semibold">Tersandikan</span>
+              <span id="config-api-key" class="font-mono text-xs font-semibold text-slate-800">Rule Engine Aktif</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-semibold">Tersinkron</span>
             </div>
-            <p class="text-[11px] text-slate-400">Dikonfigurasi via server environment `DEEPSEEK_API_KEY`.</p>
+            <p class="text-[11px] text-slate-400">Inspeksi L1 Packet &amp; Normalisasi Teks URL.</p>
           </div>
 
         </div>
@@ -342,14 +337,14 @@
             <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm">
               <i class="bi bi-diagram-3"></i>
             </div>
-            <h3 class="font-display font-bold text-base text-slate-900">Alur Orkestrasi Dual AI &amp; Fallback</h3>
+            <h3 class="font-display font-bold text-base text-slate-900">Alur Orkestrasi AI &amp; Fallback</h3>
           </div>
           <ol class="space-y-3 text-xs text-slate-600 list-decimal list-inside leading-relaxed">
             <li><strong>Permintaan dari Pengunjung:</strong> Tautan URL dikirimkan dari frontend Tabayyun ke endpoint Laravel <code>POST /api/analyze-link</code>.</li>
-            <li><strong>Validasi Keamanan &amp; SSRF:</strong> Backend memvalidasi format URL dan memastikan skema bukan private/loopback IP.</li>
-            <li><strong>Agen 1 (Gemini):</strong> Menjalankan audit sanad domain dan pola 4T dengan kecepatan ultra-tinggi (&lt; 1 detik).</li>
-            <li><strong>Agen 2 (DeepSeek):</strong> Menjalankan penalaran forensik mendalam (deep reasoning) pada narasi laporan kejahatan siber warga.</li>
-            <li><strong>Fallback Heuristik Anggun:</strong> Jika kedua API eksternal mengalami kendala jaringan, sistem secara otomatis beralih ke <em>Aswaja Heuristic Engine</em> lokal sehingga sistem tidak pernah mogok.</li>
+            <li><strong>Validasi Keamanan &amp; SSRF:</strong> Backend memvalidasi format URL dan memastikan skema bukan private/loopback IP (tanpa mengambil konten eksternal).</li>
+            <li><strong>Sensor Heuristik &amp; Suricata IDS:</strong> Menganalisis indikator ancaman URL (Defacement, Open Redirect, Typosquatting).</li>
+            <li><strong>Google Gemini AI:</strong> Menjalankan audit sanad domain dan pola 4T dengan kecepatan tinggi (&lt; 1 detik).</li>
+            <li><strong>Fallback Heuristik Anggun:</strong> Jika API AI eksternal mengalami kendala jaringan, sistem otomatis beralih ke <em>Aswaja Heuristic Engine</em> lokal sehingga sistem tidak pernah mogok.</li>
           </ol>
         </div>
 
@@ -362,14 +357,14 @@
             <h3 class="font-display font-bold text-base text-slate-900">Petunjuk Konfigurasi Server (.env)</h3>
           </div>
           <p class="text-xs text-slate-600 leading-relaxed">
-            Untuk mengaktifkan kedua AI pada server atau Vercel, tambahkan variabel environment berikut:
+            Untuk mengaktifkan AI pada server atau Vercel, tambahkan variabel environment berikut:
           </p>
           <div class="p-3.5 rounded-xl bg-slate-900 text-slate-200 font-mono text-xs overflow-x-auto space-y-1">
             <p><span class="text-emerald-400">GEMINI_API_KEY</span>=AIzaSy_your_gemini_key_here</p>
-            <p><span class="text-purple-400">DEEPSEEK_API_KEY</span>=sk_live_your_deepseek_key_here</p>
+            <p><span class="text-slate-400">GEMINI_MODEL</span>=gemini-1.5-flash</p>
           </div>
           <p class="text-[11px] text-slate-400 italic">
-            *Catatan: Sistem tidak lagi memerlukan server VPS n8n mandiri, sehingga hemat biaya operasional (Rp 0).
+            *Catatan: Menggunakan Google Gemini AI sebagai mesin utama yang diintegrasikan dengan sensor Suricata IDS lokal.
           </p>
         </div>
 
@@ -388,6 +383,7 @@
 
   <!-- Scripts -->
   <script src="../../js/api.js"></script>
+  <script src="../../js/ui-kit.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // 1. Cek Sesi Autentikasi
@@ -425,8 +421,10 @@
 
       // Logout handlers
       function handleLogout() {
-        if (confirm('Keluar dari sesi administrator Aswaja CyberShield?')) {
-          AuthService.logout();
+        if (window.AuthService && typeof window.AuthService.confirmLogout === 'function') {
+          window.AuthService.confirmLogout();
+        } else if (confirm('Keluar dari sesi administrator Aswaja CyberShield?')) {
+          window.AuthService.logout();
         }
       }
       document.getElementById('sidebar-btn-logout')?.addEventListener('click', handleLogout);
@@ -459,14 +457,14 @@
       // Live Clock
       function updateClock() {
         const now = new Date();
-        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Jakarta' });
+        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Makassar' });
         const clockEl = document.getElementById('live-clock');
-        if (clockEl) clockEl.textContent = `${timeStr} WIB`;
+        if (clockEl) clockEl.textContent = `${timeStr} WITA`;
       }
       setInterval(updateClock, 1000);
       updateClock();
 
-      // ─── LOAD STATUS & TEST INTEGRASI DUAL AI ───────────────────────────────
+      // --- LOAD STATUS & TEST INTEGRASI AI ---
       const statIntegration = document.getElementById('stat-integration-status');
       const statWebhook = document.getElementById('stat-webhook-status');
       const statAi = document.getElementById('stat-ai-status');
@@ -504,7 +502,7 @@
       function renderStatus(data) {
         statIntegration.textContent = data.status || 'Siaga';
         statWebhook.textContent = (data.gemini && data.gemini.configured) ? 'Aktif' : 'Nonaktif';
-        statAi.textContent = (data.deepseek && data.deepseek.configured) ? 'Aktif' : 'Nonaktif';
+        statAi.textContent = (data.suricata && data.suricata.available) ? 'Aktif' : 'Standby';
         statLastChecked.textContent = data.last_checked || '--';
 
         if (configWebhookUrl) {
@@ -512,8 +510,7 @@
           configWebhookUrl.textContent = g && g.configured ? `${g.masked_key} (${g.model})` : 'Belum diatur';
         }
         if (configApiKey) {
-          const d = data.deepseek;
-          configApiKey.textContent = d && d.configured ? `${d.masked_key} (${d.model})` : 'Belum diatur';
+          configApiKey.textContent = (data.suricata && data.suricata.available) ? 'Sensor EVE Log Terhubung' : 'Sensor Signature Siaga';
         }
 
         if (data.configured) {
@@ -530,10 +527,10 @@
       function renderOfflineStatus() {
         statIntegration.textContent = 'Mode Heuristik';
         statWebhook.textContent = 'Nonaktif';
-        statAi.textContent = 'Nonaktif';
-        statLastChecked.textContent = new Date().toLocaleTimeString('id-ID') + ' WIB';
+        statAi.textContent = 'Standby';
+        statLastChecked.textContent = new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Makassar' }) + ' WITA';
         if (configWebhookUrl) configWebhookUrl.textContent = 'Setel GEMINI_API_KEY di .env';
-        if (configApiKey) configApiKey.textContent = 'Setel DEEPSEEK_API_KEY di .env';
+        if (configApiKey) configApiKey.textContent = 'Suricata Rules Aktif';
       }
 
       async function runTestConnection() {
@@ -552,9 +549,9 @@
 
           if (data.status === 'Terhubung') {
             testAlertBox.className = 'p-4 rounded-xl text-xs space-y-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800';
-            testAlertHeading.textContent = 'Koneksi Dual AI Berhasil Diverifikasi!';
+            testAlertHeading.textContent = 'Koneksi AI Berhasil Diverifikasi!';
             testAlertIcon.className = 'bi bi-check-circle-fill text-emerald-600 text-base';
-            testAlertDesc.textContent = data.message || 'Probe Google Gemini & DeepSeek merespons dengan sukses. Layanan orkestrasi Dual AI siap digunakan secara penuh.';
+            testAlertDesc.textContent = data.message || 'Probe Google Gemini AI merespons dengan sukses. Layanan AI siap digunakan secara penuh.';
           } else {
             testAlertBox.className = 'p-4 rounded-xl text-xs space-y-1.5 bg-amber-50 border border-amber-200 text-amber-800';
             testAlertHeading.textContent = `Status: ${data.status || 'Belum Terhubung'}`;
@@ -576,14 +573,13 @@
           testText.textContent = 'UJI KONEKSI SEKARANG';
         }
       }
-          testAlertDesc.textContent = err.message || 'Gagal menghubungi endpoint backend. Pastikan server Laravel sedang berjalan.';
-        } finally {
-          btnTestConnection.disabled = false;
-          testSpinner.classList.add('hidden');
-          testIcon.classList.remove('hidden');
-          testText.textContent = 'UJI KONEKSI SEKARANG';
+
+      window.runProbeTest = function() {
+        if (btnTestConnection) {
+          btnTestConnection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          runTestConnection();
         }
-      }
+      };
 
       btnTestConnection?.addEventListener('click', runTestConnection);
       document.getElementById('btn-refresh-status')?.addEventListener('click', fetchAiStatus);
@@ -606,4 +602,6 @@
   </script>
 </body>
 </html>
+
+
 

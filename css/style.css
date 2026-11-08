@@ -384,14 +384,6 @@ video {
 html {
   -webkit-tap-highlight-color: transparent;
 }
-* {
-  scrollbar-color: color-mix(in oklch, currentColor 35%, transparent)
-    transparent;
-}
-*:hover {
-  scrollbar-color: color-mix(in oklch, currentColor 60%, transparent)
-    transparent;
-}
 :root {
   --p: 59.5971% 0.127418 163.225402;
   --bc: 20% 0 0;
@@ -3013,19 +3005,6 @@ div {
 .duration-300 {
   transition-duration: 0.3s;
 }
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
 @keyframes floatSlow {
   0%,
   to {
@@ -3890,6 +3869,15 @@ header.header-scrolled {
   overflow: hidden;
   z-index: 0;
 }
+
+/* Fallback pelindung elemen ambient hero agar tidak pernah memakan ruang dokumen */
+.public-hero-ambient {
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  z-index: 0 !important;
+}
 .ambient-particle {
   position: absolute;
   color: #10b981;
@@ -3931,10 +3919,6 @@ html.dark .ambient-particle {
     opacity: 0.6;
   }
   100% {
-    transform: translateY(-110vh) translateX(var(--drift, 60px)) rotate(360deg);
-    opacity: 0;
-  }
-}
     transform: translateY(-110vh) translateX(var(--drift, 60px)) rotate(360deg);
     opacity: 0;
   }
@@ -4291,10 +4275,13 @@ h1, h2, h3, h4, h5, h6 {
   overflow-wrap: break-word;
 }
 
-/* ── PREVENT UNWANTED HORIZONTAL SCROLL ── */
-html, body {
+/* ── PREVENT UNWANTED HORIZONTAL SCROLL & PREVENT DOUBLE SCROLLBAR ── */
+html {
   overflow-x: hidden;
-  max-width: 100vw;
+}
+body {
+  overflow-x: clip;
+  overflow-y: visible !important;
 }
 
 /* ================================================================
@@ -4514,6 +4501,35 @@ html:not(.dark) #tabayyun-result-card[data-alert="amber"] #result-target-url {
   color: #b45309 !important;
 }
 
+/* 2b. LIGHT MODE: ORANGE (Tinggi / Perlu Pemeriksaan) */
+html:not(.dark) #tabayyun-result-card[data-alert="orange"] {
+  background-color: #fff7ed !important;
+  border-color: #fed7aa !important;
+}
+html:not(.dark) #tabayyun-result-card[data-alert="orange"] #result-header-divider {
+  border-bottom-color: #fed7aa !important;
+}
+html:not(.dark) #tabayyun-result-card[data-alert="orange"] .result-inner-box {
+  background-color: #ffffff !important;
+  border-color: #fed7aa !important;
+}
+html:not(.dark) #tabayyun-result-card[data-alert="orange"] #result-main-title {
+  color: #7c2d12 !important;
+}
+html:not(.dark) #tabayyun-result-card[data-alert="orange"] #result-category-badge {
+  background-color: #fed7aa !important;
+  color: #7c2d12 !important;
+}
+html:not(.dark) #tabayyun-result-card[data-alert="orange"] #result-icon-box,
+html:not(.dark) #tabayyun-result-card[data-alert="orange"] #result-score-icon-box {
+  background-color: #ffedd5 !important;
+  color: #c2410c !important;
+}
+html:not(.dark) #tabayyun-result-card[data-alert="orange"] #result-score-text,
+html:not(.dark) #tabayyun-result-card[data-alert="orange"] #result-target-url {
+  color: #c2410c !important;
+}
+
 /* 3. LIGHT MODE: EMERALD (Aman / Normal Terverifikasi) */
 html:not(.dark) #tabayyun-result-card[data-alert="emerald"] {
   background-color: #ecfdf5 !important;
@@ -4609,12 +4625,23 @@ html.dark #tabayyun-result-card[data-alert="amber"] [class*="bg-white"] {
   border-color: #5c4a1e !important;
 }
 
+html.dark #tabayyun-result-card[data-alert="amber"] #result-header-divider {
+  border-bottom-color: #5c4a1e !important;
+}
+
 html.dark #tabayyun-result-card[data-alert="amber"] #result-category-badge {
   background-color: #92400e !important;
   color: #fef3c7 !important;
 }
 
-html.dark #tabayyun-result-card[data-alert="amber"] #result-target-url {
+html.dark #tabayyun-result-card[data-alert="amber"] #result-icon-box,
+html.dark #tabayyun-result-card[data-alert="amber"] #result-score-icon-box {
+  background-color: #453216 !important;
+  color: #fde68a !important;
+}
+
+html.dark #tabayyun-result-card[data-alert="amber"] #result-target-url,
+html.dark #tabayyun-result-card[data-alert="amber"] #result-score-text {
   color: #fde68a !important;
 }
 
@@ -4623,6 +4650,56 @@ html.dark [class*="text-amber-800"],
 html.dark [class*="text-amber-900"],
 html.dark [class*="text-amber-950"] {
   color: #fbbf24 !important;
+}
+
+/* --- DARK MODE: ORANGE (Tinggi / Perlu Pemeriksaan) --- */
+html.dark [class*="bg-orange-50"]:not(#tabayyun-result-card),
+html.dark [class*="bg-orange-100"]:not(#result-icon-box):not(#result-score-icon-box),
+html.dark #tabayyun-result-card[data-alert="orange"] {
+  background-color: #2D231E !important;
+  border-color: #7c3a1e !important;
+}
+
+html.dark [class*="bg-orange-50"]:not(#tabayyun-result-card) *,
+html.dark [class*="bg-orange-100"]:not(#result-icon-box):not(#result-score-icon-box) *,
+html.dark #tabayyun-result-card[data-alert="orange"] * {
+  color: #fed7aa !important;
+}
+
+html.dark [class*="bg-orange-50"]:not(#tabayyun-result-card) p,
+html.dark [class*="bg-orange-50"]:not(#tabayyun-result-card) li,
+html.dark [class*="bg-orange-50"]:not(#tabayyun-result-card) span,
+html.dark #tabayyun-result-card[data-alert="orange"] p,
+html.dark #tabayyun-result-card[data-alert="orange"] li,
+html.dark #tabayyun-result-card[data-alert="orange"] span:not(.badge) {
+  color: #ffedd5 !important;
+}
+
+html.dark #tabayyun-result-card[data-alert="orange"] #result-header-divider {
+  border-bottom-color: #6a301a !important;
+}
+
+html.dark #tabayyun-result-card[data-alert="orange"] .result-inner-box,
+html.dark #tabayyun-result-card[data-alert="orange"] .bg-white,
+html.dark #tabayyun-result-card[data-alert="orange"] [class*="bg-white"] {
+  background-color: #352620 !important;
+  border-color: #7c3a1e !important;
+}
+
+html.dark #tabayyun-result-card[data-alert="orange"] #result-category-badge {
+  background-color: #9a3412 !important;
+  color: #ffedd5 !important;
+}
+
+html.dark #tabayyun-result-card[data-alert="orange"] #result-icon-box,
+html.dark #tabayyun-result-card[data-alert="orange"] #result-score-icon-box {
+  background-color: #4a241b !important;
+  color: #fdba74 !important;
+}
+
+html.dark #tabayyun-result-card[data-alert="orange"] #result-target-url,
+html.dark #tabayyun-result-card[data-alert="orange"] #result-score-text {
+  color: #fdba74 !important;
 }
 
 /* --- DARK MODE: EMERALD (Aman / Normal Terverifikasi) --- */
@@ -4890,5 +4967,266 @@ html.dark main > div {
 html.dark footer {
   border-top-color: transparent !important;
 }
+
+/* ================================================================
+   PREMIUM ANIMATION ENGINE ENHANCEMENTS (ASWAJA CYBERSHIELD)
+   Elegan, Halus, Responsif, Ringan, Lolos Aksesibilitas WCAG AA
+   ================================================================ */
+
+/* 1. Ambient Hero Glowing Orbs & Cyber Mesh (Latar Belakang Hidup & Bernafas) */
+.ambient-glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(75px);
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform, opacity;
+  animation: orbBreathe 14s ease-in-out infinite alternate;
+}
+.ambient-orb-emerald {
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.04) 60%, transparent 80%);
+}
+.ambient-orb-teal {
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.10) 0%, rgba(13, 148, 136, 0.03) 60%, transparent 80%);
+  animation-duration: 18s;
+  animation-delay: -6s;
+}
+html.dark .ambient-orb-emerald {
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.16) 0%, rgba(5, 150, 105, 0.05) 60%, transparent 80%);
+}
+html.dark .ambient-orb-teal {
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.13) 0%, rgba(13, 148, 136, 0.04) 60%, transparent 80%);
+}
+
+@keyframes orbBreathe {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(25px, -30px) scale(1.15);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-20px, 20px) scale(0.95);
+    opacity: 0.55;
+  }
+}
+
+/* Cyber Pattern Grid Mesh Latar Belakang Hero */
+.cyber-mesh-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(ellipse 65% 55% at 50% 30%, black 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 65% 55% at 50% 30%, black 20%, transparent 75%);
+  z-index: 0;
+  opacity: 0.85;
+}
+html.dark .cyber-mesh-grid {
+  background-image: 
+    linear-gradient(to right, rgba(52, 211, 153, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(52, 211, 153, 0.05) 1px, transparent 1px);
+  opacity: 0.65;
+}
+
+/* 2. Interactive Card Border Shimmer on Hover (Glow Halus Mengitari Kartu) */
+.card-hover-effect {
+  position: relative;
+  isolation: isolate;
+}
+.card-hover-effect::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.45), transparent 45%, rgba(5, 150, 105, 0.35));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.32s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+.card-hover-effect:hover::after {
+  opacity: 1;
+}
+
+/* 3. Button Shimmer Light Sweep (Kemilau Halus Tombol CTA Utama) */
+.btn-shimmer-sweep {
+  position: relative;
+  overflow: hidden !important;
+}
+.btn-shimmer-sweep::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 45%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 100%
+  );
+  transform: rotate(25deg);
+  pointer-events: none;
+  animation: btnSweepAnim 5.5s ease-in-out infinite;
+}
+@keyframes btnSweepAnim {
+  0% { transform: translateX(-160%) rotate(25deg); }
+  22% { transform: translateX(380%) rotate(25deg); }
+  100% { transform: translateX(380%) rotate(25deg); }
+}
+
+/* 4. Live Status Pulse Indicator (Radar Dot Berkedip Lembut) */
+.live-status-dot {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.live-status-dot::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: currentColor;
+  opacity: 0.75;
+  animation: liveRadarPing 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes liveRadarPing {
+  0% { transform: scale(1); opacity: 0.8; }
+  75%, 100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* 5. Icon Micro-Pop on Card Hover (Ikon Terangkat Halus Saat Kartu Disorot) */
+.card-hover-effect:hover .icon-micro-pop,
+.card-hover:hover .icon-micro-pop,
+.clickable-card:hover .icon-micro-pop,
+.module-item:hover .icon-micro-pop {
+  transform: translateY(-4px) scale(1.12);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.icon-micro-pop {
+  display: inline-block;
+  transition: transform 0.25s ease;
+  will-change: transform;
+}
+
+/* 6. Scanning Laser Beam Effect (Efek Laser Saat Memeriksa Tautan) */
+.scanning-laser-beam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, transparent, #10b981, #34d399, transparent);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.65);
+  animation: laserScanSweep 1.8s ease-in-out infinite alternate;
+  z-index: 10;
+  pointer-events: none;
+}
+@keyframes laserScanSweep {
+  0% { transform: translateY(0); opacity: 0.25; }
+  50% { opacity: 1; }
+  100% { transform: translateY(60px); opacity: 0.25; }
+}
+
+/* 7. Elastic Card Stagger Entrance */
+.stagger-card-enter {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.stagger-card-enter.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 8. Badge Float Gently (Lencana Mengambang Halus) */
+.badge-float {
+  animation: badgeFloating 4.5s ease-in-out infinite alternate;
+}
+@keyframes badgeFloating {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-4px); }
+}
+
+/* 9. Hero Brand Highlight Gradient Shimmer */
+.hero-brand-shimmer {
+  background: linear-gradient(120deg, #059669 0%, #10b981 30%, #34d399 50%, #10b981 70%, #059669 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: brandShimmerAnim 6s linear infinite;
+}
+@keyframes brandShimmerAnim {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* 10. Tabayyun Loading Progress Bar (Active Motion & Glowing Gradient) */
+#tabayyun-loading-state .progress-track {
+  width: 100%;
+  max-width: 28rem;
+  margin: 0.75rem auto;
+  height: 12px;
+  background-color: #e2e8f0;
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.dark #tabayyun-loading-state .progress-track,
+[data-theme="dark"] #tabayyun-loading-state .progress-track {
+  background-color: #1e293b;
+  border-color: #334155;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+#loading-progress-bar {
+  height: 100% !important;
+  min-height: 10px;
+  background: linear-gradient(90deg, #059669 0%, #10b981 35%, #34d399 50%, #10b981 65%, #059669 100%) !important;
+  background-size: 200% 100% !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.6) !important;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  animation: progressShimmerAnim 1.6s linear infinite !important;
+}
+
+@keyframes progressShimmerAnim {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* 11. Aksesibilitas Penuh: Hormati Preferensi Pengguna */
+@media (prefers-reduced-motion: reduce) {
+  .ambient-glow-orb,
+  .cyber-mesh-grid,
+  .btn-shimmer-sweep::after,
+  .live-status-dot::before,
+  .scanning-laser-beam,
+  .badge-float,
+  .hero-brand-shimmer,
+  #loading-progress-bar {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
 
 

@@ -23,6 +23,12 @@ if ($requestUri !== '/' && is_file($physicalPath) && !preg_match('/\.(php|blade\
     return false;
 }
 
+// 2b. Teruskan Permintaan REST API langsung ke Backend Laravel
+if (preg_match('#^/api(/|$)#', $requestUri)) {
+    require __DIR__ . '/backend/public/index.php';
+    exit;
+}
+
 // 3. Normalisasi prefix subfolder (misal /aswajaCyber/)
 $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
 $subDir = ($scriptDir !== '/' && $scriptDir !== '.') ? $scriptDir : '';
@@ -42,8 +48,52 @@ if ($route === '' || $route === '/index') {
 if ($route === '/admin/index') {
     $route = '/admin';
 }
+if ($route === '/artikel') {
+    $queryString = !empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '';
+    header('Location: /admin/artikel' . $queryString, true, 302);
+    exit;
+}
+if ($route === '/laporan') {
+    $queryString = !empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '';
+    header('Location: /admin/laporan' . $queryString, true, 302);
+    exit;
+}
+if ($route === '/akun') {
+    $queryString = !empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '';
+    header('Location: /admin/akun' . $queryString, true, 302);
+    exit;
+}
+if ($route === '/studi-kasus') {
+    $queryString = !empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '';
+    header('Location: /admin/studi-kasus' . $queryString, true, 302);
+    exit;
+}
+if ($route === '/integrasi-ai') {
+    $queryString = !empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '';
+    header('Location: /admin/integrasi-ai' . $queryString, true, 302);
+    exit;
+}
 if ($route === '/admin/login') {
     $route = '/login';
+}
+if ($route === '/admin/lupa-password' || $route === '/admin/reset-password') {
+    $route = '/lupa-password';
+}
+if (preg_match('#^/auth/passwordReset(?:/(.+))?$#', $route, $matches)) {
+    if (!empty($matches[1]) && empty($_GET['token'])) {
+        $_GET['token'] = $matches[1];
+    }
+    $route = '/reset-password';
+}
+
+// 4b. Redirect otomatis ke Clean URL jika URL di browser masih berakhiran .blade.php atau .php
+if (
+    ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET' &&
+    preg_match('#\.(blade\.php|php)$#i', $requestUri)
+) {
+    $queryString = !empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '';
+    header('Location: ' . $route . $queryString, true, 301);
+    exit;
 }
 
 // 5. Pemetaan Rute Clean URL ke Berkas Blade
@@ -54,6 +104,8 @@ $routesMap = [
     '/cyber-guard'        => __DIR__ . '/frontend/cyber-guard.blade.php',
     '/lapor'              => __DIR__ . '/frontend/lapor.blade.php',
     '/login'              => __DIR__ . '/frontend/admin/login.blade.php',
+    '/lupa-password'      => __DIR__ . '/frontend/admin/lupa-password.blade.php',
+    '/reset-password'     => __DIR__ . '/frontend/admin/lupa-password.blade.php',
     '/admin'              => __DIR__ . '/frontend/admin/index.blade.php',
     '/admin/artikel'      => __DIR__ . '/frontend/admin/artikel.blade.php',
     '/admin/laporan'      => __DIR__ . '/frontend/admin/laporan.blade.php',
@@ -72,6 +124,11 @@ if (preg_match('#^/artikel/([a-zA-Z0-9_-]+)$#', $route, $matches)) {
     $articleFile = __DIR__ . '/frontend/artikel/' . $matches[1] . '.blade.php';
     if (is_file($articleFile)) {
         require $articleFile;
+        exit;
+    }
+    $dynamicReader = __DIR__ . '/frontend/artikel/baca.blade.php';
+    if (is_file($dynamicReader)) {
+        require $dynamicReader;
         exit;
     }
 }

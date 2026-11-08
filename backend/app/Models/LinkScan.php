@@ -22,9 +22,9 @@ class LinkScan extends Model
         'scanned_at',
         'suricata_result',
         'gemini_result',
-        'deepseek_result',
         'ai_comparison',
         'indicators',
+        'techniques',
         'final_category',
         'risk_level',
         'risk_score',
@@ -37,9 +37,9 @@ class LinkScan extends Model
         'scanned_at' => 'datetime',
         'suricata_result' => 'array',
         'gemini_result' => 'array',
-        'deepseek_result' => 'array',
         'ai_comparison' => 'array',
         'indicators' => 'array',
+        'techniques' => 'array',
         'risk_score' => 'integer',
     ];
 }

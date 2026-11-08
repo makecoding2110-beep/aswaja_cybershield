@@ -3,16 +3,16 @@
 namespace App\DTO;
 
 /**
- * Data Transfer Object untuk hasil perbandingan independen Dual AI (Gemini vs DeepSeek)
+ * Data Transfer Object untuk hasil perbandingan independen Analisis AI
  * Sesuai Dokumen Spesifikasi Bagian 5.3 & Bagian 6
  */
 class AiComparisonDTO
 {
     /**
-     * @param bool $bothAvailable Apakah kedua AI aktif dan berhasil memberikan keputusan
-     * @param bool $isMatch Apakah kategori Gemini dan DeepSeek identik
+     * @param bool $bothAvailable Apakah model AI aktif dan berhasil memberikan keputusan
+     * @param bool $isMatch Apakah kategori identik
      * @param string|null $agreedCategory Kategori yang disepakati jika match
-     * @param int $scoreDelta Selisih nilai risiko kedua model (abs(gemini - deepseek))
+     * @param int $scoreDelta Selisih nilai risiko model
      * @param bool $hasDiscrepancy Apakah terdapat pertentangan klasifikasi
      * @param array $discrepancyDetails Catatan rincian perbedaan jika ada
      * @param array $combinedIndicators Gabungan indikator temuan dari kedua AI

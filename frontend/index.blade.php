@@ -25,8 +25,10 @@
         const isDark = savedTheme === 'dark' || (!savedTheme && localStorage.getItem('aswaja_darkmode') === '1') || (!savedTheme && !localStorage.getItem('aswaja_darkmode') && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
         if (isDark) {
           document.documentElement.classList.add('dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
         } else {
           document.documentElement.classList.remove('dark');
+          document.documentElement.setAttribute('data-theme', 'light');
         }
       } catch (e) {}
     })();
@@ -63,6 +65,7 @@
     }
   </script>
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/ui-kit.css">
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
 
@@ -190,7 +193,7 @@
         <!-- Main Headline -->
         <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl text-slate-900 tracking-tight leading-[1.15] mb-6 reveal-up" style="transition-delay:80ms">
           Waspadai Jebakan <br>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-800">Investasi Palsu &amp; Judol.</span>
+          <span class="hero-brand-shimmer text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-800">Investasi Palsu &amp; Judol.</span>
         </h1>
 
         <!-- Subheadline -->
@@ -200,7 +203,7 @@
 
         <!-- CTA Button Row -->
         <div class="relative z-20 flex flex-wrap items-center justify-center gap-4 w-full sm:w-auto mb-10">
-          <a href="tabayyun.blade.php" class="btn-shimmer w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl text-white font-semibold text-base shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:shadow-emerald-600/40 hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.98]">
+          <a href="tabayyun.blade.php#analisis-tautan" class="btn-shimmer w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl text-white font-semibold text-base shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:shadow-emerald-600/40 hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.98]">
             <span class="material-symbols-outlined text-xl">link</span>
             <span>Mulai AI Tabayyun</span>
           </a>
@@ -217,7 +220,7 @@
             <div class="text-xs sm:text-sm text-slate-500 mt-0.5">Akurasi Verifikasi Tautan</div>
           </div>
           <div>
-            <div class="font-display font-bold text-2xl sm:text-3xl text-slate-900" data-counter="14200" data-counter-suffix="+" data-counter-duration="2000">14.2K+</div>
+            <div id="stat-total-tautan" class="font-display font-bold text-2xl sm:text-3xl text-slate-900" data-counter="41" data-counter-suffix="+" data-counter-duration="1500">41+</div>
             <div class="text-xs sm:text-sm text-slate-500 mt-0.5">Tautan Dianalisis &amp; Dilaporkan</div>
           </div>
           <div>
@@ -233,7 +236,7 @@
 
   
   <!-- 3 Pendekatan Utama: Recognize, Learn, Act -->
-  <div class="py-16 bg-white dark:bg-slate-900 relative overflow-hidden">
+  <div class="py-16 relative overflow-hidden">
     <!-- Section Ambient Particles -->
     <div class="section-particles absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -321,7 +324,7 @@
   </div>
 
   <!-- Empat Pilar Modul Platform -->
-  <div class="py-16 bg-slate-100/70 dark:bg-slate-900 relative overflow-hidden">
+  <div class="py-16 relative overflow-hidden">
     <!-- Section Ambient Particles -->
     <div class="section-particles absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -431,7 +434,7 @@
   
 
   
-  <div class="py-20 bg-white dark:bg-slate-900 relative overflow-hidden">
+  <div class="py-20 relative overflow-hidden">
     <!-- Section Ambient Particles -->
     <div class="section-particles absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -545,7 +548,7 @@
   
 
   
-  <div class="reveal-on-scroll py-20 bg-white dark:bg-slate-900 relative overflow-hidden">
+  <div class="reveal-on-scroll py-20 relative overflow-hidden">
     <!-- Section Ambient Particles -->
     <div class="section-particles absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -626,7 +629,7 @@
 </main>
 <script src="../js/custom-cursor.js"></script>
 
-  <footer class="bg-slate-900 text-slate-300 mt-0">
+  <footer class="bg-gradient-to-b from-[#064e3b] via-[#022c22] to-[#011a14] dark:bg-slate-950 text-emerald-100/90 dark:text-slate-300 border-t border-emerald-900/40 dark:border-slate-800 mt-0">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
 
@@ -636,10 +639,10 @@
           <img src="../logo-shield.png" alt="Logo Resmi Aswaja CyberShield" class="w-9 h-9 object-contain">
           <span class="font-display font-bold text-xl text-white tracking-tight">Aswaja CyberShield</span>
         </div>
-        <p class="text-sm text-slate-400 leading-relaxed max-w-md">
+        <p class="text-sm text-emerald-100/80 dark:text-slate-400 leading-relaxed max-w-md">
           Inisiatif ketahanan digital berbasis prinsip Tabayyun dan nilai Ahlussunnah wal Jama'ah untuk mendeteksi serta membentengi masyarakat dari bahaya judi online, penipuan finansial, dan jebakan investasi ilegal.
         </p>
-        <div class="pt-2 text-xs text-emerald-400 font-medium">
+        <div class="pt-2 text-xs text-emerald-300 dark:text-emerald-400 font-medium">
           Amanah &bull; Tabayyun &bull; Maslahah Ummah
         </div>
       </div>
@@ -648,10 +651,10 @@
       <div class="md:col-span-3 space-y-3">
         <h4 class="font-display font-semibold text-sm text-white uppercase tracking-wider">Navigasi Utama</h4>
         <ul class="space-y-2 text-sm">
-          <li><a href="index.blade.php" class="hover:text-emerald-400 transition-colors">Beranda Utama</a></li>
-          <li><a href="tabayyun.blade.php" class="hover:text-emerald-400 transition-colors">Analisis Tautan Tabayyun</a></li>
-          <li><a href="etika.blade.php" class="hover:text-emerald-400 transition-colors">Modul Etika &amp; Fiqih Siber</a></li>
-          <li><a href="cyber-guard.blade.php" class="hover:text-emerald-400 transition-colors">Cyber Guard Test (Kuis)</a></li>
+          <li><a href="index.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Beranda Utama</a></li>
+          <li><a href="tabayyun.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Analisis Tautan Tabayyun</a></li>
+          <li><a href="etika.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Modul Etika &amp; Fiqih Siber</a></li>
+          <li><a href="cyber-guard.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Cyber Guard Test (Kuis)</a></li>
         </ul>
       </div>
 
@@ -659,8 +662,9 @@
       <div class="md:col-span-3 space-y-3">
         <h4 class="font-display font-semibold text-sm text-white uppercase tracking-wider">Layanan Terpadu</h4>
         <ul class="space-y-2 text-sm">
-          <li><a href="lapor.blade.php" class="hover:text-red-400 transition-colors">Portal Lapor</a></li>
-          <li><a href="etika.blade.php" class="hover:text-emerald-400 transition-colors">Pedoman Literasi</a></li>
+          <li><a href="lapor.blade.php" class="text-rose-300 hover:text-white dark:text-rose-400 dark:hover:text-rose-300 transition-colors">Portal Lapor</a></li>
+          <li><a href="etika.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Pedoman Literasi</a></li>
+          <li><span class="text-emerald-300/60 dark:text-slate-500">Protokol Fiqih Informasi Digital</span></li>
         </ul>
       </div>
 
@@ -670,6 +674,7 @@
   
 
   <script src="../js/api.js"></script>
+  <script src="../js/ui-kit.js"></script>
   <script src="../js/animations.js"></script>
   <script src="../js/navbar.js"></script>
   <script src="../js/scroll-reveal.js"></script>

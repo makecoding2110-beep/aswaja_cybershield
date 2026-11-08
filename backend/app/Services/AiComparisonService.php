@@ -6,20 +6,20 @@ use App\DTO\AiAnalysisResultDTO;
 use App\DTO\AiComparisonDTO;
 
 /**
- * Service Pembanding Hasil Analisis Dual AI (Google Gemini vs DeepSeek)
- * Menganalisis kesesuaian kategori, disparitas skor risiko, dan konsistensi bukti temuan.
+ * Service Analisis & Konsistensi Temuan AI (Google Gemini AI)
+ * Menganalisis kesesuaian kategori, skor risiko, dan konsistensi bukti temuan.
  * Sesuai Dokumen Spesifikasi Bagian 5.3 & Bagian 6
  */
 class AiComparisonService
 {
     /**
-     * Membandingkan hasil output Gemini dan DeepSeek secara objektif
+     * Memeriksa dan merangkum hasil analisis AI secara objektif
      */
-    public function compare(AiAnalysisResultDTO $gemini, AiAnalysisResultDTO $deepseek): AiComparisonDTO
+    public function compare(AiAnalysisResultDTO $gemini, ?AiAnalysisResultDTO $secondaryAi = null): AiComparisonDTO
     {
         $geminiSuccess = $gemini->isSuccess();
-        $deepseekSuccess = $deepseek->isSuccess();
-        $bothAvailable = $geminiSuccess && $deepseekSuccess;
+        $secondarySuccess = $secondaryAi ? $secondaryAi->isSuccess() : false;
+        $bothAvailable = $geminiSuccess && $secondarySuccess;
 
         $discrepancyDetails = [];
         $combinedIndicators = [];
@@ -32,16 +32,16 @@ class AiComparisonService
                     'name' => $ind['name'],
                     'evidence' => $ind['evidence'],
                     'severity' => $ind['severity'],
-                    'explanation' => "{$ind['explanation']} [Analisis Gemini]"
+                    'explanation' => $ind['explanation']
                 ];
             }
         } else {
-            $discrepancyDetails[] = "Layanan Google Gemini: {$gemini->status} ({$gemini->reasoning})";
+            $discrepancyDetails[] = "Layanan Analisis Gemini: {$gemini->status} ({$gemini->reasoning})";
         }
 
-        // 2. Kumpulkan indikator dari DeepSeek
-        if ($deepseekSuccess) {
-            foreach ($deepseek->indicators as $ind) {
+        // 2. Kumpulkan indikator dari model sekunder (jika ada)
+        if ($secondarySuccess && $secondaryAi) {
+            foreach ($secondaryAi->indicators as $ind) {
                 // Periksa apakah evidence yang identik sudah dicatat
                 $isDuplicate = false;
                 foreach ($combinedIndicators as $existing) {
@@ -53,33 +53,27 @@ class AiComparisonService
 
                 if (!$isDuplicate) {
                     $combinedIndicators[] = [
-                        'source' => 'deepseek',
+                        'source' => 'ai_secondary',
                         'name' => $ind['name'],
                         'evidence' => $ind['evidence'],
                         'severity' => $ind['severity'],
-                        'explanation' => "{$ind['explanation']} [Penalaran DeepSeek]"
+                        'explanation' => $ind['explanation']
                     ];
                 }
             }
-        } else {
-            $discrepancyDetails[] = "Layanan DeepSeek: {$deepseek->status} ({$deepseek->reasoning})";
         }
 
         // 3. Evaluasi Kasus Ketersediaan
         if (!$bothAvailable) {
             $scoreDelta = 0;
-            $isMatch = false;
-            $agreedCategory = null;
-            $hasDiscrepancy = true;
+            $isMatch = $geminiSuccess;
+            $agreedCategory = $geminiSuccess ? $gemini->category : null;
+            $hasDiscrepancy = false;
 
-            if ($geminiSuccess && !$deepseekSuccess) {
-                $summary = "Hanya Google Gemini yang berhasil menganalisis ({$gemini->category}, skor risiko {$gemini->riskScore}%). DeepSeek tidak tersedia.";
-                $agreedCategory = $gemini->category;
-            } elseif (!$geminiSuccess && $deepseekSuccess) {
-                $summary = "Hanya DeepSeek yang berhasil menganalisis ({$deepseek->category}, skor risiko {$deepseek->riskScore}%). Gemini tidak tersedia.";
-                $agreedCategory = $deepseek->category;
+            if ($geminiSuccess) {
+                $summary = "Analisis mandiri Google Gemini AI ({$gemini->category}, skor risiko {$gemini->riskScore}%).";
             } else {
-                $summary = "Kedua layanan AI tidak tersedia atau belum dikonfigurasi. Pemeriksaan mandiri bergantung pada sensor teknis.";
+                $summary = "Layanan AI tidak tersedia atau belum dikonfigurasi. Pemeriksaan mandiri bergantung pada sensor teknis.";
             }
 
             return new AiComparisonDTO(
@@ -95,21 +89,21 @@ class AiComparisonService
         }
 
         // 4. Kedua AI Tersedia: Evaluasi Kesepakatan
-        $scoreDelta = abs($gemini->riskScore - $deepseek->riskScore);
-        $isMatch = ($gemini->category === $deepseek->category);
+        $scoreDelta = abs($gemini->riskScore - $secondaryAi->riskScore);
+        $isMatch = ($gemini->category === $secondaryAi->category);
         $agreedCategory = $isMatch ? $gemini->category : null;
         $hasDiscrepancy = !$isMatch || ($scoreDelta > 35);
 
         if ($isMatch) {
             if ($scoreDelta <= 15) {
-                $summary = "Kedua AI sepakat secara konsisten pada kategori '{$gemini->category}' dengan disparitas skor sangat rendah ({$scoreDelta}%).";
+                $summary = "Model AI sepakat secara konsisten pada kategori '{$gemini->category}' dengan disparitas skor sangat rendah ({$scoreDelta}%).";
             } else {
-                $summary = "Kedua AI sepakat pada kategori '{$gemini->category}', namun terdapat perbedaan intensitas risiko (selisih skor {$scoreDelta}%).";
-                $discrepancyDetails[] = "Disparitas skor risiko: Gemini={$gemini->riskScore}%, DeepSeek={$deepseek->riskScore}% (selisih {$scoreDelta}%).";
+                $summary = "Model AI sepakat pada kategori '{$gemini->category}', namun terdapat perbedaan intensitas risiko (selisih skor {$scoreDelta}%).";
+                $discrepancyDetails[] = "Disparitas skor risiko: Utama={$gemini->riskScore}%, Sekunder={$secondaryAi->riskScore}% (selisih {$scoreDelta}%).";
             }
         } else {
-            $discrepancyDetails[] = "Perbedaan kategori: Gemini mengidentifikasi '{$gemini->category}', sedangkan DeepSeek mengidentifikasi '{$deepseek->category}'.";
-            $summary = "Terdapat disparitas keputusan antara Gemini ('{$gemini->category}') dan DeepSeek ('{$deepseek->category}'). Diperlukan verifikasi bukti tambahan.";
+            $discrepancyDetails[] = "Perbedaan kategori: Utama mengidentifikasi '{$gemini->category}', sedangkan Sekunder mengidentifikasi '{$secondaryAi->category}'.";
+            $summary = "Terdapat disparitas keputusan antara model utama ('{$gemini->category}') dan model sekunder ('{$secondaryAi->category}'). Diperlukan verifikasi bukti tambahan.";
         }
 
         return new AiComparisonDTO(

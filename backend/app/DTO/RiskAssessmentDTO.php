@@ -18,7 +18,7 @@ class RiskAssessmentDTO
      * @param string $title Judul kesimpulan analisis
      * @param string $reasoning Narasi penjelasan komprehensif dasar klasifikasi
      * @param array $allIndicators Seluruh daftar bukti indikator gabungan terstruktur
-     * @param array $matrixTrace Jejak evaluasi matriks (Suricata, Gemini, DeepSeek)
+     * @param array $matrixTrace Jejak evaluasi matriks (Suricata, Gemini AI)
      * @param string $decisionSource Sumber penentu utama ('suricata_ai_consensus' | 'suricata_ids' | 'dual_ai_only' | 'unconcluded')
      */
     public function __construct(
@@ -31,7 +31,8 @@ class RiskAssessmentDTO
         public readonly string $reasoning,
         public readonly array $allIndicators,
         public readonly array $matrixTrace,
-        public readonly string $decisionSource
+        public readonly string $decisionSource,
+        public readonly array $techniques = []
     ) {}
 
     public function toArray(): array
@@ -45,6 +46,7 @@ class RiskAssessmentDTO
             'title' => $this->title,
             'reasoning' => $this->reasoning,
             'indicators' => $this->allIndicators,
+            'techniques' => $this->techniques,
             'matrix_trace' => $this->matrixTrace,
             'decision_source' => $this->decisionSource,
         ];

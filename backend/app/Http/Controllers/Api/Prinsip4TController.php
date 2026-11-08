@@ -20,7 +20,7 @@ class Prinsip4TController extends Controller
         ]);
     }
 
-    public function update(Request $request, int $id): JsonResponse
+    public function update(Request $request, string|int $id): JsonResponse
     {
         $validated = $request->validate([
             'title' => 'nullable|string|max:150',

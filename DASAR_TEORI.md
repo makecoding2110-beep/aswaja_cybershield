@@ -57,13 +57,14 @@ Pencegahan tautan Judi Online dan Investasi Bodong merupakan bagian dari **Maqas
 
 ### 3.1. Konsep *Defense-in-Depth* (Mengapa AI Saja Tidak Cukup?)
 Dalam rekayasa keamanan siber, mengandalkan satu lapisan deteksi saja (*Single Point of Detection*) memiliki celah fatal:
-- **Kelemahan Deteksi Signature Murni:** Mudah dikelabui oleh kata-kata baru yang disamarkan (*obfuscation*) atau narasi penipuan yang belum terdaftar di *database rule*.
-- **Kelemahan AI (LLM) Murni:** Bersifat probabilistik, tidak dapat melihat paket jaringan mentah (*network blind*), dan rentan terhadap *latency* jaringan eksternal.
+- **Kelemahan Deteksi Signature Murni:** Mudah dikelabui oleh kata-kata baru yang disamarkan (*obfuscation*), teknik defacement, open redirect, atau narasi penipuan yang belum terdaftar di *database rule*.
+- **Kelemahan AI (LLM) Murni:** Bersifat probabilistik, tidak dapat melihat paket jaringan mentah (*network blind*), dan rentan terhadap *prompt injection*.
 
-Oleh sebab itu, **Aswaja CyberShield** menerapkan teori **Defense-in-Depth Hibrida** yang menggabungkan:
+Oleh sebab itu, **Aswaja CyberShield** menerapkan teori **Defense-in-Depth Hibrida (Zero-Fetch)** yang menggabungkan:
 1. **Lapisan Deterministik Jaringan (Suricata NIDS — Layer 3/4/7)**
-2. **Lapisan Heuristik Struktur URL (3-Tier Keyword Matching)**
-3. **Lapisan Kognitif Ganda Paralel (Google Gemini + DeepSeek AI)**
+2. **Lapisan Struktur URL & 3 Teknik Penyusupan Tautan (`UrlThreatAnalyzer`)**
+3. **Lapisan Kognitif Semantik (Google Gemini AI — Layer 7)**
+4. **Lapisan Heuristik Struktur URL (3-Tier Keyword Matching)**
 
 ### 3.2. Teori *Network Intrusion Detection System* (Suricata NIDS) & Telemetri `eve.json`
 **Suricata** adalah mesin NIDS *multi-threaded* yang bekerja dengan melakukan *Deep Packet Inspection* (DPI) terhadap lalu lintas jaringan dan menghasilkan log berformat **EVE JSON (*Extensible Event Format*)** di [`backend/storage/logs/suricata/eve.json`](file:///d:/aswajaCyber/backend/storage/logs/suricata/eve.json).
@@ -104,21 +105,23 @@ flowchart LR
 
 ---
 
-## 5. Teori Arsitektur Kecerdasan Buatan Ganda (*Parallel Dual-AI Ensemble*)
+## 5. Teori Kognitif AI Semantik & Zero-Fetch URL Threat Analysis
 
-Dalam teori *Ensemble Learning*, menggabungkan dua model independen yang memiliki spesialisasi arsitektur berbeda menghasilkan keandalan (*robustness*) yang jauh lebih tinggi dibandingkan model tunggal (*Single-Model Inference*):
-
-1. **Model 1 — Google Gemini (`gemini-1.5-flash`):** Unggul dalam **Analisis Semantik & Pragmatik Bahasa Indonesia**, memahami nuansa kalimat promosi persuasif, klaim keuntungan hiperbolis, serta pemetaan nilai etika 4T.
-2. **Model 2 — DeepSeek AI (`deepseek-chat`):** Unggul dalam **Penalaran Logis & Audit Forensik Teknis (*Chain-of-Thought Reasoning*)**, mengidentifikasi pola *de-obfuscation* (`sl0t`, `g4c0r`), skema pencucian deposit e-wallet individu, dan struktur piramida Ponzi.
-3. **Eksekusi Paralel Non-Blocking (`Http::pool`):**
-   Jika kedua AI dipanggil secara sekuensial, total waktu tunggu adalah $T_{\text{total}} = T_{\text{Gemini}} + T_{\text{DeepSeek}}$. Dengan teknik *asynchronous concurrent pooling*, waktu tunggu direduksi menjadi:
-   $$T_{\text{paralel}} = \max\left(T_{\text{Gemini}}, \, T_{\text{DeepSeek}}\right)$$
+1. **Google Gemini AI (`gemini-1.5-flash`):**
+   - Unggul dalam **Analisis Semantik & Pragmatik Bahasa Indonesia**, memahami nuansa kalimat promosi persuasif, klaim keuntungan hiperbolis, penyamaran kata kunci (*leetspeak*: `sl0t`, `g4c0r`), serta pemetaan nilai etika Fiqih Siber 4T.
+   - Menggunakan **Proteksi Prompt Injection**: Seluruh masukan teks URL diperlakukan murni sebagai string data pasif, bukan perintah komputasi yang dapat dieksekusi.
+2. **Prinsip Zero-Fetch:**
+   - Server tidak pernah melakukan HTTP GET/POST ke URL yang diperiksa guna mencegah paparan eksploitasi remote, pelacakan IP server oleh sindikat, maupun pengunduhan malware secara tidak sengaja.
+3. **Deteksi 3 Teknik Penyusupan Tautan (`UrlThreatAnalyzer`):**
+   - *Web Defacement & Subdomain Hijacking:* Mengevaluasi manipulasi CMS pada domain instansi bereputasi tinggi (`.go.id`, `.ac.id`, `.desa.id`).
+   - *Open Redirect:* Mendeteksi parameter pengalihan URL yang disamarkan (*cloaking*).
+   - *Typosquatting & Serangan Homoglif:* Mengukur jarak Levenshtein dan substitusi karakter visual (`0` $\to$ `o`, `1` $\to$ `l/i`, `rn` $\to$ `m`).
 
 ---
 
 ## 6. Model Matematika Sintesis Risiko Multi-Sensor (*Weighted Risk Synthesis*)
 
-Sistem mengambil keputusan akhir secara objektif melalui pemodelan matematika 5 tahap:
+Sistem mengambil keputusan akhir secara objektif melalui pemodelan matematika:
 
 ### 6.1. Fungsi Skor Anomali Struktur URL ($S_{\text{url}}$)
 $$S_{\text{url}} = \min\left(100, \sum_{k=1}^{m} C_k\right)$$
@@ -131,20 +134,21 @@ $$S_{\text{suricata}} = \begin{cases}
 0  & \text{untuk Whitelist Regulator (SID 1000000) atau Trafik Bersih}
 \end{cases}$$
 
-### 6.3. Pengukuran Deviasi Konsensus Dual AI ($\Delta_{\text{AI}}$)
-$$\Delta_{\text{AI}} = \left| S_{\text{gemini}} - S_{\text{deepseek}} \right|$$
-Jika kategori ancaman antara Gemini dan DeepSeek bertentangan atau $\Delta_{\text{AI}}$ melampaui ambang batas konsensus, sistem menandai adanya **Disparitas AI (`hasDiscrepancy = true`)** dan menahan vonis menjadi `belum_dapat_disimpulkan`.
+### 6.3. Fungsi Skor Threat Analyzer ($S_{\text{threat}}$)
+$$S_{\text{threat}} = \min\left(100, \sum_{j=1}^{n} W_{\text{tech}, j}\right)$$
+Di mana kombinasi teknik berbahaya (misal: open redirect ke domain judol, atau defacement `.go.id`) menghasilkan amplifikasi skor bahaya.
 
 ### 6.4. Persamaan Sintesis Rata-Rata Terbobot Proporsional ($\text{RawScore}$)
-$$\text{RawScore} = \frac{\sum_{i \in \text{Aktif}} W_i \cdot S_i}{\sum_{i \in \text{Aktif}} W_i}$$
+$$\text{RawScore} = \frac{W_{\text{threat}} \cdot S_{\text{threat}} + W_{\text{suricata}} \cdot S_{\text{suricata}} + W_{\text{gemini}} \cdot S_{\text{gemini}} + W_{\text{url}} \cdot S_{\text{url}}}{\sum W_i}$$
 Dengan distribusi bobot standar:
-- $W_{\text{suricata}} = 0.35$ ($35\%$ — Bukti empiris paket jaringan)
-- $W_{\text{gemini}} = 0.30$ ($30\%$ — Analisis semantik & kontekstual)
-- $W_{\text{deepseek}} = 0.30$ ($30\%$ — Penalaran forensik & modus transaksi)
+- $W_{\text{threat}} = 0.35$ ($35\%$ — Deteksi 3 teknik penyusupan judol)
+- $W_{\text{suricata}} = 0.30$ ($30\%$ — Bukti empiris paket jaringan)
+- $W_{\text{gemini}} = 0.30$ ($30\%$ — Analisis semantik kognitif AI)
 - $W_{\text{url}} = 0.05$ ($5\%$ — Heuristik penulisan struktur URL)
 
 $$\sum W_{\text{nominal}} = 0.35 + 0.30 + 0.30 + 0.05 = 1.00$$
 
-### 6.5. Persamaan Konversi Skor Keamanan Tampilan (*Display Safety Score*)
-Untuk memudahkan pemahaman masyarakat awam pada antarmuka publik (di mana nilai tinggi berarti aman dan nilai rendah berarti berbahaya), skor risiko ($0 \le \text{RiskScore} \le 100$) ditransformasikan secara invers ke rentang $[5, 98]$:
-$$\text{DisplaySafetyScore} = \max\left(5, \, \min\left(98, \, 100 - \text{RiskScore}\right)\right)$$
+### 6.5. Sistem Skor 2-State (Aman vs Berbahaya)
+Sistem mengadopsi standar biner tegas pada antarmuka publik:
+- **Tautan Aman (`normal` / `clean`):** Menampilkan **"Tingkat Keamanan"** ($0\% - 100\%$, hijau emerald).
+- **Tautan Berbahaya (`terindikasi_judol` / `terindikasi_investasi` / `mencurigakan`):** Menampilkan **"Tingkat Bahaya"** ($0\% - 100\%$, merah danger). Label penegas *"Sangat Berbahaya"* disematkan hanya jika skor bahaya $\ge 85\%$.

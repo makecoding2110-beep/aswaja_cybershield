@@ -128,7 +128,7 @@ $recent = $scanHistoryService->getRecentScans(10);
 assertCondition(count($recent) >= 6, "Setiap URL yang diuji otomatis tersimpan dalam riwayat audit (total: " . count($recent) . ")");
 $lastScan = $recent[0] ?? null;
 assertCondition($lastScan !== null && !empty($lastScan['id']), "Riwayat audit memiliki ID terstruktur ({$lastScan['id']})");
-assertCondition(isset($lastScan['suricata_result']) && isset($lastScan['gemini_result']) && isset($lastScan['deepseek_result']), "Riwayat audit memisahkan hasil Suricata, Gemini, dan DeepSeek");
+assertCondition(isset($lastScan['suricata_result']) && isset($lastScan['gemini_result']), "Riwayat audit memisahkan hasil Suricata dan Gemini AI");
 
 // -----------------------------------------------------------------------------
 // Skenario 8: Uji Tiga Tingkat Pencocokan - Tingkat KONTEKSTUAL Mandiri (Anti-False-Positive)

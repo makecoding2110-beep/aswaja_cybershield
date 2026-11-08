@@ -21,24 +21,24 @@ class RiskAssessmentService
         UrlAnalysisDTO $urlAnalysis,
         array $suricataResult,
         AiAnalysisResultDTO $gemini,
-        AiAnalysisResultDTO $deepseek,
-        AiComparisonDTO $aiComparison
+        ?AiAnalysisResultDTO $secondaryAi = null,
+        ?AiComparisonDTO $aiComparison = null,
+        ?array $threatResult = null
     ): RiskAssessmentDTO {
         $suricataMatched = (bool)($suricataResult['matched'] ?? false);
         $suricataAvailable = (bool)($suricataResult['available'] ?? false);
 
         $geminiSuccess = $gemini->isSuccess();
-        $deepseekSuccess = $deepseek->isSuccess();
+        $secondarySuccess = $secondaryAi ? $secondaryAi->isSuccess() : false;
 
         $geminiCat = $geminiSuccess ? $gemini->category : null;
-        $deepseekCat = $deepseekSuccess ? $deepseek->category : null;
+        $secondaryCat = $secondarySuccess && $secondaryAi ? $secondaryAi->category : null;
 
         // Kumpulkan jejak evaluasi matriks
         $matrixTrace = [
             'suricata_state' => $suricataMatched ? 'mencurigakan' : ($suricataAvailable ? 'normal' : 'tidak_tersedia'),
             'gemini_state' => $geminiCat ?? 'tidak_tersedia',
-            'deepseek_state' => $deepseekCat ?? 'tidak_tersedia',
-            'ai_is_match' => $aiComparison->isMatch,
+            'ai_is_match' => $aiComparison ? $aiComparison->isMatch : $geminiSuccess,
             'url_has_typosquatting' => $urlAnalysis->hasTyposquatting,
             'url_is_suspicious_tld' => $urlAnalysis->isSuspiciousTld,
         ];
@@ -79,6 +79,20 @@ class RiskAssessmentService
                 'severity' => $ind['severity'],
                 'explanation' => $ind['explanation']
             ];
+        }
+
+        // Indikator Threat Analyzer (Defacement, Open Redirect, Typosquatting)
+        if (!empty($threatResult['indicators'])) {
+            foreach ($threatResult['indicators'] as $ind) {
+                $allIndicators[] = [
+                    'origin' => 'threat_analyzer',
+                    'name' => $ind['name'],
+                    'evidence' => $ind['evidence'],
+                    'severity' => $ind['severity'],
+                    'explanation' => $ind['explanation'],
+                    'technique' => $ind['technique'] ?? null
+                ];
+            }
         }
 
         // 2. Analisis Tiga Tingkat Pencocokan Kata Kunci Judol & Hitung Nilai Anomali URL (0 - 100)
@@ -127,6 +141,21 @@ class RiskAssessmentService
         if ($supportingIndicatorsCount >= 1) $urlScore += 20;
         $urlScore = min(100, $urlScore);
 
+        // Evaluasi alert Suricata awal untuk judol dan investasi
+        $alerts = $suricataResult['alerts'] ?? [];
+        $hasPriority1Judol = false;
+        $hasInvestasiAlert = false;
+        foreach ($alerts as $a) {
+            $msg = strtolower($a['msg'] ?? ($a['alert_signature'] ?? ''));
+            $prio = (int)($a['priority'] ?? ($a['severity'] ?? 2));
+            if (($prio === 1) && (str_contains($msg, 'judi') || str_contains($msg, 'slot') || str_contains($msg, 'maysir') || str_contains($msg, 'togel') || str_contains($msg, 'deposit') || str_contains($msg, 'uri') || str_contains($msg, 'dns'))) {
+                $hasPriority1Judol = true;
+            }
+            if (str_contains($msg, 'investasi') || str_contains($msg, 'trading') || str_contains($msg, 'cuan')) {
+                $hasInvestasiAlert = true;
+            }
+        }
+
         // 3. Evaluasi Matriks Korelasi (Spesifikasi Bagian 6)
         $finalCategory = 'belum_dapat_disimpulkan';
         $categoryLabel = 'Belum Dapat Disimpulkan';
@@ -135,45 +164,45 @@ class RiskAssessmentService
         $decisionSource = 'unconcluded';
 
         // Kasus A: Kedua AI Sukses Menganalisis
-        if ($geminiSuccess && $deepseekSuccess) {
-            // Skenario 1: Gemini Judol + DeepSeek Judol
-            if ($geminiCat === 'judol' && $deepseekCat === 'judol') {
+        if ($geminiSuccess && $secondarySuccess && $secondaryAi) {
+            // Skenario 1: Gemini Judol + Sekunder Judol
+            if ($geminiCat === 'judol' && $secondaryCat === 'judol') {
                 if ($suricataMatched || $urlScore >= 40) {
                     $finalCategory = 'terindikasi_judol';
                     $categoryLabel = 'Terindikasi Judi Online';
                     $alertClass = 'red';
                     $title = 'Waspada: Terindikasi Kuat Jaringan Perjudian Online';
-                    $reasoning = 'Suricata dan kedua model AI (Gemini & DeepSeek) secara konsisten mengonfirmasi adanya indikator kuat aktivitas perjudian daring (slot/maysir).';
+                    $reasoning = 'Suricata dan model AI secara konsisten mengonfirmasi adanya indikator kuat aktivitas perjudian daring (slot/maysir).';
                     $decisionSource = 'parallel_dual_ai';
                 } else {
                     $finalCategory = 'mencurigakan';
                     $categoryLabel = 'Mencurigakan (Perlu Pemeriksaan Tambahan)';
                     $alertClass = 'amber';
                     $title = 'Perhatian: Terindikasi Pola Judol pada Konten';
-                    $reasoning = 'Kedua AI mendeteksi pola perjudian daring pada narasi/konten, namun belum memicu signature jaringan Suricata. Diperlukan bukti tambahan.';
+                    $reasoning = 'Model AI mendeteksi pola perjudian daring pada narasi/konten, namun belum memicu signature jaringan Suricata. Diperlukan bukti tambahan.';
                     $decisionSource = 'dual_ai_only';
                 }
             }
-            // Skenario 2: Gemini Investasi + DeepSeek Investasi
-            elseif ($geminiCat === 'investasi_menyesatkan' && $deepseekCat === 'investasi_menyesatkan') {
+            // Skenario 2: Gemini Investasi + Sekunder Investasi
+            elseif ($geminiCat === 'investasi_menyesatkan' && $secondaryCat === 'investasi_menyesatkan') {
                 if ($suricataMatched || $urlScore >= 40) {
                     $finalCategory = 'terindikasi_investasi';
                     $categoryLabel = 'Terindikasi Investasi Menyesatkan';
                     $alertClass = 'red';
                     $title = 'Waspada: Terindikasi Pola Penipuan Investasi Menyesatkan';
-                    $reasoning = 'Bukti teknis dan analisis independen kedua AI mengonfirmasi skema penawaran investasi bodong, klaim return tidak wajar, atau manipulasi finansial.';
+                    $reasoning = 'Bukti teknis dan analisis independen AI mengonfirmasi skema penawaran investasi bodong, klaim return tidak wajar, atau manipulasi finansial.';
                     $decisionSource = 'parallel_dual_ai';
                 } else {
                     $finalCategory = 'mencurigakan';
                     $categoryLabel = 'Mencurigakan (Perlu Pemeriksaan Tambahan)';
                     $alertClass = 'amber';
                     $title = 'Perhatian: Terindikasi Janji Investasi Tidak Realistis';
-                    $reasoning = 'Kedua AI mengidentifikasi penawaran investasi berisiko tinggi tanpa izin regulator, namun signature jaringan belum terpicu.';
+                    $reasoning = 'Model AI mengidentifikasi penawaran investasi berisiko tinggi tanpa izin regulator, namun signature jaringan belum terpicu.';
                     $decisionSource = 'dual_ai_only';
                 }
             }
             // Skenario 3: Kedua AI Normal
-            elseif ($geminiCat === 'normal' && $deepseekCat === 'normal') {
+            elseif ($geminiCat === 'normal' && $secondaryCat === 'normal') {
                 if ($suricataMatched || $urlScore >= 50) {
                     $finalCategory = 'mencurigakan';
                     $categoryLabel = 'Mencurigakan (Anomali Teknis)';
@@ -186,7 +215,7 @@ class RiskAssessmentService
                     $categoryLabel = 'Normal';
                     $alertClass = 'emerald';
                     $title = 'Aman: Tidak Ditemukan Indikasi Ancaman';
-                    $reasoning = 'Tidak ditemukan indikator perjudian online maupun investasi menyesatkan baik dari sensor jaringan Suricata maupun analisis independen Dual AI.';
+                    $reasoning = 'Tidak ditemukan indikator perjudian online maupun investasi menyesatkan baik dari sensor jaringan Suricata maupun analisis AI.';
                     $decisionSource = 'clean_consensus';
                 }
             }
@@ -195,28 +224,38 @@ class RiskAssessmentService
                 $finalCategory = 'belum_dapat_disimpulkan';
                 $categoryLabel = 'Belum Dapat Disimpulkan';
                 $alertClass = 'amber';
-                $title = 'Klasifikasi Belum Pasti: Disparitas Analisis AI';
-                $reasoning = "Hasil analisis kedua model AI berbeda (Gemini: {$geminiCat}, DeepSeek: {$deepseekCat}). Sistem menahan kesimpulan akhir dan menetapkan status verifikasi manual admin.";
+                $title = 'Klasifikasi Belum Pasti: Perlu Verifikasi Lanjutan';
+                $reasoning = "Hasil analisis model berbeda (Utama: {$geminiCat}, Sekunder: {$secondaryCat}). Sistem menahan kesimpulan akhir dan menetapkan status verifikasi manual admin.";
                 $decisionSource = 'ai_divergence';
             }
         }
         // Kasus B: Hanya Salah Satu AI yang Berhasil
-        elseif ($geminiSuccess || $deepseekSuccess) {
-            $activeAi = $geminiSuccess ? $gemini : $deepseek;
-            if (in_array($activeAi->category, ['judol', 'investasi_menyesatkan'], true)) {
-                $finalCategory = ($activeAi->category === 'judol') ? 'terindikasi_judol' : 'terindikasi_investasi';
-                $categoryLabel = ($activeAi->category === 'judol') ? 'Terindikasi Judi Online' : 'Terindikasi Investasi Menyesatkan';
+        elseif ($geminiSuccess || $secondarySuccess) {
+            $activeAi = $geminiSuccess ? $gemini : $secondaryAi;
+            $isAiConfirmedJudol = in_array($activeAi->category, ['judol'], true)
+                || ($activeAi->category === 'suspicious' && ($hasPriority1Judol || $hasJudolStrong || ($hasJudolMedium && $suricataMatched)));
+
+            if ($isAiConfirmedJudol || $activeAi->category === 'investasi_menyesatkan') {
+                $finalCategory = ($activeAi->category === 'investasi_menyesatkan') ? 'terindikasi_investasi' : 'terindikasi_judol';
+                $categoryLabel = ($activeAi->category === 'investasi_menyesatkan') ? 'Terindikasi Investasi Menyesatkan' : 'Terindikasi Judi Online';
                 $alertClass = 'red';
-                $title = "Waspada: Terindikasi {$categoryLabel} (Single AI)";
-                $reasoning = "Ditemukan bukti kuat dari {$activeAi->provider} ({$activeAi->reasoning}), namun model pasangan sedang tidak tersedia untuk verifikasi silang.";
+                $title = "Waspada: {$categoryLabel}";
+                $reasoning = "Ditemukan bukti kuat (" . ($activeAi->reasoning ?: 'signature jaringan dan pola URL terkonfirmasi') . ").";
                 $decisionSource = 'single_ai_with_evidence';
-            } else {
+            } elseif ($suricataMatched || $urlScore >= 40 || $activeAi->category === 'suspicious') {
                 $finalCategory = 'mencurigakan';
-                $categoryLabel = 'Mencurigakan';
+                $categoryLabel = 'Mencurigakan (Perlu Kewaspadaan)';
                 $alertClass = 'amber';
-                $title = 'Perlu Pemeriksaan Lanjutan';
-                $reasoning = 'Hasil satu AI belum dapat diverifikasi silang karena keterbatasan koneksi model pasangan.';
-                $decisionSource = 'single_ai_unverified';
+                $title = 'Perhatian: Terdeteksi Pola Mencurigakan';
+                $reasoning = "Ditemukan indikator mencurigakan pada tautan (" . ($activeAi->reasoning ?: 'sensor mendeteksi anomali pola') . "). Disarankan waspada.";
+                $decisionSource = 'ai_and_technical_suspicion';
+            } else {
+                $finalCategory = 'normal';
+                $categoryLabel = 'Belum Ditemukan Indikasi';
+                $alertClass = 'emerald';
+                $title = 'Bersih: Tidak Ditemukan Pola Signature Berbahaya';
+                $reasoning = "Analisis {$activeAi->provider} dan sensor teknis mengonfirmasi tautan bersih dari indikasi ancaman siber.";
+                $decisionSource = 'single_ai_clean';
             }
         }
         // Kasus C: Kedua AI Belum Terhubung (Offline)
@@ -298,21 +337,69 @@ class RiskAssessmentService
             }
         }
 
+        // 3.B Evaluasi Penguatan dari Threat Analyzer (Defacement, Open Redirect, Typosquatting)
+        $threatScore = (int)($threatResult['threat_score'] ?? 0);
+        $detectedTechniques = array_values(array_unique(array_merge(
+            $threatResult['techniques'] ?? [],
+            $gemini->techniques ?? [],
+            $secondaryAi ? ($secondaryAi->techniques ?? []) : []
+        )));
+
+        if (!($suricataResult['isWhitelist'] ?? false) && $threatScore >= 60) {
+            if ($threatScore >= 75) {
+                $finalCategory = 'terindikasi_judol';
+                $categoryLabel = 'Terindikasi Judi Online';
+                $alertClass = 'red';
+                $title = 'Waspada: Terindikasi Pola Eksploitasi / Penyusupan Tautan';
+                $reasoning = "Terdeteksi teknik manipulasi tautan siber (" . implode(', ', $detectedTechniques) . ") yang membahayakan keamanan finansial pengguna.";
+                $decisionSource = 'threat_analyzer';
+            } elseif ($finalCategory === 'normal' || $finalCategory === 'belum_ditemukan_indikasi') {
+                $finalCategory = 'mencurigakan';
+                $categoryLabel = 'Mencurigakan';
+                $alertClass = 'amber';
+                $title = 'Perlu Pemeriksaan Lanjutan';
+                $reasoning = "Terdeteksi anomali struktur tautan (" . implode(', ', $detectedTechniques) . "). Disarankan waspada.";
+                $decisionSource = 'threat_analyzer';
+            }
+        }
+
         // 4. Kalkulasi Skor Risiko Terstandar & Terdokumentasi (0 - 100)
+        $highestSuricataPriority = 3;
+        foreach ($alerts as $a) {
+            $p = (int)($a['priority'] ?? ($a['severity'] ?? 3));
+            if ($p < $highestSuricataPriority) {
+                $highestSuricataPriority = $p;
+            }
+        }
+
         $riskScore = $this->calculateConsistentRiskScore(
             $urlScore,
             $suricataMatched,
             $gemini,
-            $deepseek,
-            $finalCategory
+            $secondaryAi,
+            $finalCategory,
+            $threatScore,
+            $highestSuricataPriority
         );
 
-        // 5. Penentuan Tingkat Risiko (Rendah, Sedang, Tinggi, Kritis)
+        // 5. Penentuan Tingkat Risiko Berjenjang 4 Tingkat:
+        // - Rendah (0% - 25%): Hijau
+        // - Sedang (26% - 50%): Kuning / Amber
+        // - Tinggi / Perlu Pemeriksaan (51% - 84%): Oranye
+        // - Berat / Kritis (85% - 100%): Merah
         $riskLevel = match (true) {
-            $riskScore >= 86 => 'kritis',
-            $riskScore >= 61 => 'tinggi',
-            $riskScore >= 31 => 'sedang',
+            $riskScore >= 85 => 'berat',
+            $riskScore >= 51 => 'tinggi',
+            $riskScore >= 26 => 'sedang',
             default => 'rendah'
+        };
+
+        // Sinkronisasi kelas warna antarmuka pengguna
+        $alertClass = match ($riskLevel) {
+            'berat' => 'red',
+            'tinggi' => 'orange',
+            'sedang' => 'amber',
+            default => 'emerald'
         };
 
         return new RiskAssessmentDTO(
@@ -325,7 +412,8 @@ class RiskAssessmentService
             reasoning: $reasoning,
             allIndicators: $allIndicators,
             matrixTrace: $matrixTrace,
-            decisionSource: $decisionSource
+            decisionSource: $decisionSource,
+            techniques: $detectedTechniques
         );
     }
 
@@ -337,11 +425,13 @@ class RiskAssessmentService
         int $urlAnomalyScore,
         bool $suricataMatched,
         AiAnalysisResultDTO $gemini,
-        AiAnalysisResultDTO $deepseek,
-        string $finalCategory
+        ?AiAnalysisResultDTO $secondaryAi = null,
+        string $finalCategory = 'normal',
+        int $threatScore = 0,
+        int $highestSuricataPriority = 1
     ): int {
-        // Jika kategori akhir normal
-        if ($finalCategory === 'normal') {
+        // Jika kategori akhir normal / belum ditemukan indikasi dan tidak ada ancaman
+        if (in_array($finalCategory, ['normal', 'belum_ditemukan_indikasi'], true) && $threatScore < 50) {
             return min(25, (int)round($urlAnomalyScore * 0.2));
         }
 
@@ -352,20 +442,35 @@ class RiskAssessmentService
         $weights['url'] = 0.05;
         $scores['url'] = $urlAnomalyScore;
 
-        // Bobot 2: Suricata NIDS (35%)
-        $weights['suricata'] = 0.35;
-        $scores['suricata'] = $suricataMatched ? 95 : 0;
+        // Bobot 2: Suricata NIDS (30%)
+        // Prioritas 1 (Judol Eksplisit) -> 95; Prioritas 2 (TLD/Fast-flux) -> 50; Prioritas 3 (Afiliasi/Mitologi) -> 30
+        $weights['suricata'] = 0.30;
+        if ($suricataMatched) {
+            $scores['suricata'] = match ($highestSuricataPriority) {
+                1 => 95,
+                2 => 50,
+                default => 30
+            };
+        } else {
+            $scores['suricata'] = 0;
+        }
 
-        // Bobot 3: Gemini AI (30%)
+        // Bobot 3: UrlThreatAnalyzer (Defacement / Open Redirect / Typosquatting) (35%)
+        if ($threatScore > 0) {
+            $weights['threat'] = 0.35;
+            $scores['threat'] = $threatScore;
+        }
+
+        // Bobot 4: Gemini AI (30%)
         if ($gemini->isSuccess()) {
             $weights['gemini'] = 0.30;
             $scores['gemini'] = $gemini->riskScore;
         }
 
-        // Bobot 4: DeepSeek AI (30%)
-        if ($deepseek->isSuccess()) {
-            $weights['deepseek'] = 0.30;
-            $scores['deepseek'] = $deepseek->riskScore;
+        // Bobot 5: Model Tambahan (Opsional)
+        if ($secondaryAi && $secondaryAi->isSuccess()) {
+            $weights['secondary_ai'] = 0.10;
+            $scores['secondary_ai'] = $secondaryAi->riskScore;
         }
 
         // Normalisasi total bobot menjadi 1.0
@@ -382,7 +487,7 @@ class RiskAssessmentService
 
         // Penyesuaian khusus jika terindikasi kuat judol / investasi
         if (in_array($finalCategory, ['terindikasi_judol', 'terindikasi_investasi'], true)) {
-            $computed = max(70, $computed);
+            $computed = max(70, $computed, $threatScore);
         } elseif ($finalCategory === 'belum_dapat_disimpulkan') {
             // Rentang waspada seimbang
             $computed = max(40, min(65, (int)round($computed)));

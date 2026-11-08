@@ -1,12 +1,23 @@
+/**
+ * Aswaja CyberShield - Admin Guard & Session Security
+ * Mengamankan modul panel administrator dengan perlindungan:
+ * 1. Clean Admin Routing (bebas ekstensi .blade.php / .php)
+ * 2. Autentikasi Tab Aktif (SessionStorage)
+ * 3. Preservasi Sesi saat Reload (F5 / Refresh halaman TIDAK logout)
+ * 4. Session & Inactivity Timeout (5 menit tanpa aktivitas pengguna -> logout otomatis)
+ * 5. BFCache Protection & Activity Tracking (Mouse, Keyboard, Touch, Click, Scroll)
+ */
 (function () {
   'use strict';
 
   var AUTH_TOKEN_KEY = 'aswaja_admin_token';
   var AUTH_USER_KEY = 'aswaja_admin_user';
   var NAV_FLAG = 'aswaja_admin_navigating';
+  var LAST_ACTIVITY_KEY = 'aswaja_admin_last_activity';
+  var LOGOUT_REASON_KEY = 'aswaja_logout_reason';
+  var INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 Menit (300.000 ms)
 
   var initialPathname = window.location.pathname || '/admin';
-  var isVercel = window.location.hostname.indexOf('vercel.app') !== -1;
 
   function getBasePrefix(pathname) {
     var feIdx = pathname.indexOf('/frontend/');
@@ -42,19 +53,33 @@
     return toCleanAdminRoute(rawHref);
   }
 
-  function redirectToLogin() {
+  function clearAdminSession() {
     try {
       sessionStorage.removeItem(AUTH_TOKEN_KEY);
       sessionStorage.removeItem(AUTH_USER_KEY);
       sessionStorage.removeItem(NAV_FLAG);
       localStorage.removeItem(AUTH_TOKEN_KEY);
       localStorage.removeItem(AUTH_USER_KEY);
+      localStorage.removeItem(LAST_ACTIVITY_KEY);
     } catch (e) {}
+  }
+
+  function redirectToLogin() {
+    clearAdminSession();
     window.location.replace(toNavigableAdminRoute('login'));
   }
 
-  // Expose helper global untuk logout dari halaman admin mana pun
+  function handleSessionTimeout() {
+    clearAdminSession();
+    try {
+      localStorage.setItem(LOGOUT_REASON_KEY, 'timeout');
+    } catch (e) {}
+    window.location.replace(toNavigableAdminRoute('login') + '?reason=timeout');
+  }
+
+  // Expose helper global untuk logout dari modul admin mana pun
   window.adminLogoutRedirect = redirectToLogin;
+  window.adminSessionTimeout = handleSessionTimeout;
 
   // 1. Verifikasi token aktif pada sesi saat halaman mulai dimuat
   var activeToken = sessionStorage.getItem(AUTH_TOKEN_KEY);
@@ -63,7 +88,17 @@
     return;
   }
 
-  // 2. Bersihkan URL di address bar browser secara instan (hilangkan /frontend dan .blade.php)
+  // 2. Cek Inactivity Timeout (5 menit tanpa interaksi pengguna)
+  var now = Date.now();
+  var lastAct = parseInt(localStorage.getItem(LAST_ACTIVITY_KEY) || '0', 10);
+  if (lastAct > 0 && (now - lastAct > INACTIVITY_TIMEOUT_MS)) {
+    handleSessionTimeout();
+    return;
+  }
+  // Sesi valid saat dimuat / di-reload -> perbarui waktu aktivitas
+  localStorage.setItem(LAST_ACTIVITY_KEY, String(now));
+
+  // 3. Bersihkan URL di address bar browser secara instan (hilangkan /frontend dan .blade.php)
   try {
     var cleanCurrent = toCleanAdminRoute(initialPathname);
     if (cleanCurrent && cleanCurrent !== initialPathname) {
@@ -71,7 +106,7 @@
     }
   } catch (e) {}
 
-  // 3. Pastikan seluruh link sidebar admin valid di lokal maupun di Vercel
+  // 4. Pastikan seluruh link sidebar admin valid di lokal maupun di Vercel
   document.addEventListener('DOMContentLoaded', function () {
     if (window.AuthService) {
       window.AuthService.logout = redirectToLogin;
@@ -87,15 +122,53 @@
     });
   });
 
-  // 4. Proteksi BFCache (Back/Forward Cache peramban):
+  // 5. Proteksi BFCache (Back/Forward Cache peramban):
   window.addEventListener('pageshow', function () {
     var checkToken = sessionStorage.getItem(AUTH_TOKEN_KEY);
     if (!checkToken) {
       redirectToLogin();
+      return;
+    }
+    var currentCheck = Date.now();
+    var currentLast = parseInt(localStorage.getItem(LAST_ACTIVITY_KEY) || '0', 10);
+    if (currentLast > 0 && (currentCheck - currentLast > INACTIVITY_TIMEOUT_MS)) {
+      handleSessionTimeout();
     }
   });
 
-  // 5. Tangkap klik pada tautan internal modul admin
+  // 6. Pemantau Aktivitas Pengguna (Inactivity Timeout Monitor):
+  // Memantau gerakan kursor mouse, klik, ketukan kibor, sentuhan, dan scroll.
+  var lastActivityRecorded = Date.now();
+  function recordUserActivity() {
+    var currentTime = Date.now();
+    // Throttle pencatatan ke localStorage setiap 5 detik agar performa tetap ringan
+    if (currentTime - lastActivityRecorded < 5000) return;
+    lastActivityRecorded = currentTime;
+
+    // Cek apakah sudah melebihi 5 menit sebelum memperbarui
+    var stored = parseInt(localStorage.getItem(LAST_ACTIVITY_KEY) || '0', 10);
+    if (stored > 0 && (currentTime - stored > INACTIVITY_TIMEOUT_MS)) {
+      handleSessionTimeout();
+      return;
+    }
+    localStorage.setItem(LAST_ACTIVITY_KEY, String(currentTime));
+  }
+
+  ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(function (eventName) {
+    window.addEventListener(eventName, recordUserActivity, { passive: true });
+  });
+
+  // Background interval memeriksa ketidakaktifan setiap 5 detik secara proaktif
+  setInterval(function () {
+    var token = sessionStorage.getItem(AUTH_TOKEN_KEY);
+    if (!token) return;
+    var stored = parseInt(localStorage.getItem(LAST_ACTIVITY_KEY) || '0', 10);
+    if (stored > 0 && (Date.now() - stored > INACTIVITY_TIMEOUT_MS)) {
+      handleSessionTimeout();
+    }
+  }, 5000);
+
+  // 7. Tangkap klik pada tautan internal modul admin
   document.addEventListener('click', function (e) {
     var link = e.target.closest('a');
     if (!link) return;
@@ -103,13 +176,13 @@
     var href = link.getAttribute('href');
     if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
 
-    // Jika tautan menuju logout, login, atau keluar ke domain lain, biarkan sesi hangus
+    // Jika tautan menuju logout atau keluar ke domain lain
     if (href.indexOf('login') !== -1 || href.indexOf('logout') !== -1 || href.startsWith('http')) {
       sessionStorage.removeItem(NAV_FLAG);
       return;
     }
 
-    // Tandai bahwa ini adalah perpindahan menu internal admin yang sah
+    // Tandai perpindahan menu internal admin yang sah
     sessionStorage.setItem(NAV_FLAG, '1');
 
     // Tampilkan page loader perisai saat berpindah menu admin
@@ -143,25 +216,10 @@
     }
   });
 
-  // 6. Helper navigasi internal terprogram (misal pencarian global atau tombol aksi)
+  // 8. Helper navigasi internal terprogram (misal pencarian global atau tombol aksi)
   window.adminNavigate = function (url) {
     sessionStorage.setItem(NAV_FLAG, '1');
+    localStorage.setItem(LAST_ACTIVITY_KEY, String(Date.now()));
     window.location.href = toNavigableAdminRoute(url);
   };
-
-  // 7. Saat halaman ditinggalkan (pagehide / unload / reload):
-  window.addEventListener('pagehide', function () {
-    var isInternal = sessionStorage.getItem(NAV_FLAG) === '1';
-    if (!isInternal) {
-      try {
-        sessionStorage.removeItem(AUTH_TOKEN_KEY);
-        sessionStorage.removeItem(AUTH_USER_KEY);
-        sessionStorage.removeItem(NAV_FLAG);
-        localStorage.removeItem(AUTH_TOKEN_KEY);
-        localStorage.removeItem(AUTH_USER_KEY);
-      } catch (e) {}
-    } else {
-      sessionStorage.removeItem(NAV_FLAG);
-    }
-  });
 })();

@@ -52,6 +52,7 @@
     }
   </script>
   <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/ui-kit.css">
 </head>
 
 <body class="h-full bg-slate-50 font-sans text-slate-800 antialiased flex flex-row overflow-x-hidden">
@@ -73,22 +74,18 @@
   <div id="sidebar-backdrop"
     class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300"></div>
 
-  <!-- Sidebar Component (Kiri) -->
-  <aside id="sidebar"
-    class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-300 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto lg:z-auto border-r border-slate-800 flex-shrink-0">
+    <!-- Sidebar Component (Kiri: Hijau Gradasi) -->
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-[#064e3b] via-[#022c22] to-[#011a14] text-emerald-100 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen border-r border-emerald-900/40 shrink-0 shadow-2xl">
     <!-- Brand Header -->
-    <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800/80 bg-slate-950/40">
-      <a href="index.blade.php" class="flex items-center gap-3 group text-decoration-none">
-        <img src="../../logo-shield.png" alt="Aswaja CyberShield"
-          class="w-9 h-9 rounded-xl object-contain ring-1 ring-emerald-500/30 shadow-md">
+    <div class="h-16 flex items-center justify-between px-5 border-b border-emerald-800/40 bg-emerald-950/40">
+      <a href="/admin" class="flex items-center gap-3 group text-decoration-none">
+        <img src="../../logo-shield.png" alt="Aswaja CyberShield" class="w-9 h-9 rounded-xl object-contain ring-1 ring-emerald-400/40 shadow-md">
         <div class="min-w-0">
           <span class="font-display font-bold text-sm text-white tracking-tight block truncate">Aswaja CyberShield</span>
-          <span class="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider block">Admin Dashboard</span>
-      </div>
+          <span class="text-[10px] text-emerald-300 font-semibold uppercase tracking-wider block">Admin Dashboard</span>
+        </div>
       </a>
-      <button id="close-sidebar-btn" type="button"
-        class="lg:hidden text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
-        aria-label="Tutup sidebar">
+      <button id="close-sidebar-btn" type="button" class="lg:hidden text-emerald-200/80 hover:text-white p-1 rounded-lg hover:bg-emerald-800/40 transition-colors" aria-label="Tutup sidebar">
         <i class="bi bi-x-lg text-lg"></i>
       </button>
     </div>
@@ -96,73 +93,57 @@
     <!-- Navigation Menu Items -->
     <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-6" aria-label="Navigasi Utama Admin">
       <div>
-        <p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Menu Utama</p>
+        <p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-emerald-300/70 mb-2">Menu Utama</p>
         <div class="space-y-1">
           <!-- 1. Dashboard -->
-          <a href="index.blade.php"
-            class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-speedometer2 text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <a href="/admin" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-speedometer2 text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Dashboard</span>
           </a>
 
           <!-- 2. Artikel -->
-          <a href="artikel.blade.php"
-            class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i
-              class="bi bi-file-earmark-text text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <a href="/admin/artikel" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-file-earmark-text text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Artikel</span>
           </a>
 
-          <!-- 3. Riwayat Pelaporan (Active) -->
-          <a href="laporan.blade.php"
-            class="flex items-center justify-between px-3 py-2.5 text-sm font-semibold rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-950/30 transition-all">
+          <!-- 3. Riwayat Pelaporan -->
+          <a href="/admin/laporan" class="flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-xl bg-emerald-500 text-white shadow-lg shadow-emerald-950/50 transition-all group">
             <span class="flex items-center gap-3">
-              <i class="bi bi-shield-exclamation text-base text-white"></i>
+              <i class="bi bi-shield-exclamation text-base text-white transition-colors"></i>
               <span>Laporan</span>
             </span>
-            <span id="badge-sidebar-reports"
-              class="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+            <span id="badge-sidebar-reports" class="bg-rose-500/20 text-rose-300 text-xs px-2 py-0.5 rounded-full font-bold border border-rose-500/30">0</span>
           </a>
 
-          <!-- 4. Studi Kasus -->
-          <a href="studi-kasus.blade.php"
-            class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-journal-check text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <!-- 5. Studi Kasus -->
+          <a href="/admin/studi-kasus" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-journal-check text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Studi Kasus</span>
           </a>
 
-          <!-- 5. Integrasi Dual AI -->
-          <a href="integrasi-ai.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-cpu text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
-            <span>Integrasi Dual AI</span>
-          </a>
-
-          <!-- 6. Kelola Akun -->
-          <a href="akun.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-people text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <!-- 4. Kelola Akun -->
+          <a href="/admin/akun" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-people text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Kelola Akun</span>
           </a>
-
         </div>
       </div>
-
+    </nav>
 
     <!-- Sidebar Bottom / User Bar -->
-    <div class="p-3 border-t border-slate-800/80 bg-slate-950/40">
-      <div class="flex items-center justify-between px-2.5 py-2 rounded-xl bg-slate-800/60 border border-slate-700/50">
+    <div class="p-3 mt-auto shrink-0 border-t border-emerald-800/40 bg-emerald-950/50">
+      <div class="flex items-center justify-between px-2.5 py-2 rounded-xl bg-emerald-900/40 border border-emerald-700/40">
         <div class="flex items-center gap-2.5 min-w-0">
-          <div id="sidebar-avatar"
-            class="w-8 h-8 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
+          <div id="sidebar-avatar" class="w-8 h-8 rounded-lg bg-emerald-500 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
             A
           </div>
           <div class="min-w-0 flex-1">
             <p id="sidebar-user-name" class="text-xs font-semibold text-white truncate">Admin Utama</p>
-            <p id="sidebar-user-role" class="text-[10px] text-emerald-400 truncate font-mono">Super Admin</p>
+            <p id="sidebar-user-role" class="text-[10px] text-emerald-300 truncate font-mono">Super Admin</p>
           </div>
         </div>
-        <button id="sidebar-btn-logout" type="button"
-          class="text-slate-400 hover:text-rose-400 p-1.5 rounded-lg hover:bg-slate-700/60 transition-colors"
-          title="Keluar">
+        <button id="sidebar-btn-logout" type="button" class="text-emerald-200/80 hover:text-rose-400 p-1.5 rounded-lg hover:bg-emerald-800/50 transition-colors" title="Keluar">
           <i class="bi bi-box-arrow-right"></i>
         </button>
       </div>
@@ -200,7 +181,7 @@
         <div
           class="hidden xl:flex items-center gap-1.5 text-xs text-slate-600 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 font-mono">
           <i class="bi bi-clock text-slate-400"></i>
-          <span id="live-clock">--:--:-- WIB</span>
+          <span id="live-clock"><?php date_default_timezone_set('Asia/Makassar'); echo date('H:i:s'); ?> WITA</span>
         </div>
 
         <button type="button" id="btn-refresh-reports"
@@ -251,7 +232,7 @@
               <p id="dropdown-user-email" class="text-xs font-semibold text-slate-800 truncate">admin@aswajacyber.id</p>
             </div>
             <div class="py-1">
-              <a href="akun.blade.php"
+              <a href="/admin/akun"
                 class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">
                 <i class="bi bi-person-gear text-slate-400"></i>
                 <span>Kelola Akun &amp; Profil</span>
@@ -285,11 +266,11 @@
           <div id="role-badge-container">
             <!-- Populated by JS -->
           </div>
-          <a href="../lapor.blade.php" target="_blank"
-            class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl shadow-sm shadow-emerald-600/20 transition-all">
-            <i class="bi bi-inbox"></i>
+          <button type="button" id="btn-add-report" onclick="openAddReportModal()"
+            class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-xl shadow-sm shadow-emerald-600/20 transition-all cursor-pointer">
+            <i class="bi bi-plus-circle"></i>
             <span>Aduan Baru</span>
-          </a>
+          </button>
         </div>
       </div>
 
@@ -391,10 +372,8 @@
 
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200/90 py-4 px-6 text-center text-xs text-slate-500 mt-auto">
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto">
-        <p>&copy; 2026 <strong class="font-semibold text-slate-700">Aswaja CyberShield</strong> &bull; Pengawasan Siber
-          &amp; Pengawasan Konten</p>
-        <p class="text-slate-400">Modul Verifikasi Laporan &bull; Komdigi / AduanKonten Ready</p>
+      <div class="flex items-center justify-center gap-2 max-w-7xl mx-auto">
+        <p>&copy; 2026 <strong class="font-semibold text-slate-700">Aswaja CyberShield</strong> &bull; Pengawasan Siber &amp; Pengawasan Konten</p>
       </div>
     </footer>
   </div>
@@ -485,9 +464,10 @@
               <label for="modal-admin-name" class="block font-semibold text-slate-700 mb-1">
                 Admin Penangani <span class="text-rose-500">*</span>
               </label>
-              <input type="text" name="assigned_admin" id="modal-admin-name" required
-                placeholder="Nama analis penangan..."
-                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-800">
+              <select name="assigned_admin" id="modal-admin-name" required
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-800 font-semibold cursor-pointer">
+                <option value="Belum Ditugaskan">Belum Ditugaskan</option>
+              </select>
             </div>
           </div>
 
@@ -518,8 +498,131 @@
     </div>
   </div>
 
+  <!-- Modal Tambah Aduan Manual (Admin) -->
+  <div id="modal-add-report" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="modal-add-title">
+    <div class="min-h-full flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+              <i class="bi bi-inbox-fill text-lg"></i>
+            </div>
+            <div>
+              <h4 id="modal-add-title" class="font-display font-bold text-base text-slate-900">Catat Aduan Siber Baru</h4>
+              <p class="text-xs text-slate-500">Input manual laporan dari kanal WhatsApp, hotline, atau verifikasi lapangan</p>
+            </div>
+          </div>
+          <button type="button" onclick="closeAddReportModal()" class="text-slate-400 hover:text-slate-700 p-1 rounded-lg">
+            <i class="bi bi-x-lg text-lg"></i>
+          </button>
+        </div>
+
+        <form id="form-add-report" onsubmit="handleCreateReportSubmit(event)" class="space-y-4 text-xs">
+          <!-- 1. URL Tautan Mencurigakan (Wajib) -->
+          <div>
+            <label for="add-report-url" class="block font-semibold text-slate-700 mb-1">
+              URL Tautan Mencurigakan <span class="text-rose-500">*</span>
+            </label>
+            <input type="url" id="add-report-url" required maxlength="500" placeholder="https://domain-mencurigakan.xyz/deposit"
+              class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-800 font-mono">
+            <p class="text-[10px] text-slate-400 mt-1">Hanya skema http:// atau https://, maksimal 500 karakter.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <!-- 2. Kategori Insiden (Wajib) -->
+            <div>
+              <label for="add-report-category" class="block font-semibold text-slate-700 mb-1">
+                Kategori Insiden <span class="text-rose-500">*</span>
+              </label>
+              <select id="add-report-category" required
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-800 font-semibold">
+                <option value="">-- Pilih Kategori --</option>
+                <option value="Investasi Berkedok Trading / Crypto">Investasi Berkedok Trading / Crypto</option>
+                <option value="Promosi Judi Online / Slot">Promosi Judi Online / Slot</option>
+                <option value="Tautan Phishing / Malware APK">Tautan Phishing / Malware APK</option>
+                <option value="Iklan Cuan Kilat Bersyarat Deposit">Iklan Cuan Kilat Bersyarat Deposit</option>
+                <option value="Tautan Undangan Grup Arisan Bodong">Tautan Undangan Grup Arisan Bodong</option>
+                <option value="Pencatutan Tokoh / Hoaks Donasi">Pencatutan Tokoh / Hoaks Donasi</option>
+              </select>
+            </div>
+
+            <!-- 3. Status Awal -->
+            <div>
+              <label for="add-report-status" class="block font-semibold text-slate-700 mb-1">
+                Status Awal <span class="text-rose-500">*</span>
+              </label>
+              <select id="add-report-status" required
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-800 font-semibold">
+                <option value="Pending" selected>Pending (Antrean Awal)</option>
+                <option value="Diproses">Diproses (Investigasi Langsung)</option>
+                <option value="Selesai">Selesai (Sudah Divalidasi)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <!-- 4. Nama Pelapor (Opsional) -->
+            <div>
+              <label for="add-report-reporter" class="block font-semibold text-slate-700 mb-1">
+                Nama Pelapor <span class="text-slate-400 font-normal">(Opsional)</span>
+              </label>
+              <input type="text" id="add-report-reporter" placeholder="Contoh: Warga Samarinda / Anonim"
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-800">
+            </div>
+
+            <!-- 5. Sumber Laporan (Manual Admin) -->
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Sumber Pencatatan</label>
+              <div class="px-3 py-2 bg-slate-100 rounded-xl text-slate-600 font-medium flex items-center gap-1.5 border border-slate-200/80">
+                <i class="bi bi-person-badge text-emerald-600"></i>
+                <span>Manual Admin (Internal CSIRT)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. Kronologi Kejadian (Opsional) -->
+          <div>
+            <label for="add-report-desc" class="block font-semibold text-slate-700 mb-1">
+              Kronologi Kejadian / Modus Operandi <span class="text-slate-400 font-normal">(Opsional)</span>
+            </label>
+            <textarea id="add-report-desc" rows="3" placeholder="Jelaskan ringkas bagaimana modus penawaran atau indikasi judi online ditemukan..."
+              class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-800 leading-relaxed"></textarea>
+          </div>
+
+          <!-- 7. Unggah Bukti (Opsional, JPG/PNG/PDF maks 5 MB) -->
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">
+              Bukti Tangkapan Layar / Dokumen <span class="text-slate-400 font-normal">(Opsional, Maks. 5 MB)</span>
+            </label>
+            <input type="file" id="add-report-file" accept=".jpg,.jpeg,.png,.pdf" class="hidden">
+            <div id="add-report-dropzone" onclick="document.getElementById('add-report-file').click()"
+              class="border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-xl p-3.5 text-center cursor-pointer transition-colors bg-slate-50/50 hover:bg-emerald-50/20">
+              <i class="bi bi-cloud-arrow-up text-xl text-slate-400 mb-1 block"></i>
+              <p class="text-[11px] text-slate-600 font-medium" id="add-report-file-label">Klik untuk pilih berkas (JPG, PNG, atau PDF)</p>
+              <p class="text-[10px] text-slate-400">Ukuran maksimal berkas 5 MB</p>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-2.5">
+            <button type="button" onclick="closeAddReportModal()"
+              class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition-colors">
+              Batal
+            </button>
+            <button type="submit" id="btn-submit-add-report"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow-sm transition-all active:scale-[0.98] inline-flex items-center gap-1.5">
+              <i class="bi bi-check2-circle"></i>
+              <span>Simpan Aduan</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- API Layer & Scripts -->
   <script src="../../js/api.js"></script>
+  <script src="../../js/ui-kit.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // 1. Auth Guard
@@ -543,7 +646,9 @@
       document.getElementById('dropdown-user-email').textContent = currentUser.email || currentUser.username || 'admin@aswajacyber.id';
 
       function handleLogout() {
-        if (confirm('Keluar dari sesi administrator Aswaja CyberShield?')) {
+        if (window.AuthService && typeof window.AuthService.confirmLogout === 'function') {
+          window.AuthService.confirmLogout();
+        } else if (confirm('Keluar dari sesi administrator Aswaja CyberShield?')) {
           window.AuthService.logout();
         }
       }
@@ -553,9 +658,9 @@
       // Live Clock
       function updateClock() {
         const now = new Date();
-        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Jakarta' });
+        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Makassar' });
         const el = document.getElementById('live-clock');
-        if (el) el.textContent = `${timeStr} WIB`;
+        if (el) el.textContent = `${timeStr} WITA`;
       }
       updateClock();
       setInterval(updateClock, 1000);
@@ -615,21 +720,117 @@
         document.getElementById('search-report').value = urlQuery;
       }
 
+      function showTableSkeleton() {
+        const tbody = document.getElementById('reports-table-body');
+        if (!tbody) return;
+        tbody.innerHTML = [1, 2, 3, 4, 5].map(() => `
+          <tr class="animate-pulse">
+            <td class="px-5 py-4 whitespace-nowrap">
+              <div class="h-3.5 w-16 bg-slate-200 rounded mb-1.5"></div>
+              <div class="h-2.5 w-32 bg-slate-100 rounded"></div>
+            </td>
+            <td class="px-4 py-4 whitespace-nowrap">
+              <div class="h-3.5 w-24 bg-slate-200 rounded"></div>
+            </td>
+            <td class="px-4 py-4">
+              <div class="h-3.5 w-28 bg-slate-200 rounded mb-1.5"></div>
+              <div class="h-2.5 w-40 bg-slate-100 rounded"></div>
+            </td>
+            <td class="px-4 py-4 whitespace-nowrap">
+              <div class="h-3.5 w-20 bg-slate-200 rounded"></div>
+            </td>
+            <td class="px-4 py-4 whitespace-nowrap">
+              <div class="h-5 w-16 bg-slate-200 rounded-full"></div>
+            </td>
+            <td class="px-5 py-4 whitespace-nowrap text-right">
+              <div class="h-7 w-24 bg-slate-200 rounded-lg inline-block"></div>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      let adminUsersList = [];
+
+      async function loadAdminsDropdown() {
+        try {
+          if (window.ApiService && typeof window.ApiService.getAdmins === 'function') {
+            const res = await window.ApiService.getAdmins();
+            adminUsersList = Array.isArray(res) ? res : (res?.data || []);
+          }
+        } catch (err) {
+          console.warn('Gagal memuat daftar admin:', err);
+        }
+
+        if (!adminUsersList || adminUsersList.length === 0) {
+          adminUsersList = [
+            { name: 'Admin Utama', role: 'Super Admin' },
+            { name: 'Muhammad Ali Reza', role: 'Admin Basic' },
+            { name: 'Deby Cantika Putri', role: 'Admin Basic' },
+            { name: 'Muhammad Fauzan Dahlan', role: 'Admin Basic' },
+            { name: 'panitia mit week', role: 'Admin Basic' }
+          ];
+        }
+
+        renderAdminOptions();
+      }
+
+      function renderAdminOptions(selectedName = '') {
+        const selectEl = document.getElementById('modal-admin-name');
+        if (!selectEl) return;
+
+        let optionsHtml = '<option value="Belum Ditugaskan">Belum Ditugaskan</option>';
+        let isMatched = (!selectedName || selectedName === 'Belum Ditugaskan');
+
+        adminUsersList.forEach(admin => {
+          const name = admin.name || admin.username || '';
+          if (!name) return;
+          const roleLabel = admin.role ? ` (${admin.role})` : '';
+          const isSelected = selectedName && (selectedName.toLowerCase() === name.toLowerCase());
+          if (isSelected) isMatched = true;
+          optionsHtml += `<option value="${escapeHtml(name)}" ${isSelected ? 'selected' : ''}>${escapeHtml(name)}${escapeHtml(roleLabel)}</option>`;
+        });
+
+        if (selectedName && selectedName !== 'Belum Ditugaskan' && !isMatched) {
+          optionsHtml += `<option value="${escapeHtml(selectedName)}" selected>${escapeHtml(selectedName)} (Tersimpan)</option>`;
+        }
+
+        selectEl.innerHTML = optionsHtml;
+        selectEl.value = selectedName || 'Belum Ditugaskan';
+      }
+
       async function loadReports() {
+        showTableSkeleton();
         try {
           const res = await window.ApiService.getReports();
           reportsList = Array.isArray(res) ? res : (res?.data || []);
 
-          const pendingCount = reportsList.filter(r => r.status === 'Pending' || r.status === 'Masuk').length;
-          document.getElementById('badge-sidebar-reports').textContent = pendingCount;
+          if (window.ApiService && typeof window.ApiService.updateSidebarReportBadges === 'function') {
+            await window.ApiService.updateSidebarReportBadges();
+          } else {
+            const pendingCount = reportsList.filter(r => r.status === 'Pending' || r.status === 'Masuk').length;
+            document.querySelectorAll('#badge-sidebar-reports, .badge-sidebar-reports').forEach(el => el.textContent = pendingCount);
+          }
 
           renderNotificationList(reportsList.slice(0, 4));
           renderReportsTable();
         } catch (err) {
           console.error('Error load reports:', err);
           document.getElementById('reports-table-body').innerHTML = `
-            <tr><td colspan="6" class="text-center py-8 text-rose-500 text-xs">Gagal memuat data laporan: ${err.message}</td></tr>
+            <tr>
+              <td colspan="6" class="text-center py-10 px-4">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 mb-3 border border-rose-200">
+                  <i class="bi bi-exclamation-triangle text-xl"></i>
+                </div>
+                <p class="text-sm font-bold text-slate-800">Gagal Memuat Data Laporan</p>
+                <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1 mb-3">${escapeHtml(err.message || 'Terjadi gangguan jaringan saat menghubungi server.')}</p>
+                <button type="button" onclick="loadReports()" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all active:scale-95">
+                  <i class="bi bi-arrow-clockwise"></i>
+                  <span>Coba Lagi</span>
+                </button>
+              </td>
+            </tr>
           `;
+          document.getElementById('reports-counter-info').textContent = 'Gagal memuat laporan';
         }
       }
 
@@ -649,6 +850,12 @@
         renderReportsTable();
       };
 
+      window.resetFilters = function () {
+        document.getElementById('search-report').value = '';
+        document.getElementById('filter-category').value = '';
+        setStatusFilter('');
+      };
+
       window.applyFilter = function () {
         currentPage = 1;
         renderReportsTable();
@@ -656,11 +863,7 @@
 
       document.getElementById('search-report')?.addEventListener('input', applyFilter);
       document.getElementById('filter-category')?.addEventListener('change', applyFilter);
-      document.getElementById('btn-reset-filter')?.addEventListener('click', () => {
-        document.getElementById('search-report').value = '';
-        document.getElementById('filter-category').value = '';
-        setStatusFilter('');
-      });
+      document.getElementById('btn-reset-filter')?.addEventListener('click', resetFilters);
 
       function getFilteredReports() {
         const q = (document.getElementById('search-report').value || '').toLowerCase().trim();
@@ -731,11 +934,11 @@
           const truncUrl = safeUrl.length > 36 ? safeUrl.substring(0, 36) + '...' : safeUrl;
 
           return `
-            <tr class="hover:bg-slate-50/75 transition-colors">
+            <tr class="hover:bg-slate-50/75 transition-colors cursor-pointer group" onclick="openActionModal('${r.id}')" title="Klik untuk membuka detail aduan #${escapeHtml(r.id)}">
               <!-- 1. ID Laporan -->
               <td class="px-5 py-4 whitespace-nowrap">
-                <div class="font-mono font-bold text-xs text-slate-900">${escapeHtml(r.id)}</div>
-                <div class="font-mono text-[10px] text-rose-600 truncate max-w-[200px]" title="${safeUrl}">
+                <div class="font-mono font-bold text-xs text-slate-900 group-hover:text-emerald-700 transition-colors">${escapeHtml(r.id)}</div>
+                <div class="font-mono text-[10px] text-rose-600 truncate max-w-[200px] group-hover:underline" title="${safeUrl}">
                   ${truncUrl}
                 </div>
               </td>
@@ -767,14 +970,14 @@
               </td>
 
               <!-- 6. Aksi (Detail / Ubah Status & Hapus) -->
-              <td class="px-5 py-4 whitespace-nowrap text-right">
+              <td class="px-5 py-4 whitespace-nowrap text-right" onclick="event.stopPropagation()">
                 <div class="inline-flex items-center gap-1.5">
-                  <button type="button" onclick="openActionModal('${r.id}')" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition-colors">
+                  <button type="button" onclick="event.stopPropagation(); openActionModal('${r.id}')" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition-colors">
                     <i class="bi bi-pencil-square"></i>
                     <span>Detail / Ubah</span>
                   </button>
                   ${isSuper ? `
-                    <button type="button" onclick="handleDeleteReport('${r.id}')" class="p-1 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 transition-colors" title="Hapus Laporan">
+                    <button type="button" onclick="event.stopPropagation(); handleDeleteReport('${r.id}')" class="p-1 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 transition-colors" title="Hapus Laporan">
                       <i class="bi bi-trash text-sm"></i>
                     </button>
                   ` : ''}
@@ -844,7 +1047,8 @@
 
         // Form fields
         document.getElementById('modal-status').value = isPending ? 'Pending' : (isProcess ? 'Diproses' : 'Selesai');
-        document.getElementById('modal-admin-name').value = item.handledBy || item.assigned_admin || currentUser.name || 'Admin Analis';
+        const assignedAdmin = item.handledBy || item.assigned_admin || (isPending ? 'Belum Ditugaskan' : (currentUser.name || 'Admin Analis'));
+        renderAdminOptions(assignedAdmin);
         document.getElementById('modal-notes').value = item.verificationNotes || item.verification_note || '';
 
         document.getElementById('modal-report-action').classList.remove('hidden');
@@ -894,32 +1098,219 @@
         }
       };
 
-      // Delete Report Handler (Super Admin Only)
-      window.handleDeleteReport = async function (id) {
-        if (!isSuper) {
-          alert('Akses Ditolak: Hanya Super Admin yang berwenang menghapus data aduan.');
+      const UI = window.AswajaUI;
+
+      if (UI) {
+        UI.enhanceModal(document.getElementById('modal-report-action'), {
+          labelledBy: 'modal-action-title',
+          initialFocus: '#modal-status',
+          onRequestClose: () => closeActionModal()
+        });
+        UI.enhanceModal(document.getElementById('modal-add-report'), {
+          labelledBy: 'modal-add-title',
+          initialFocus: '#add-report-url',
+          onRequestClose: () => closeAddReportModal()
+        });
+      }
+
+      // --- Modul Tambah Aduan Baru (Manual Admin) ---
+      let selectedAddFile = null;
+
+      window.openAddReportModal = function () {
+        const form = document.getElementById('form-add-report');
+        if (form) form.reset();
+        selectedAddFile = null;
+        const fileLbl = document.getElementById('add-report-file-label');
+        if (fileLbl) fileLbl.textContent = 'Klik untuk pilih berkas (JPG, PNG, atau PDF)';
+        const modal = document.getElementById('modal-add-report');
+        if (modal) modal.classList.remove('hidden');
+        setTimeout(() => document.getElementById('add-report-url')?.focus(), 80);
+      };
+
+      window.closeAddReportModal = function () {
+        const modal = document.getElementById('modal-add-report');
+        if (modal) modal.classList.add('hidden');
+      };
+
+      document.getElementById('add-report-file')?.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (!validTypes.includes(file.type) && !['jpg', 'jpeg', 'png', 'pdf'].includes(ext)) {
+          if (UI && typeof UI.toast === 'function') {
+            UI.toast('Format berkas tidak didukung. Harap unggah JPG, PNG, atau PDF.', { type: 'error' });
+          } else {
+            alert('Format berkas tidak didukung. Harap unggah JPG, PNG, atau PDF.');
+          }
+          e.target.value = '';
+          return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+          if (UI && typeof UI.toast === 'function') {
+            UI.toast('Ukuran berkas melebihi batas 5 MB.', { type: 'error' });
+          } else {
+            alert('Ukuran berkas melebihi batas 5 MB.');
+          }
+          e.target.value = '';
+          return;
+        }
+        selectedAddFile = file;
+        const fileLbl = document.getElementById('add-report-file-label');
+        if (fileLbl) fileLbl.textContent = `Berkas dipilih: ${file.name} (${Math.round(file.size / 1024)} KB)`;
+      });
+
+      window.handleCreateReportSubmit = async function (e) {
+        e.preventDefault();
+        const urlInput = document.getElementById('add-report-url');
+        const catInput = document.getElementById('add-report-category');
+        const statusInput = document.getElementById('add-report-status');
+        const reporterInput = document.getElementById('add-report-reporter');
+        const descInput = document.getElementById('add-report-desc');
+
+        const rawUrl = urlInput.value.trim();
+        const category = catInput.value.trim();
+        const status = statusInput.value.trim();
+        const reporter = reporterInput.value.trim() || 'Hamba Allah';
+        const description = descInput.value.trim();
+
+        // 1. Validasi Input
+        if (!rawUrl) {
+          UI && UI.toast ? UI.toast('URL tautan wajib diisi.', { type: 'error' }) : alert('URL tautan wajib diisi.');
+          urlInput.focus();
+          return;
+        }
+        if (!/^https?:\/\//i.test(rawUrl)) {
+          UI && UI.toast ? UI.toast('URL harus diawali dengan http:// atau https://', { type: 'error' }) : alert('URL harus diawali dengan http:// atau https://');
+          urlInput.focus();
+          return;
+        }
+        if (rawUrl.length > 500) {
+          UI && UI.toast ? UI.toast('Panjang URL maksimal 500 karakter.', { type: 'error' }) : alert('Panjang URL maksimal 500 karakter.');
+          urlInput.focus();
+          return;
+        }
+        if (!category) {
+          UI && UI.toast ? UI.toast('Pilih kategori insiden terlebih dahulu.', { type: 'error' }) : alert('Pilih kategori insiden terlebih dahulu.');
+          catInput.focus();
           return;
         }
 
-        if (confirm(`Hapus tiket laporan #${id} secara permanen? Tindakan ini tidak dapat dibatalkan.`)) {
+        // 2. Alur Simpan & Konfirmasi Pop Up
+        const executeSave = async () => {
+          const btn = document.getElementById('btn-submit-add-report');
+          const originalText = btn.innerHTML;
+          btn.disabled = true;
+          btn.innerHTML = `<span class="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span><span>Menyimpan...</span>`;
+
           try {
-            await window.ApiService.deleteReport(id);
+            const payload = {
+              url: rawUrl,
+              category,
+              status,
+              reporter,
+              description,
+              evidence: selectedAddFile,
+              source: 'Manual Admin',
+              handledBy: currentUser.name || 'Admin Utama'
+            };
+
+            const result = await window.ApiService.createAdminReport(payload);
+            const ticketId = result.ticketId || result.id || (result.data && result.data.id) || 'LPR089';
+
+            closeAddReportModal();
+
+            if (UI && typeof UI.toast === 'function') {
+              UI.toast(`Aduan #${ticketId} berhasil dicatat dan masuk ke sistem!`, { type: 'success' });
+            }
+
+            // Langsung perbarui tabel, badge sidebar, dan notifikasi tanpa reload
             await loadReports();
+            if (window.ApiService && typeof window.ApiService.updateSidebarReportBadges === 'function') {
+              await window.ApiService.updateSidebarReportBadges();
+            }
           } catch (err) {
-            alert('Gagal menghapus laporan: ' + err.message);
+            console.error('Gagal mencatat aduan:', err);
+            if (UI && typeof UI.confirm === 'function') {
+              await UI.confirm({
+                title: 'Gagal Menyimpan Aduan',
+                message: `Kendala: ${err.message}`,
+                confirmText: 'Coba Lagi',
+                cancelText: 'Tutup',
+                type: 'danger',
+                onConfirm: async () => {
+                  await handleCreateReportSubmit(e);
+                }
+              });
+            } else {
+              alert('Gagal mencatat aduan: ' + err.message);
+            }
+          } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+          }
+        };
+
+        if (UI && typeof UI.confirm === 'function') {
+          const confirmed = await UI.confirm({
+            title: 'Simpan Aduan Siber Ini?',
+            message: `Pastikan rincian aduan berikut sudah tepat:\n\n• URL: ${rawUrl}\n• Kategori: ${category}\n• Pelapor: ${reporter}\n• Status Awal: ${status}`,
+            confirmText: 'Ya, Simpan Aduan',
+            cancelText: 'Periksa Kembali',
+            type: 'primary'
+          });
+          if (confirmed && confirmed.status === 'confirmed') {
+            await executeSave();
+          }
+        } else {
+          if (confirm('Simpan aduan siber ini?')) {
+            await executeSave();
           }
         }
       };
 
+      // Universal Reusable Delete Modal for Reports
+      window.handleDeleteReport = async function (id) {
+        if (!isSuper) {
+          UI.notice({
+            icon: 'warning',
+            title: 'Akses Ditolak',
+            message: 'Hanya Super Admin yang berwenang menghapus data aduan.'
+          });
+          return;
+        }
+
+        const report = reportsList.find(r => String(r.id) === String(id));
+        const ticketLabel = `Tiket #${id} (${report?.category || 'Laporan Pengguna'})`;
+
+        await UI.confirmDelete({
+          type: 'laporan aduan',
+          name: ticketLabel,
+          successMessage: `Laporan #${id} berhasil dihapus.`,
+          onDelete: async () => {
+            await window.ApiService.deleteReport(id);
+            const row = document.querySelector(`button[onclick*="handleDeleteReport('${id}')"]`)?.closest('tr');
+            if (row) {
+              row.style.transition = 'opacity 250ms ease, transform 250ms ease';
+              row.style.opacity = '0';
+              row.style.transform = 'translateY(-6px)';
+              await new Promise(r => setTimeout(r, 260));
+            }
+            await loadReports();
+          }
+        });
+      };
+
       function renderNotificationList(reports) {
         const container = document.getElementById('notif-list-container');
+        if (!container) return;
         if (!reports || reports.length === 0) {
           container.innerHTML = '<div class="p-4 text-center text-xs text-slate-400">Tidak ada notifikasi baru.</div>';
           return;
         }
 
         container.innerHTML = reports.map(r => `
-          <a href="laporan.blade.php" class="block p-3 hover:bg-slate-50 transition-colors">
+          <a href="/admin/laporan" class="block p-3 hover:bg-slate-50 transition-colors">
             <div class="flex items-center justify-between mb-1">
               <span class="font-mono font-bold text-[11px] text-slate-800">${escapeHtml(r.id)}</span>
               <span class="text-[10px] text-slate-400">${escapeHtml(r.date || 'Hari ini')}</span>
@@ -941,11 +1332,16 @@
         return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
       }
 
-      document.getElementById('btn-refresh-reports')?.addEventListener('click', loadReports);
+      document.getElementById('btn-refresh-reports')?.addEventListener('click', () => {
+        loadReports();
+        loadAdminsDropdown();
+      });
 
       loadReports();
+      loadAdminsDropdown();
     });
   </script>
 </body>
 
 </html>
+

@@ -1,17 +1,3 @@
-"""
-=============================================================================
-SURICATA IDS ENGINE EMULATOR
-=============================================================================
-Implementasi Signature-Based IDS untuk mendeteksi (investasi menyesatkan),
-(tautan judol), (maysir modern), (investasi bodong).
-
-Kompatibel dengan format rule resmi Suricata IDS (Snort/Suricata Specification).
-Dapat digunakan sebagai:
-1. Engine deteksi layer pertama sebelum AI Analysis (Gemini/DeepSeek).
-2. CLI analyzer mandiri dengan format output JSON.
-=============================================================================
-"""
-
 import sys
 import os
 import re

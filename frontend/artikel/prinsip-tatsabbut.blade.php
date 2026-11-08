@@ -42,6 +42,7 @@
     }
   </script>
   <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/ui-kit.css">
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
 
@@ -133,11 +134,8 @@
         <span class="text-slate-800 font-semibold truncate">Prinsip Tatsabbut (T3)</span>
       </nav>
 
-      <!-- 2-Column Responsive Layout (Penuh & Seimbang) -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-
-        <!-- Kolom Kiri: Naskah Utama Artikel (lg:col-span-8) -->
-        <div class="lg:col-span-8 bg-white p-6 sm:p-10 rounded-3xl border border-slate-200/90 shadow-sm">
+      <!-- Naskah Utama Artikel -->
+      <div class="max-w-4xl mx-auto bg-white dark:bg-slate-900/90 p-6 sm:p-10 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm">
           
           <!-- Article Header -->
           <header class="mb-8 pb-8 border-b border-slate-200">
@@ -159,7 +157,7 @@
                   <p class="font-serif italic text-base sm:text-lg leading-relaxed mb-2">
                     "Sanad (rantai pembawa kabar) itu adalah bagian dari agama. Kalaulah bukan karena sanad, niscaya setiap orang akan mengatakan apa saja yang dia kehendaki."
                   </p>
-                  <span class="text-xs font-bold text-emerald-800 tracking-wider block uppercase">— Abdullah bin al-Mubarak (Ulama Salaf)</span>
+                  <span class="text-xs font-bold text-emerald-800 tracking-wider block uppercase">â€” Abdullah bin al-Mubarak (Ulama Salaf)</span>
                 </div>
               </div>
             </div>
@@ -227,109 +225,39 @@
             </a>
           </div>
 
-        </div>
-
-        <!-- Kolom Kanan: Sidebar Interaktif & Widget Pendukung (lg:col-span-4) -->
-        <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-28">
-
-          <!-- Widget 1: Rangkaian Metodologi 4T -->
-          <div class="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm space-y-4">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 class="font-display font-bold text-base text-slate-900 flex items-center gap-2">
-                <span class="material-symbols-outlined text-emerald-600 text-xl">route</span>
-                Alur Prinsip 4T
-              </h3>
-              <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Metodologi</span>
-            </div>
-            
-            <nav class="space-y-2 text-xs">
-              <a href="prinsip-tawaqquf.blade.php" class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 border border-slate-100 font-medium text-slate-700 hover:text-emerald-700 transition-all">
-                <div class="flex items-center gap-2.5">
-                  <span class="w-6 h-6 rounded-lg bg-slate-100 text-slate-600 font-bold flex items-center justify-center text-[11px]">T1</span>
-                  <span>Tawaqquf (Tahan Diri)</span>
-                </div>
-                <span class="material-symbols-outlined text-slate-400 text-[18px]">chevron_right</span>
-              </a>
-
-              <a href="prinsip-tastabbus.blade.php" class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 border border-slate-100 font-medium text-slate-700 hover:text-emerald-700 transition-all">
-                <div class="flex items-center gap-2.5">
-                  <span class="w-6 h-6 rounded-lg bg-slate-100 text-slate-600 font-bold flex items-center justify-center text-[11px]">T2</span>
-                  <span>Tastabbus (Teliti Isi)</span>
-                </div>
-                <span class="material-symbols-outlined text-slate-400 text-[18px]">chevron_right</span>
-              </a>
-
-              <!-- T3 (Active) -->
-              <a href="prinsip-tatsabbut.blade.php" class="flex items-center justify-between p-3 rounded-xl bg-emerald-50 border border-emerald-200 font-semibold text-emerald-900 transition-all">
-                <div class="flex items-center gap-2.5">
-                  <span class="w-6 h-6 rounded-lg bg-emerald-600 text-white font-bold flex items-center justify-center text-[11px]">T3</span>
-                  <span>Tatsabbut (Cek Sumber)</span>
-                </div>
-                <span class="material-symbols-outlined text-emerald-700 text-[18px]">check_circle</span>
-              </a>
-
-              <a href="prinsip-taaqqul.blade.php" class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 border border-slate-100 font-medium text-slate-700 hover:text-emerald-700 transition-all">
-                <div class="flex items-center gap-2.5">
-                  <span class="w-6 h-6 rounded-lg bg-slate-100 text-slate-600 font-bold flex items-center justify-center text-[11px]">T4</span>
-                  <span>Ta'aqqul (Timbang Dampak)</span>
-                </div>
-                <span class="material-symbols-outlined text-slate-400 text-[18px]">chevron_right</span>
-              </a>
-            </nav>
-          </div>
-
-          <!-- Widget 2: Uji Langsung Pesan di AI Tabayyun -->
-          <div class="card-hover-effect cursor-pointer p-6 rounded-3xl bg-gradient-to-br from-emerald-600 to-emerald-800 text-white shadow-md shadow-emerald-700/20 space-y-4">
-            <div class="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center text-white">
-              <span class="material-symbols-outlined text-2xl">bolt</span>
-            </div>
-            <div>
-              <h3 class="font-display font-bold text-lg leading-tight mb-1">Dapat Tautan Mencurigakan?</h3>
-              <p class="text-xs text-emerald-100 leading-relaxed">
-                Uji tautan investasi bodong, robot trading, atau skema deposit mencurigakan langsung dengan mesin detektor AI Tabayyun.
-              </p>
-            </div>
-            <a href="../tabayyun.blade.php" class="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white text-emerald-900 font-bold text-xs hover:bg-emerald-50 transition-all shadow-sm">
-              <span>Buka AI Tabayyun Checker</span>
-              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </a>
-          </div>
-
-        </aside>
-
       </div>
 
     </div>
   </main>
 
   <!-- Footer -->
-  <footer class="bg-slate-900 text-slate-300 border-t border-slate-800 mt-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <footer class="bg-gradient-to-b from-[#064e3b] via-[#022c22] to-[#011a14] dark:bg-slate-950 text-emerald-100/90 dark:text-slate-300 border-t border-emerald-900/40 dark:border-slate-800 mt-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
         <div class="md:col-span-6 space-y-4">
           <div class="flex items-center gap-2 xl:gap-3 shrink-0">
             <img src="../../logo-shield.png" alt="Logo Resmi Aswaja CyberShield" class="w-9 h-9 object-contain">
             <span class="font-display font-bold text-xl text-white tracking-tight">Aswaja CyberShield</span>
           </div>
-          <p class="text-sm text-slate-400 leading-relaxed max-w-md">
+          <p class="text-sm text-emerald-100/80 dark:text-slate-400 leading-relaxed max-w-md">
             Inisiatif ketahanan digital berbasis prinsip Tabayyun dan nilai Ahlussunnah wal Jama'ah untuk mendeteksi serta membentengi masyarakat dari bahaya judi online, penipuan finansial, dan jebakan investasi ilegal.
           </p>
-          <div class="pt-2 text-xs text-emerald-400 font-medium">Amanah &bull; Tabayyun &bull; Maslahah Ummah</div>
+          <div class="pt-2 text-xs text-emerald-300 dark:text-emerald-400 font-medium">Amanah &bull; Tabayyun &bull; Maslahah Ummah</div>
         </div>
         <div class="md:col-span-3 space-y-3">
           <h4 class="font-display font-semibold text-sm text-white uppercase tracking-wider">Navigasi Utama</h4>
           <ul class="space-y-2 text-sm">
-            <li><a href="../index.blade.php" class="hover:text-emerald-400 transition-colors">Beranda Utama</a></li>
-            <li><a href="../tabayyun.blade.php" class="hover:text-emerald-400 transition-colors">Analisis Tautan Tabayyun</a></li>
-            <li><a href="../etika.blade.php" class="hover:text-emerald-400 transition-colors">Modul Etika &amp; Fiqih Siber</a></li>
-            <li><a href="../cyber-guard.blade.php" class="hover:text-emerald-400 transition-colors">Cyber Guard Test (Kuis)</a></li>
+            <li><a href="../index.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Beranda Utama</a></li>
+            <li><a href="../tabayyun.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Analisis Tautan Tabayyun</a></li>
+            <li><a href="../etika.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Modul Etika &amp; Fiqih Siber</a></li>
+            <li><a href="../cyber-guard.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Cyber Guard Test (Kuis)</a></li>
           </ul>
         </div>
         <div class="md:col-span-3 space-y-3">
           <h4 class="font-display font-semibold text-sm text-white uppercase tracking-wider">Layanan Terpadu</h4>
           <ul class="space-y-2 text-sm">
-            <li><a href="../lapor.blade.php" class="hover:text-red-400 transition-colors">Portal Lapor</a></li>
-            <li><a href="../etika.blade.php" class="hover:text-emerald-400 transition-colors">Pedoman Literasi</a></li>
+            <li><a href="../lapor.blade.php" class="text-rose-300 hover:text-white dark:text-rose-400 dark:hover:text-rose-300 transition-colors">Portal Lapor</a></li>
+            <li><a href="../etika.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Pedoman Literasi</a></li>
           </ul>
         </div>
       </div>
@@ -337,6 +265,8 @@
   </footer>
 
   <script src="../../js/navbar.js"></script>
+  <script src="../../js/scroll-reveal.js"></script>
+  <script src="../../js/animations.js"></script>
 </body>
 </html>
 

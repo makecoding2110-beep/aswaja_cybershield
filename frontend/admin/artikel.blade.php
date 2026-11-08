@@ -49,6 +49,7 @@
     }
   </script>
   <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/ui-kit.css">
 </head>
 <body class="h-full bg-slate-50 font-sans text-slate-800 antialiased flex flex-row overflow-x-hidden">
 
@@ -68,18 +69,18 @@
   <!-- Mobile Sidebar Overlay Backdrop -->
   <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300"></div>
 
-  <!-- Sidebar Component (Kiri) -->
-  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-300 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto lg:z-auto border-r border-slate-800 flex-shrink-0">
+    <!-- Sidebar Component (Kiri: Hijau Gradasi) -->
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-[#064e3b] via-[#022c22] to-[#011a14] text-emerald-100 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen border-r border-emerald-900/40 shrink-0 shadow-2xl">
     <!-- Brand Header -->
-    <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800/80 bg-slate-950/40">
-      <a href="index.blade.php" class="flex items-center gap-3 group text-decoration-none">
-        <img src="../../logo-shield.png" alt="Aswaja CyberShield" class="w-9 h-9 rounded-xl object-contain ring-1 ring-emerald-500/30 shadow-md">
+    <div class="h-16 flex items-center justify-between px-5 border-b border-emerald-800/40 bg-emerald-950/40">
+      <a href="/admin" class="flex items-center gap-3 group text-decoration-none">
+        <img src="../../logo-shield.png" alt="Aswaja CyberShield" class="w-9 h-9 rounded-xl object-contain ring-1 ring-emerald-400/40 shadow-md">
         <div class="min-w-0">
           <span class="font-display font-bold text-sm text-white tracking-tight block truncate">Aswaja CyberShield</span>
-        <span class="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider block">Admin Dashboard</span>
-      </div>
+          <span class="text-[10px] text-emerald-300 font-semibold uppercase tracking-wider block">Admin Dashboard</span>
+        </div>
       </a>
-      <button id="close-sidebar-btn" type="button" class="lg:hidden text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors" aria-label="Tutup sidebar">
+      <button id="close-sidebar-btn" type="button" class="lg:hidden text-emerald-200/80 hover:text-white p-1 rounded-lg hover:bg-emerald-800/40 transition-colors" aria-label="Tutup sidebar">
         <i class="bi bi-x-lg text-lg"></i>
       </button>
     </div>
@@ -87,62 +88,57 @@
     <!-- Navigation Menu Items -->
     <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-6" aria-label="Navigasi Utama Admin">
       <div>
-        <p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Menu Utama</p>
+        <p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-emerald-300/70 mb-2">Menu Utama</p>
         <div class="space-y-1">
           <!-- 1. Dashboard -->
-          <a href="index.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-speedometer2 text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <a href="/admin" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-speedometer2 text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Dashboard</span>
           </a>
 
-          <!-- 2. Artikel (Active) -->
-          <a href="artikel.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-950/30 transition-all">
-            <i class="bi bi-file-earmark-text text-base text-white"></i>
+          <!-- 2. Artikel -->
+          <a href="/admin/artikel" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl bg-emerald-500 text-white shadow-lg shadow-emerald-950/50 transition-all group">
+            <i class="bi bi-file-earmark-text text-base text-white transition-colors"></i>
             <span>Artikel</span>
           </a>
 
           <!-- 3. Riwayat Pelaporan -->
-          <a href="laporan.blade.php" class="flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
+          <a href="/admin/laporan" class="flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
             <span class="flex items-center gap-3">
-              <i class="bi bi-shield-exclamation text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+              <i class="bi bi-shield-exclamation text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
               <span>Laporan</span>
             </span>
-            <span id="badge-sidebar-reports" class="bg-rose-500/20 text-rose-400 text-xs px-2 py-0.5 rounded-full font-bold border border-rose-500/30">0</span>
-          </a>
-
-          <!-- 4. Kelola Akun -->
-          <a href="akun.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-people text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
-            <span>Kelola Akun</span>
+            <span id="badge-sidebar-reports" class="bg-rose-500/20 text-rose-300 text-xs px-2 py-0.5 rounded-full font-bold border border-rose-500/30">0</span>
           </a>
 
           <!-- 5. Studi Kasus -->
-          <a href="studi-kasus.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-journal-check text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <a href="/admin/studi-kasus" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-journal-check text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Studi Kasus</span>
           </a>
-          <!-- 6. Integrasi Dual AI -->
-          <a href="integrasi-ai.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-cpu text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
-            <span>Integrasi Dual AI</span>
+
+          <!-- 4. Kelola Akun -->
+          <a href="/admin/akun" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-people text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
+            <span>Kelola Akun</span>
           </a>
         </div>
       </div>
-
+    </nav>
 
     <!-- Sidebar Bottom / User Bar -->
-    <div class="p-3 border-t border-slate-800/80 bg-slate-950/40">
-      <div class="flex items-center justify-between px-2.5 py-2 rounded-xl bg-slate-800/60 border border-slate-700/50">
+    <div class="p-3 mt-auto shrink-0 border-t border-emerald-800/40 bg-emerald-950/50">
+      <div class="flex items-center justify-between px-2.5 py-2 rounded-xl bg-emerald-900/40 border border-emerald-700/40">
         <div class="flex items-center gap-2.5 min-w-0">
-          <div id="sidebar-avatar" class="w-8 h-8 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
+          <div id="sidebar-avatar" class="w-8 h-8 rounded-lg bg-emerald-500 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
             A
           </div>
           <div class="min-w-0 flex-1">
             <p id="sidebar-user-name" class="text-xs font-semibold text-white truncate">Admin Utama</p>
-            <p id="sidebar-user-role" class="text-[10px] text-emerald-400 truncate font-mono">Super Admin</p>
+            <p id="sidebar-user-role" class="text-[10px] text-emerald-300 truncate font-mono">Super Admin</p>
           </div>
         </div>
-        <button id="sidebar-btn-logout" type="button" class="text-slate-400 hover:text-rose-400 p-1.5 rounded-lg hover:bg-slate-700/60 transition-colors" title="Keluar">
+        <button id="sidebar-btn-logout" type="button" class="text-emerald-200/80 hover:text-rose-400 p-1.5 rounded-lg hover:bg-emerald-800/50 transition-colors" title="Keluar">
           <i class="bi bi-box-arrow-right"></i>
         </button>
       </div>
@@ -174,7 +170,7 @@
         <!-- Live Clock Pill -->
         <div class="hidden xl:flex items-center gap-1.5 text-xs text-slate-600 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 font-mono">
           <i class="bi bi-clock text-slate-400"></i>
-          <span id="live-clock">--:--:-- WIB</span>
+          <span id="live-clock"><?php date_default_timezone_set('Asia/Makassar'); echo date('H:i:s'); ?> WITA</span>
         </div>
 
         <!-- Notification Bell Dropdown -->
@@ -190,7 +186,7 @@
             </div>
             <div id="notif-list-container" class="divide-y divide-slate-100 max-h-72 overflow-y-auto"></div>
             <div class="px-4 pt-2 border-t border-slate-100 text-center">
-              <a href="laporan.blade.php" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700">Lihat Semua Laporan &rarr;</a>
+              <a href="/admin/laporan" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700">Lihat Semua Laporan &rarr;</a>
             </div>
           </div>
         </div>
@@ -215,7 +211,7 @@
               <p id="dropdown-user-email" class="text-xs font-semibold text-slate-800 truncate">admin@aswajacyber.id</p>
             </div>
             <div class="py-1">
-              <a href="akun.blade.php" class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+              <a href="/admin/akun" class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">
                 <i class="bi bi-person-gear text-slate-400"></i>
                 <span>Kelola Akun &amp; Profil</span>
               </a>
@@ -279,11 +275,21 @@
             <!-- Filter Kategori -->
             <select name="category" id="filter-category" class="px-3 py-2 text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-700">
               <option value="">Semua Kategori</option>
-              <option value="Fiqih Finansial">Fiqih Finansial</option>
-              <option value="Metodologi Tabayyun">Metodologi Tabayyun</option>
-              <option value="Edukasi Hukum">Edukasi Hukum</option>
-              <option value="Forensik Digital">Forensik Digital</option>
-              <option value="Literasi Judol">Literasi Judol</option>
+              <optgroup label="── Kategori Umum (Dampak & Modus) ──">
+                <option value="Literasi & Modus Judi Online">Literasi &amp; Modus Judi Online</option>
+                <option value="Dampak Sosial & Jeratan Finansial">Dampak Sosial &amp; Jeratan Finansial</option>
+                <option value="Regulasi & Penegakan Hukum Siber">Regulasi &amp; Penegakan Hukum Siber</option>
+              </optgroup>
+              <optgroup label="── Kategori IT & Keamanan Siber ──">
+                <option value="Forensik Digital & Investigasi Judol">Forensik Digital &amp; Investigasi Judol</option>
+                <option value="Manipulasi Algoritma & Script Judol">Manipulasi Algoritma &amp; Script Judol</option>
+                <option value="Infiltrasi Web & Malware APK">Infiltrasi Web &amp; Malware APK</option>
+              </optgroup>
+              <optgroup label="── Kategori Nilai Agama & Fiqih Aswaja ──">
+                <option value="Fiqih Muamalah & Larangan Maysir">Fiqih Muamalah &amp; Larangan Maysir</option>
+                <option value="Metodologi Tabayyun & Kaidah 4T">Metodologi Tabayyun &amp; Kaidah 4T</option>
+                <option value="Kajian Fatwa & Maqashid Syariah">Kajian Fatwa &amp; Maqashid Syariah</option>
+              </optgroup>
             </select>
 
             <!-- Filter Status Publish -->
@@ -388,11 +394,21 @@
                 Kategori <span class="text-rose-500">*</span>
               </label>
               <select name="category" id="article-category" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-800">
-                <option value="Fiqih Finansial">Fiqih Finansial</option>
-                <option value="Metodologi Tabayyun">Metodologi Tabayyun</option>
-                <option value="Edukasi Hukum">Edukasi Hukum</option>
-                <option value="Forensik Digital">Forensik Digital</option>
-                <option value="Literasi Judol">Literasi Judol</option>
+                <optgroup label="── 1. Kategori Umum (Dampak & Modus) ──">
+                  <option value="Literasi & Modus Judi Online">Literasi &amp; Modus Judi Online</option>
+                  <option value="Dampak Sosial & Jeratan Finansial">Dampak Sosial &amp; Jeratan Finansial</option>
+                  <option value="Regulasi & Penegakan Hukum Siber">Regulasi &amp; Penegakan Hukum Siber</option>
+                </optgroup>
+                <optgroup label="── 2. Kategori IT & Keamanan Siber ──">
+                  <option value="Forensik Digital & Investigasi Judol">Forensik Digital &amp; Investigasi Judol</option>
+                  <option value="Manipulasi Algoritma & Script Judol">Manipulasi Algoritma &amp; Script Judol</option>
+                  <option value="Infiltrasi Web & Malware APK">Infiltrasi Web &amp; Malware APK</option>
+                </optgroup>
+                <optgroup label="── 3. Kategori Nilai Agama & Fiqih Aswaja ──">
+                  <option value="Fiqih Muamalah & Larangan Maysir">Fiqih Muamalah &amp; Larangan Maysir</option>
+                  <option value="Metodologi Tabayyun & Kaidah 4T">Metodologi Tabayyun &amp; Kaidah 4T</option>
+                  <option value="Kajian Fatwa & Maqashid Syariah">Kajian Fatwa &amp; Maqashid Syariah</option>
+                </optgroup>
               </select>
             </div>
           </div>
@@ -492,9 +508,15 @@
       <form id="form-4t" method="POST" onsubmit="handleSave4T(event)">
         <input type="hidden" name="pillar_id" id="p4t-id">
         <div class="space-y-3 text-xs">
-          <div>
-            <label class="block font-semibold text-slate-700 mb-1">Nama Kaidah</label>
-            <input type="text" name="title" id="p4t-title" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white text-slate-800 font-bold">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Nama Kaidah</label>
+              <input type="text" name="title" id="p4t-title" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white text-slate-800 font-bold">
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Teks / Kaligrafi Arab</label>
+              <input type="text" name="arabic" id="p4t-arabic" placeholder="Contoh: تَوَقُّفْ" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white text-emerald-800 font-serif font-bold text-sm text-right" dir="rtl">
+            </div>
           </div>
           <div>
             <label class="block font-semibold text-slate-700 mb-1">Subjudul / Makna</label>
@@ -506,9 +528,15 @@
           </div>
         </div>
 
-        <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-end gap-2">
-          <button type="button" onclick="close4TModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl">Batal</button>
-          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl">Simpan Perubahan</button>
+        <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
+          <button type="button" id="btn-p4t-edit-article" onclick="openPillarArticleEditor()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold text-xs rounded-xl border border-emerald-200 transition-colors">
+            <i class="bi bi-pencil-square"></i>
+            <span>Edit Artikel Edukasi</span>
+          </button>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="close4TModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl">Batal</button>
+            <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl">Simpan Perubahan</button>
+          </div>
         </div>
       </form>
     </div>
@@ -517,6 +545,7 @@
 
   <!-- API Layer & Scripts -->
   <script src="../../js/api.js"></script>
+  <script src="../../js/ui-kit.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // 1. Auth Guard
@@ -540,7 +569,9 @@
       document.getElementById('dropdown-user-email').textContent = currentUser.email || currentUser.username || 'admin@aswajacyber.id';
 
       function handleLogout() {
-        if (confirm('Keluar dari sesi administrator Aswaja CyberShield?')) {
+        if (window.AuthService && typeof window.AuthService.confirmLogout === 'function') {
+          window.AuthService.confirmLogout();
+        } else if (confirm('Keluar dari sesi administrator Aswaja CyberShield?')) {
           window.AuthService.logout();
         }
       }
@@ -550,9 +581,9 @@
       // Live Clock
       function updateClock() {
         const now = new Date();
-        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Jakarta' });
+        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Makassar' });
         const el = document.getElementById('live-clock');
-        if (el) el.textContent = `${timeStr} WIB`;
+        if (el) el.textContent = `${timeStr} WITA`;
       }
       updateClock();
       setInterval(updateClock, 1000);
@@ -602,54 +633,80 @@
       // 2. Data Management: Articles & 4T
       function getFallback4T() {
         return [
-          { id: 1, code: 'T1', title: 'Tawaqquf', name: 'Tawaqquf', subtitle: 'Tahan Diri & Jeda Reflektif', tagline: 'Tahan Diri & Jeda Reflektif', description: 'Menahan jempol saat menerima tautan sensasional berbau cuan instan. Menghentikan penyebaran sebelum fakta teruji.' },
-          { id: 2, code: 'T2', title: 'Tastabbus', name: 'Tastabbus', subtitle: 'Telusuri Sanad & Fakta Digital', tagline: 'Telusuri Sanad & Fakta Digital', description: 'Melacak jejak digital domain, memverifikasi perizinan regulator OJK/Bappebti, dan membongkar kedok samaran tautan.' },
-          { id: 3, code: 'T3', title: 'Tatsabbut', name: 'Tatsabbut', subtitle: 'Konfirmasi Otoritas & Fatwa', tagline: 'Konfirmasi Otoritas & Fatwa', description: 'Menguji kesesuaian muamalah dengan fatwa alim ulama dan hukum fiqih untuk memastikan tiadanya unsur judi (maysir).' },
-          { id: 4, code: 'T4', title: "Ta'aqqul", name: "Ta'aqqul", subtitle: 'Pertimbangan Maslahat & Mudharat', tagline: 'Pertimbangan Maslahat & Mudharat', description: 'Menimbang apakah konten valid tersebut jika disebarkan membawa kemaslahatan atau malah memicu kegaduhan.' }
+          { id: 1, code: 'T1', title: 'Tawaqquf', name: 'Tawaqquf', arabic: 'تَوَقُّف', subtitle: 'Tahan Diri & Jeda Reflektif', tagline: 'Tahan Diri & Jeda Reflektif', description: 'Menahan jempol saat menerima tautan sensasional berbau cuan instan. Menghentikan penyebaran sebelum fakta teruji.' },
+          { id: 2, code: 'T2', title: 'Tastabbus', name: 'Tastabbus', arabic: 'تَثَبُّت', subtitle: 'Telusuri Sanad & Fakta Digital', tagline: 'Telusuri Sanad & Fakta Digital', description: 'Melacak jejak digital domain, memverifikasi perizinan regulator OJK/Bappebti, dan membongkar kedok samaran tautan.' },
+          { id: 3, code: 'T3', title: 'Tatsabbut', name: 'Tatsabbut', arabic: 'تَبَيُّن', subtitle: 'Konfirmasi Otoritas & Fatwa', tagline: 'Konfirmasi Otoritas & Fatwa', description: 'Menguji kesesuaian muamalah dengan fatwa alim ulama dan hukum fiqih untuk memastikan tiadanya unsur judi (maysir).' },
+          { id: 4, code: 'T4', title: "Ta'aqqul", name: "Ta'aqqul", arabic: 'تَعَقُّل', subtitle: 'Pertimbangan Maslahat & Mudharat', tagline: 'Pertimbangan Maslahat & Mudharat', description: 'Menimbang apakah konten valid tersebut jika disebarkan membawa kemaslahatan atau malah memicu kegaduhan.' }
         ];
       }
 
-      let articlesList = [];
+      function getFallbackArticles() {
+        try {
+          const stored = localStorage.getItem('aswaja_mock_articles');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          }
+          if (window.MockDatabase && Array.isArray(window.MockDatabase.articles)) {
+            return window.MockDatabase.articles;
+          }
+        } catch (e) {}
+        return [];
+      }
+
+      function withTimeout(promise, ms = 3500) {
+        return Promise.race([
+          promise,
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Request timeout (' + ms + 'ms)')), ms))
+        ]);
+      }
+
+      let articlesList = getFallbackArticles();
       let prinsip4tList = getFallback4T();
       let currentPage = 1;
       const itemsPerPage = 4;
 
       async function loadInitialData() {
-        // Tampilkan kartu 4T secara instan saat pertama kali dibuka
+        // Tampilkan kartu 4T dan daftar artikel secara instan dari cache/lokal tanpa menunggu jaringan
         renderPrinsip4TGrid();
+        applyFilter();
 
-        // 1. Ambil data Kaidah 4T terbaru dari API
+        // Ambil data terbaru secara asinkron dan paralel tanpa memblokir rendering UI
         try {
-          const p4tRes = await window.ApiService.getPrinsip4T();
-          const items = Array.isArray(p4tRes) ? p4tRes : (p4tRes?.data || []);
-          if (items && items.length > 0) {
-            prinsip4tList = items;
-            renderPrinsip4TGrid();
+          const [p4tResult, articlesResult, reportsResult] = await Promise.allSettled([
+            withTimeout(window.ApiService.getPrinsip4T(), 3500),
+            withTimeout(window.ApiService.getArticles(), 3500),
+            withTimeout(window.ApiService.getReports(), 3500)
+          ]);
+
+          if (p4tResult.status === 'fulfilled' && p4tResult.value) {
+            const p4tRes = p4tResult.value;
+            const items = Array.isArray(p4tRes) ? p4tRes : (p4tRes?.data || []);
+            if (items && items.length > 0) {
+              prinsip4tList = items;
+              renderPrinsip4TGrid();
+            }
+          }
+
+          if (articlesResult.status === 'fulfilled' && articlesResult.value) {
+            const articlesRes = articlesResult.value;
+            const items = Array.isArray(articlesRes) ? articlesRes : (articlesRes?.data || []);
+            if (items && items.length > 0) {
+              articlesList = items;
+              applyFilter();
+            }
+          }
+
+          if (reportsResult.status === 'fulfilled' && reportsResult.value) {
+            const reportsRes = reportsResult.value;
+            const reports = Array.isArray(reportsRes) ? reportsRes : (reportsRes?.data || []);
+            const pendingCount = reports.filter(r => r.status === 'Pending' || r.status === 'Masuk').length;
+            const badgeReports = document.getElementById('badge-sidebar-reports');
+            if (badgeReports) badgeReports.textContent = pendingCount;
+            renderNotificationList(reports.slice(0, 4));
           }
         } catch (err) {
-          console.warn('[Admin Artikel] Menggunakan fallback kaidah 4T:', err);
-        }
-
-        // 2. Ambil data Artikel
-        try {
-          const articlesRes = await window.ApiService.getArticles();
-          articlesList = Array.isArray(articlesRes) ? articlesRes : (articlesRes?.data || []);
-          applyFilter();
-        } catch (err) {
-          console.error('[Admin Artikel] Error load articles:', err);
-          applyFilter();
-        }
-
-        // 3. Ambil data Laporan untuk notifikasi & badge
-        try {
-          const reportsRes = await window.ApiService.getReports();
-          const reports = Array.isArray(reportsRes) ? reportsRes : (reportsRes?.data || []);
-          const pendingCount = reports.filter(r => r.status === 'Pending' || r.status === 'Masuk').length;
-          const badgeReports = document.getElementById('badge-sidebar-reports');
-          if (badgeReports) badgeReports.textContent = pendingCount;
-          renderNotificationList(reports.slice(0, 4));
-        } catch (err) {
-          console.warn('[Admin Artikel] Error load reports:', err);
+          console.warn('[Admin Artikel] Background refresh error:', err);
         }
       }
 
@@ -660,16 +717,29 @@
         const listToRender = (prinsip4tList && prinsip4tList.length > 0) ? prinsip4tList : getFallback4T();
 
         grid.innerHTML = listToRender.map(item => `
-          <div onclick="openEdit4TModal('${item.id || item.code}')" class="p-4 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-emerald-500/20 hover:border-emerald-400/60 transition-all cursor-pointer group">
-            <div class="flex items-center justify-between mb-2">
-              <span class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 font-mono font-bold text-xs flex items-center justify-center border border-emerald-400/30">
-                ${escapeHtml(item.code || item.id)}
-              </span>
-              <i class="bi bi-pencil text-xs text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <div class="p-4 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-emerald-500/20 hover:border-emerald-400/60 transition-all group flex flex-col justify-between cursor-pointer hover:scale-[1.01] active:scale-[0.99] shadow-sm" onclick="openEdit4TModal('${item.id || item.code}')" title="Klik untuk edit kaidah ${escapeHtml(item.title || item.name || '')}">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 font-mono font-bold text-xs flex items-center justify-center border border-emerald-400/30">
+                  ${escapeHtml(item.code || item.id)}
+                </span>
+                <span class="font-serif text-sm font-semibold text-emerald-300" dir="rtl">${escapeHtml(item.arabic || '')}</span>
+              </div>
+              <h4 class="font-display font-bold text-white text-sm group-hover:text-emerald-300 transition-colors">${escapeHtml(item.title || item.name || 'Kaidah 4T')}</h4>
+              <p class="text-[11px] text-emerald-400 font-medium mt-0.5 truncate">${escapeHtml(item.subtitle || item.tagline || '')}</p>
+              <p class="text-[11px] text-slate-300 line-clamp-2 mt-1.5 leading-snug">${escapeHtml(item.description || '')}</p>
             </div>
-            <h4 class="font-display font-bold text-white text-sm group-hover:text-emerald-300 transition-colors">${escapeHtml(item.title || item.name || 'Kaidah 4T')}</h4>
-            <p class="text-[11px] text-emerald-400 font-medium mt-0.5 truncate">${escapeHtml(item.subtitle || item.tagline || item.arabic || '')}</p>
-            <p class="text-[11px] text-slate-300 line-clamp-2 mt-1.5 leading-snug">${escapeHtml(item.description || '')}</p>
+            
+            <div class="pt-3 mt-3 border-t border-emerald-900/60 flex items-center justify-between gap-1.5" onclick="event.stopPropagation()">
+              <button type="button" onclick="event.stopPropagation(); openEdit4TModal('${item.id || item.code}')" class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 transition-all inline-flex items-center gap-1 cursor-pointer">
+                <i class="bi bi-pencil text-[10px]"></i>
+                <span>Edit Kaidah</span>
+              </button>
+              <button type="button" onclick="event.stopPropagation(); openEditArticleForPillar('${item.code || item.id}')" class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs transition-all inline-flex items-center gap-1 cursor-pointer">
+                <i class="bi bi-pencil-square text-[10px]"></i>
+                <span>Edit Artikel</span>
+              </button>
+            </div>
           </div>
         `).join('');
       }
@@ -738,9 +808,9 @@
             : `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200"><span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>Draft</span>`;
 
           return `
-            <tr class="hover:bg-slate-50/75 transition-colors">
+            <tr class="hover:bg-slate-50/75 transition-colors cursor-pointer group" onclick="openEditArticleModal(${a.id})" title="Klik untuk edit artikel: ${escapeHtml(a.title)}">
               <td class="px-5 py-4 max-w-sm">
-                <div class="font-display font-bold text-slate-900 text-xs sm:text-sm line-clamp-1 hover:text-emerald-700 transition-colors cursor-pointer" onclick="openEditArticleModal(${a.id})">
+                <div class="font-display font-bold text-slate-900 text-xs sm:text-sm line-clamp-1 group-hover:text-emerald-700 transition-colors">
                   ${escapeHtml(a.title)}
                 </div>
                 <p class="text-[11px] text-slate-400 line-clamp-1 mt-0.5">${escapeHtml(a.summary || '')}</p>
@@ -760,12 +830,12 @@
               <td class="px-4 py-4 whitespace-nowrap">
                 ${statusBadge}
               </td>
-              <td class="px-5 py-4 whitespace-nowrap text-right">
+              <td class="px-5 py-4 whitespace-nowrap text-right" onclick="event.stopPropagation()">
                 <div class="inline-flex items-center gap-1.5">
-                  <button type="button" onclick="openEditArticleModal(${a.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 transition-colors" title="Edit Artikel">
+                  <button type="button" onclick="event.stopPropagation(); openEditArticleModal(${a.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 transition-colors" title="Edit Artikel">
                     <i class="bi bi-pencil-square text-sm"></i>
                   </button>
-                  <button type="button" onclick="handleDeleteArticle(${a.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 transition-colors" title="Hapus Artikel">
+                  <button type="button" onclick="event.stopPropagation(); handleDeleteArticle(${a.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 transition-colors" title="Hapus Artikel">
                     <i class="bi bi-trash text-sm"></i>
                   </button>
                 </div>
@@ -808,15 +878,37 @@
       };
 
       // Modal Handlers
+      const UI = window.AswajaUI;
+      const articleForm = document.getElementById('form-article');
+      const articleContentArea = document.getElementById('article-content');
+      const articleRte = UI ? UI.richEditor(articleContentArea, { label: 'Isi artikel edukasi', placeholder: 'Tuliskan naskah isi artikel edukasi di sini...' }) : null;
+      const articleDirtyTracker = UI ? UI.form.trackDirty(articleForm, () => (articleRte ? articleRte.getHTML() : '')) : null;
+
+      if (UI) {
+        UI.enhanceModal(document.getElementById('modal-article'), {
+          labelledBy: 'modal-article-title',
+          initialFocus: '#article-title',
+          onRequestClose: () => closeArticleModal()
+        });
+      }
+
       window.openAddArticleModal = function() {
         document.getElementById('modal-article-title').innerHTML = '<i class="bi bi-file-earmark-plus text-emerald-600"></i><span>Tambah Artikel Baru</span>';
-        document.getElementById('form-article').reset();
+        articleForm.reset();
         document.getElementById('article-id').value = '';
         document.getElementById('article-author').value = currentUser.name || 'Tim Literasi Siber';
         document.getElementById('article-image-data').value = '';
+        const addImgThumb = document.getElementById('article-img-thumb');
+        if (addImgThumb) {
+          addImgThumb.removeAttribute('src');
+          addImgThumb.classList.add('hidden');
+        }
         document.getElementById('article-file-preview').classList.add('hidden');
         document.getElementById('article-dropzone').classList.remove('hidden');
         document.getElementById('article-status').value = 'Published';
+        if (articleRte) articleRte.setHTML('');
+        if (UI) UI.form.clearErrors(articleForm);
+        if (articleDirtyTracker) articleDirtyTracker.reset();
         document.getElementById('modal-article').classList.remove('hidden');
       };
 
@@ -828,38 +920,73 @@
         document.getElementById('article-id').value = item.id;
         document.getElementById('article-title').value = item.title || '';
         document.getElementById('article-slug').value = item.slug || '';
-        document.getElementById('article-category').value = item.category || 'Fiqih Finansial';
+        const catSelect = document.getElementById('article-category');
+        const targetCat = item.category || 'Literasi & Modus Judi Online';
+        let exists = Array.from(catSelect.options).some(opt => opt.value.toLowerCase() === targetCat.toLowerCase());
+        if (!exists && targetCat) {
+          const opt = document.createElement('option');
+          opt.value = targetCat;
+          opt.textContent = targetCat;
+          catSelect.appendChild(opt);
+        }
+        catSelect.value = targetCat;
         document.getElementById('article-author').value = item.author || '';
         document.getElementById('article-status').value = item.status || 'Published';
-        document.getElementById('article-summary').value = item.summary || '';
-        document.getElementById('article-content').value = item.content || item.summary || '';
+        document.getElementById('article-summary').value = item.summary || item.excerpt || '';
+        const bodyContent = item.content || item.summary || item.excerpt || '';
+        if (articleRte) articleRte.setHTML(bodyContent);
+        else articleContentArea.value = bodyContent;
 
-        const existingImg = item.image || item.cover_image || '';
+        const rawImg = item.image || item.cover_image || item.coverImage || '';
+        const isValidImg = rawImg && (
+          rawImg.startsWith('data:image/') ||
+          rawImg.startsWith('http://') ||
+          rawImg.startsWith('https://') ||
+          rawImg.startsWith('/')
+        ) && !rawImg.includes('../images/');
+
         const imgData = document.getElementById('article-image-data');
         const imgThumb = document.getElementById('article-img-thumb');
         const fileNameEl = document.getElementById('article-file-name');
         const previewEl = document.getElementById('article-file-preview');
         const dropzoneEl = document.getElementById('article-dropzone');
 
-        if (existingImg) {
-          imgData.value = existingImg;
-          imgThumb.src = existingImg;
+        // Pastikan handler error jika gambar gagal dimuat
+        imgThumb.onerror = function() {
+          imgData.value = '';
+          imgThumb.removeAttribute('src');
+          previewEl.classList.add('hidden');
+          dropzoneEl.classList.remove('hidden');
+        };
+
+        if (isValidImg) {
+          imgData.value = rawImg;
+          imgThumb.src = rawImg;
           imgThumb.classList.remove('hidden');
-          fileNameEl.textContent = 'Gambar Terlampir';
+          fileNameEl.textContent = rawImg.startsWith('data:image/') ? 'Gambar Sampul Terlampir' : (rawImg.split('/').pop() || 'Gambar Terlampir');
           previewEl.classList.remove('hidden');
           dropzoneEl.classList.add('hidden');
         } else {
           imgData.value = '';
-          imgThumb.src = '';
+          imgThumb.removeAttribute('src');
           imgThumb.classList.add('hidden');
           previewEl.classList.add('hidden');
           dropzoneEl.classList.remove('hidden');
         }
 
+        if (UI) UI.form.clearErrors(articleForm);
+        if (articleDirtyTracker) articleDirtyTracker.reset();
         document.getElementById('modal-article').classList.remove('hidden');
       };
 
-      window.closeArticleModal = function() {
+      window.closeArticleModal = async function(force) {
+        if (!force && articleDirtyTracker && articleDirtyTracker.isDirty()) {
+          const discard = await UI.confirmDiscard({
+            title: 'Tutup form artikel?',
+            message: 'Perubahan pada artikel ini belum disimpan. Apakah Anda yakin ingin membatalkan perubahan?'
+          });
+          if (!discard) return;
+        }
         document.getElementById('modal-article').classList.add('hidden');
       };
 
@@ -921,80 +1048,139 @@
         btnRemoveArticleImage.addEventListener('click', () => {
           articleFileInput.value = '';
           articleImageData.value = '';
+          if (articleImgThumb) {
+            articleImgThumb.removeAttribute('src');
+            articleImgThumb.classList.add('hidden');
+          }
           articleFilePreview.classList.add('hidden');
           articleDropzone.classList.remove('hidden');
         });
       }
 
       // Save Article
+      // Save Article with Validation, Confirmation & Feedback
       window.handleSaveArticle = async function(e) {
         e.preventDefault();
         const id = document.getElementById('article-id').value;
-        const title = document.getElementById('article-title').value.trim();
+        const titleInput = document.getElementById('article-title');
+        const catInput = document.getElementById('article-category');
+        const authorInput = document.getElementById('article-author');
+        const summaryInput = document.getElementById('article-summary');
+
+        const title = titleInput.value.trim();
         const slug = document.getElementById('article-slug').value.trim();
-        const category = document.getElementById('article-category').value;
-        const author = document.getElementById('article-author').value.trim();
+        const category = catInput.value;
+        const author = authorInput.value.trim();
         const image = document.getElementById('article-image-data')?.value || '';
         const status = document.getElementById('article-status').value;
-        const summary = document.getElementById('article-summary').value.trim();
-        const content = document.getElementById('article-content').value.trim();
+        const summary = summaryInput.value.trim();
+        const content = articleRte ? articleRte.getHTML() : document.getElementById('article-content').value.trim();
 
-        const btn = document.getElementById('btn-submit-article');
-        btn.disabled = true;
-        btn.textContent = 'Menyimpan...';
+        // 1. Validasi field
+        const errs = [];
+        if (!title) errs.push({ input: titleInput, label: 'Judul Artikel', message: 'Judul artikel wajib diisi.' });
+        if (!category) errs.push({ input: catInput, label: 'Kategori', message: 'Kategori artikel wajib dipilih.' });
+        if (!author) errs.push({ input: authorInput, label: 'Penulis', message: 'Penulis atau lembaga wajib diisi.' });
+        if (!summary) errs.push({ input: summaryInput, label: 'Ringkasan', message: 'Ringkasan singkat wajib diisi.' });
+        if (errs.length) {
+          UI.form.showErrors(articleForm, errs, { title: 'Form Belum Lengkap' });
+          return;
+        }
+        UI.form.clearErrors(articleForm);
 
-        try {
-          const payload = { 
-            title, 
-            slug, 
-            category, 
-            author, 
-            image: image || null, 
-            cover_image: image || null,
-            readTime: '5 Menit Baca',
-            status, 
-            summary, 
-            content 
-          };
-          if (id) {
-            await window.ApiService.updateArticle(id, payload);
-          } else {
-            await window.ApiService.createArticle(payload);
-          }
-          closeArticleModal();
+        // 2. Alur konfirmasi
+        const actionLabel = id ? 'Simpan Perubahan' : (status === 'Published' ? 'Terbitkan Sekarang' : 'Simpan sebagai Draf');
+        const confirmMsg = id
+          ? `Simpan perubahan pada artikel "${title}"?`
+          : `Simpan dan ${status === 'Published' ? 'terbitkan' : 'arsipkan draf'} artikel "${title}"?`;
+
+        const outcome = await UI.confirm({
+          icon: 'info',
+          title: id ? 'Simpan editan artikel?' : 'Terbitkan artikel baru?',
+          message: confirmMsg,
+          summary: [
+            { label: 'Judul', value: title },
+            { label: 'Kategori', value: category },
+            { label: 'Penulis', value: author },
+            { label: 'Status', value: status }
+          ],
+          confirmText: actionLabel,
+          cancelText: 'Periksa Lagi',
+          loadingTitle: 'Menyimpan artikel...',
+          loadingText: 'Mohon tunggu, naskah artikel sedang diproses.',
+          errorTitle: 'Gagal menyimpan artikel',
+          onConfirm: async () => {
+            const payload = {
+              title,
+              slug,
+              category,
+              author,
+              image: image || null,
+              cover_image: image || null,
+              readTime: '5 Menit Baca',
+              status,
+              summary,
+              content
+            };
+            if (id) {
+              return await window.ApiService.updateArticle(id, payload);
+            } else {
+              return await window.ApiService.createArticle(payload);
+            }
+          },
+          success: () => ({
+            title: id ? 'Artikel berhasil diperbarui' : 'Artikel berhasil disimpan',
+            message: `Artikel "${title}" kini telah tersimpan dengan status ${status}.`,
+            actions: [{ id: 'close', label: 'Tutup & Kembali', variant: 'primary', autofocus: true }]
+          })
+        });
+
+        if (outcome.status === 'success') {
+          if (articleDirtyTracker) articleDirtyTracker.reset();
+          closeArticleModal(true);
           await loadInitialData();
-        } catch (err) {
-          alert('Gagal menyimpan artikel: ' + err.message);
-        } finally {
-          btn.disabled = false;
-          btn.textContent = 'Simpan Artikel';
         }
       };
 
-      // Delete Article
+      // Delete Article with Universal Reusable Delete Modal
       window.handleDeleteArticle = async function(id) {
         if (!isSuper) {
-          alert('Akses Ditolak: Hanya Super Admin yang berwenang menghapus artikel edukasi.');
+          UI.notice({
+            icon: 'warning',
+            title: 'Akses Ditolak',
+            message: 'Hanya Super Admin yang berwenang menghapus artikel edukasi.'
+          });
           return;
         }
 
-        if (confirm('Apakah Anda yakin ingin menghapus artikel ini? Tindakan ini tidak dapat dibatalkan.')) {
-          try {
-            await window.ApiService.deleteArticle(id);
-            await loadInitialData();
-          } catch (err) {
-            alert('Gagal menghapus artikel: ' + err.message);
-          }
-        }
-      };
+        const target = articlesList.find(a => Number(a.id) === Number(id));
+        const title = target ? target.title : `ID #${id}`;
 
+        await UI.confirmDelete({
+          type: 'artikel',
+          name: title,
+          successMessage: 'Artikel edukasi berhasil dihapus.',
+          onDelete: async () => {
+            await window.ApiService.deleteArticle(id);
+            const row = document.querySelector(`button[onclick*="handleDeleteArticle(${id})"]`)?.closest('tr');
+            if (row) {
+              row.style.transition = 'opacity 250ms ease, transform 250ms ease';
+              row.style.opacity = '0';
+              row.style.transform = 'translateY(-6px)';
+              await new Promise(r => setTimeout(r, 260));
+            }
+            await loadInitialData();
+          }
+        });
+      };
       // 4T Pillar Modal Handlers
       window.openEdit4TModal = function(id) {
-        const item = prinsip4tList.find(p => (p.id || p.code) === id);
+        const item = (prinsip4tList || []).find(p => p.id == id || p.code == id || (p.code && id && String(p.code).toUpperCase() === String(id).toUpperCase()));
         if (!item) return;
 
-        document.getElementById('p4t-id').value = item.id || item.code;
+        document.getElementById('p4t-id').value = item.code || item.id;
         document.getElementById('p4t-title').value = item.title || item.name || '';
+        document.getElementById('p4t-arabic').value = item.arabic || '';
         document.getElementById('p4t-subtitle').value = item.subtitle || item.tagline || '';
         document.getElementById('p4t-desc').value = item.description || '';
 
@@ -1005,21 +1191,77 @@
         document.getElementById('modal-4t').classList.add('hidden');
       };
 
+      window.openEditArticleForPillar = function(code) {
+        const codeUpper = String(code || '').toUpperCase();
+        const slugMap = {
+          'T1': 'prinsip-tawaqquf',
+          'T2': 'prinsip-tastabbus',
+          'T3': 'prinsip-tatsabbut',
+          'T4': 'prinsip-taaqqul'
+        };
+        const targetSlug = slugMap[codeUpper] || slugMap[code] || 'prinsip-tawaqquf';
+        const article = (articlesList || []).find(a => (a.slug || '').toLowerCase() === targetSlug.toLowerCase());
+        if (article) {
+          openEditArticleModal(article.id);
+        } else {
+          // Fallback pencarian kata kunci di judul
+          const keyword = targetSlug.replace('prinsip-', '');
+          const fallback = (articlesList || []).find(a => (a.title || '').toLowerCase().includes(keyword));
+          if (fallback) {
+            openEditArticleModal(fallback.id);
+          } else {
+            alert('Artikel edukasi untuk kaidah ini belum tersedia di basis data.');
+          }
+        }
+      };
+
+      window.openPillarArticleEditor = function() {
+        const id = document.getElementById('p4t-id').value;
+        close4TModal();
+        openEditArticleForPillar(id);
+      };
+
       window.handleSave4T = async function(e) {
         e.preventDefault();
         const id = document.getElementById('p4t-id').value;
         const title = document.getElementById('p4t-title').value.trim();
+        const arabic = document.getElementById('p4t-arabic').value.trim();
         const subtitle = document.getElementById('p4t-subtitle').value.trim();
         const description = document.getElementById('p4t-desc').value.trim();
 
-        try {
-          await window.ApiService.updatePrinsip4T(id, { title, subtitle, description });
-          close4TModal();
-          const p4tRes = await window.ApiService.getPrinsip4T();
-          prinsip4tList = Array.isArray(p4tRes) ? p4tRes : (p4tRes?.data || []);
+        // 1. Instant local update for seamless UX
+        const idx = (prinsip4tList || []).findIndex(p => p.id == id || p.code == id || (p.code && id && String(p.code).toUpperCase() === String(id).toUpperCase()));
+        if (idx !== -1) {
+          prinsip4tList[idx] = {
+            ...prinsip4tList[idx],
+            title,
+            name: title,
+            arabic,
+            subtitle,
+            tagline: subtitle,
+            description
+          };
           renderPrinsip4TGrid();
+        }
+
+        close4TModal();
+
+        // 2. Persist to API & Database
+        try {
+          await window.ApiService.updatePrinsip4T(id, { title, arabic, subtitle, description });
+          const p4tRes = await window.ApiService.getPrinsip4T();
+          if (p4tRes && (Array.isArray(p4tRes) || Array.isArray(p4tRes.data))) {
+            prinsip4tList = Array.isArray(p4tRes) ? p4tRes : p4tRes.data;
+            renderPrinsip4TGrid();
+          }
+          if (window.showToast) {
+            showToast('Kaidah Prinsip 4T berhasil diperbarui!', 'success');
+          }
         } catch (err) {
-          alert('Gagal memperbarui kaidah: ' + err.message);
+          console.warn('[Admin 4T] Error persisting:', err);
+          if (window.showToast) {
+            showToast('Kaidah diperbarui secara lokal', 'success');
+          }
         }
       };
 
@@ -1032,7 +1274,7 @@
         }
 
         container.innerHTML = reports.map(r => `
-          <a href="laporan.blade.php" class="block p-3 hover:bg-slate-50 transition-colors">
+          <a href="/admin/laporan" class="block p-3 hover:bg-slate-50 transition-colors">
             <div class="flex items-center justify-between mb-1">
               <span class="font-mono font-bold text-[11px] text-slate-800">${escapeHtml(r.id)}</span>
               <span class="text-[10px] text-slate-400">${escapeHtml(r.date || 'Hari ini')}</span>
@@ -1058,3 +1300,4 @@
   </script>
 </body>
 </html>
+

@@ -27,14 +27,14 @@ class ArticleController extends Controller
             'slug' => 'nullable|string|max:255',
             'category' => 'required|string|max:100',
             'content' => 'required|string',
-            'excerpt' => 'nullable|string|max:500',
-            'summary' => 'nullable|string|max:500',
-            'author' => 'nullable|string|max:100',
+            'excerpt' => 'nullable|string|max:2000',
+            'summary' => 'nullable|string|max:2000',
+            'author' => 'nullable|string|max:150',
             'status' => 'nullable|string|in:Published,Draft',
             'readTime' => 'nullable|string|max:50',
-            'image' => 'nullable|string|max:500',
-            'cover_image' => 'nullable|string|max:500',
-            'coverImage' => 'nullable|string|max:500'
+            'image' => 'nullable|string',
+            'cover_image' => 'nullable|string',
+            'coverImage' => 'nullable|string'
         ]);
 
         $newArticle = $this->repository->createArticle($validated);
@@ -71,14 +71,14 @@ class ArticleController extends Controller
             'slug' => 'nullable|string|max:255',
             'category' => 'nullable|string|max:100',
             'content' => 'nullable|string',
-            'excerpt' => 'nullable|string|max:500',
-            'summary' => 'nullable|string|max:500',
-            'author' => 'nullable|string|max:100',
+            'excerpt' => 'nullable|string|max:2000',
+            'summary' => 'nullable|string|max:2000',
+            'author' => 'nullable|string|max:150',
             'status' => 'nullable|string|in:Published,Draft',
             'readTime' => 'nullable|string|max:50',
-            'image' => 'nullable|string|max:500',
-            'cover_image' => 'nullable|string|max:500',
-            'coverImage' => 'nullable|string|max:500'
+            'image' => 'nullable|string',
+            'cover_image' => 'nullable|string',
+            'coverImage' => 'nullable|string'
         ]);
 
         $updated = $this->repository->updateArticle($id, $validated);
@@ -114,4 +114,3 @@ class ArticleController extends Controller
         ]);
     }
 }
-

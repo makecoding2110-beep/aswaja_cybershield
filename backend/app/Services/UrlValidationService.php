@@ -217,7 +217,7 @@ class UrlValidationService
         }
 
         // 5. Analisis Huruf Berulang (Repetitive Characters)
-        // Mendeteksi 3+ karakter berulang (misal: slooot, gacoool) atau 2 karakter berulang tidak wajar (misal: investasii, cuannn)
+        // Mendeteksi 3+ karakter berulang (misal: slooot, gacooor) atau 2 karakter berulang tidak wajar (misal: investasii, cuannn)
         // Abaikan prefix standar web seperti 'www.' agar tidak memicu false positive
         $cleanHostForRepetition = preg_replace('/^www\d*\./i', '', $host);
         if (preg_match('/([a-zA-Z])\1{2,}|(ii|uu|jj|vv|qq|yy)|([a-z])\3(?=\d{2,}|[-_.]|$)/i', $cleanHostForRepetition, $m)) {
@@ -503,7 +503,7 @@ class UrlValidationService
         $lower = strtolower($normalizedUrl);
 
         // 1. Tingkat KUAT (Indikator Kuat Eksplisit)
-        $strongPattern = '/(slot[-_]?gacor|situs[-_]?togel|casino[-_]?online|kasino[-_]?online|judi[-_]?slot|judi[-_]?online|bandar[-_]?togel|agen[-_]?slot|judi[-_]?bola|sbobet|togel4d|slot88|slot777|gacor777|gacor88|rtp[-_]?slot|depo[-_]?slot|deposit[-_]?slot)/i';
+        $strongPattern = '/(judol\d*|slot[-_]?gacor|situs[-_]?togel|casino[-_]?online|kasino[-_]?online|judi[-_]?slot|judi[-_]?online|bandar[-_]?togel|agen[-_]?slot|judi[-_]?bola|sbobet|togel4d|slot88|slot777|gacor777|gacor88|rtp[-_]?slot|depo[-_]?slot|deposit[-_]?slot|maxwin\d*)/i';
         $hasStrong = false;
         if (preg_match($strongPattern, $lower, $mStrong)) {
             $hasStrong = true;

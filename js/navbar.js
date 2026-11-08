@@ -126,15 +126,28 @@ function setupThemeManager() {
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
-  function applyTheme(theme) {
+  function applyTheme(theme, animate) {
     const isDark = theme === 'dark';
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+    const root = document.documentElement;
+
+    // Transisi halus ±200 ms hanya saat pengguna mengganti tema (bukan saat halaman dimuat)
+    if (animate && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+      root.classList.add('ui-theme-anim');
+      clearTimeout(applyTheme._animTimer);
+      applyTheme._animTimer = setTimeout(() => root.classList.remove('ui-theme-anim'), 260);
     }
-    localStorage.setItem('aswaja_theme', theme);
-    localStorage.setItem('aswaja_darkmode', isDark ? '1' : '0');
+
+    if (isDark) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    // Token CSS (css/ui-kit.css) membaca html[data-theme="dark"]
+    root.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    try {
+      localStorage.setItem('aswaja_theme', theme);
+      localStorage.setItem('aswaja_darkmode', isDark ? '1' : '0');
+    } catch (e) {}
 
     // Update icons
     const icons = document.querySelectorAll('#darkmode-icon, .darkmode-icon');
@@ -142,10 +155,10 @@ function setupThemeManager() {
       icon.textContent = isDark ? 'light_mode' : 'dark_mode';
     });
 
-    // Update buttons
+    // Update buttons: label menjelaskan aksi yang akan terjadi
     const btns = document.querySelectorAll('#darkmode-toggle, .darkmode-toggle-btn');
     btns.forEach(btn => {
-      const title = isDark ? 'Beralih ke Mode Terang' : 'Beralih ke Mode Gelap';
+      const title = isDark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap';
       btn.setAttribute('title', title);
       btn.setAttribute('aria-label', title);
     });
@@ -166,7 +179,7 @@ function setupThemeManager() {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       const currentDark = document.documentElement.classList.contains('dark');
-      applyTheme(currentDark ? 'light' : 'dark');
+      applyTheme(currentDark ? 'light' : 'dark', true);
     });
   });
 

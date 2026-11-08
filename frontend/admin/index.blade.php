@@ -49,6 +49,7 @@
     }
   </script>
   <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/ui-kit.css">
 </head>
 <body class="h-full bg-slate-50 font-sans text-slate-800 antialiased flex flex-row overflow-x-hidden">
 
@@ -68,18 +69,18 @@
   <!-- Mobile Sidebar Overlay Backdrop -->
   <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300"></div>
 
-  <!-- Sidebar Component (Kiri) -->
-  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-300 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto lg:z-auto border-r border-slate-800 flex-shrink-0">
+    <!-- Sidebar Component (Kiri: Hijau Gradasi) -->
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-[#064e3b] via-[#022c22] to-[#011a14] text-emerald-100 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen border-r border-emerald-900/40 shrink-0 shadow-2xl">
     <!-- Brand Header -->
-    <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800/80 bg-slate-950/40">
-      <a href="index.blade.php" class="flex items-center gap-3 group text-decoration-none">
-        <img src="../../logo-shield.png" alt="Aswaja CyberShield" class="w-9 h-9 rounded-xl object-contain ring-1 ring-emerald-500/30 shadow-md">
+    <div class="h-16 flex items-center justify-between px-5 border-b border-emerald-800/40 bg-emerald-950/40">
+      <a href="/admin" class="flex items-center gap-3 group text-decoration-none">
+        <img src="../../logo-shield.png" alt="Aswaja CyberShield" class="w-9 h-9 rounded-xl object-contain ring-1 ring-emerald-400/40 shadow-md">
         <div class="min-w-0">
-        <span class="font-display font-bold text-sm text-white tracking-tight block truncate">Aswaja CyberShield</span>
-        <span class="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider block">Admin Dashboard</span>
-      </div>
+          <span class="font-display font-bold text-sm text-white tracking-tight block truncate">Aswaja CyberShield</span>
+          <span class="text-[10px] text-emerald-300 font-semibold uppercase tracking-wider block">Admin Dashboard</span>
+        </div>
       </a>
-      <button id="close-sidebar-btn" type="button" class="lg:hidden text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors" aria-label="Tutup sidebar">
+      <button id="close-sidebar-btn" type="button" class="lg:hidden text-emerald-200/80 hover:text-white p-1 rounded-lg hover:bg-emerald-800/40 transition-colors" aria-label="Tutup sidebar">
         <i class="bi bi-x-lg text-lg"></i>
       </button>
     </div>
@@ -87,62 +88,57 @@
     <!-- Navigation Menu Items -->
     <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-6" aria-label="Navigasi Utama Admin">
       <div>
-        <p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Menu Utama</p>
+        <p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-emerald-300/70 mb-2">Menu Utama</p>
         <div class="space-y-1">
           <!-- 1. Dashboard -->
-          <a href="index.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-950/30 transition-all">
-            <i class="bi bi-speedometer2 text-base text-white"></i>
+          <a href="/admin" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl bg-emerald-500 text-white shadow-lg shadow-emerald-950/50 transition-all group">
+            <i class="bi bi-speedometer2 text-base text-white transition-colors"></i>
             <span>Dashboard</span>
           </a>
 
           <!-- 2. Artikel -->
-          <a href="artikel.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-file-earmark-text text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <a href="/admin/artikel" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-file-earmark-text text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Artikel</span>
           </a>
 
           <!-- 3. Riwayat Pelaporan -->
-          <a href="laporan.blade.php" class="flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
+          <a href="/admin/laporan" class="flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
             <span class="flex items-center gap-3">
-              <i class="bi bi-shield-exclamation text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+              <i class="bi bi-shield-exclamation text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
               <span>Laporan</span>
             </span>
-            <span id="badge-sidebar-reports" class="bg-rose-500/20 text-rose-400 text-xs px-2 py-0.5 rounded-full font-bold border border-rose-500/30">0</span>
+            <span id="badge-sidebar-reports" class="bg-rose-500/20 text-rose-300 text-xs px-2 py-0.5 rounded-full font-bold border border-rose-500/30">0</span>
           </a>
 
-          <!-- 4. Studi Kasus -->
-          <a href="studi-kasus.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-journal-check text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <!-- 5. Studi Kasus -->
+          <a href="/admin/studi-kasus" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-journal-check text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Studi Kasus</span>
           </a>
-          <!-- 5. Integrasi Dual AI -->
-          <a href="integrasi-ai.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-cpu text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
-            <span>Integrasi Dual AI</span>
-          </a>
 
-          <!-- 6. Kelola Akun -->
-          <a href="akun.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-people text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <!-- 4. Kelola Akun -->
+          <a href="/admin/akun" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-people text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Kelola Akun</span>
           </a>
-
         </div>
       </div>
+    </nav>
 
     <!-- Sidebar Bottom / User Bar -->
-    <div class="p-3 border-t border-slate-800/80 bg-slate-950/40">
-      <div class="flex items-center justify-between px-2.5 py-2 rounded-xl bg-slate-800/60 border border-slate-700/50">
+    <div class="p-3 mt-auto shrink-0 border-t border-emerald-800/40 bg-emerald-950/50">
+      <div class="flex items-center justify-between px-2.5 py-2 rounded-xl bg-emerald-900/40 border border-emerald-700/40">
         <div class="flex items-center gap-2.5 min-w-0">
-          <div id="sidebar-avatar" class="w-8 h-8 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
+          <div id="sidebar-avatar" class="w-8 h-8 rounded-lg bg-emerald-500 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
             A
           </div>
           <div class="min-w-0 flex-1">
             <p id="sidebar-user-name" class="text-xs font-semibold text-white truncate">Admin Utama</p>
-            <p id="sidebar-user-role" class="text-[10px] text-emerald-400 truncate font-mono">Super Admin</p>
+            <p id="sidebar-user-role" class="text-[10px] text-emerald-300 truncate font-mono">Super Admin</p>
           </div>
         </div>
-        <button id="sidebar-btn-logout" type="button" class="text-slate-400 hover:text-rose-400 p-1.5 rounded-lg hover:bg-slate-700/60 transition-colors" title="Keluar">
+        <button id="sidebar-btn-logout" type="button" class="text-emerald-200/80 hover:text-rose-400 p-1.5 rounded-lg hover:bg-emerald-800/50 transition-colors" title="Keluar">
           <i class="bi bi-box-arrow-right"></i>
         </button>
       </div>
@@ -167,7 +163,7 @@
         <!-- Live Clock Pill -->
         <div class="hidden xl:flex items-center gap-1.5 text-xs text-slate-600 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 font-mono">
           <i class="bi bi-clock text-slate-400"></i>
-          <span id="live-clock">--:--:-- WIB</span>
+          <span id="live-clock"><?php date_default_timezone_set('Asia/Makassar'); echo date('H:i:s'); ?> WITA</span>
         </div>
 
         <!-- Refresh Button -->
@@ -190,7 +186,7 @@
               <!-- Dynamically populated -->
             </div>
             <div class="px-4 pt-2 border-t border-slate-100 text-center">
-              <a href="laporan.blade.php" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700">Lihat Semua Laporan &rarr;</a>
+              <a href="/admin/laporan" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700">Lihat Semua Laporan &rarr;</a>
             </div>
           </div>
         </div>
@@ -215,11 +211,11 @@
               <p id="dropdown-user-email" class="text-xs font-semibold text-slate-800 truncate">admin@aswajacyber.id</p>
             </div>
             <div class="py-1">
-              <a href="akun.blade.php" class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+              <a href="/admin/akun" class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">
                 <i class="bi bi-person-gear text-slate-400"></i>
                 <span>Kelola Akun &amp; Profil</span>
               </a>
-              <a href="laporan.blade.php" class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+              <a href="/admin/laporan" class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">
                 <i class="bi bi-inbox text-slate-400"></i>
                 <span>Laporan</span>
               </a>
@@ -249,25 +245,28 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         
         <!-- 1. Total Artikel -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all duration-200 group">
+        <div onclick="window.location.href='/admin/artikel'" role="button" tabindex="0" class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:border-emerald-500/50 hover:shadow-md transition-all duration-200 group cursor-pointer active:scale-[0.99]" title="Buka Modul Kelola Artikel">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Artikel</span>
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider group-hover:text-emerald-700 transition-colors">Total Artikel</span>
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-xs">
               <i class="bi bi-file-earmark-text text-xl"></i>
             </div>
           </div>
           <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-display font-extrabold text-slate-900" id="stat-articles">0</span>
+            <span class="text-3xl font-display font-extrabold text-slate-900 group-hover:text-emerald-700 transition-colors" id="stat-articles">0</span>
             <span class="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Edukasi</span>
           </div>
-          <p class="text-xs text-slate-400 mt-2">Materi literasi siber publik &amp; fiqih</p>
+          <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100">
+            <p class="text-xs text-slate-400">Materi literasi siber publik &amp; fiqih</p>
+            <span class="text-[11px] font-semibold text-emerald-600 group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-0.5">Kelola &rarr;</span>
+          </div>
         </div>
 
         <!-- 2. Laporan Masuk -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all duration-200 group">
+        <div onclick="window.location.href='/admin/laporan?status=Pending'" role="button" tabindex="0" class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:border-amber-500/50 hover:shadow-md transition-all duration-200 group cursor-pointer active:scale-[0.99]" title="Buka Laporan Masuk (Pending)">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Laporan Masuk</span>
-            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider group-hover:text-amber-700 transition-colors">Laporan Masuk</span>
+            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-amber-600 group-hover:text-white transition-all shadow-xs">
               <i class="bi bi-shield-exclamation text-xl"></i>
             </div>
           </div>
@@ -275,37 +274,46 @@
             <span class="text-3xl font-display font-extrabold text-amber-600" id="stat-reports-in">0</span>
             <span class="text-xs font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">Pending</span>
           </div>
-          <p class="text-xs text-slate-400 mt-2">Menunggu investigasi tim analis</p>
+          <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100">
+            <p class="text-xs text-slate-400">Menunggu investigasi tim analis</p>
+            <span class="text-[11px] font-semibold text-amber-600 group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-0.5">Tinjau &rarr;</span>
+          </div>
         </div>
 
         <!-- 3. Akun Aktif -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all duration-200 group">
+        <div onclick="window.location.href='/admin/akun'" role="button" tabindex="0" class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:border-blue-500/50 hover:shadow-md transition-all duration-200 group cursor-pointer active:scale-[0.99]" title="Buka Manajemen Akun & Staf">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Akun Aktif</span>
-            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider group-hover:text-blue-700 transition-colors">Akun Aktif</span>
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-xs">
               <i class="bi bi-people text-xl"></i>
             </div>
           </div>
           <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-display font-extrabold text-slate-900" id="stat-accounts">0</span>
+            <span class="text-3xl font-display font-extrabold text-slate-900 group-hover:text-blue-700 transition-colors" id="stat-accounts">0</span>
             <span class="text-xs font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">Pengelola</span>
           </div>
-          <p class="text-xs text-slate-400 mt-2">Super Admin &amp; Analis Tim Siber</p>
+          <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100">
+            <p class="text-xs text-slate-400">Super Admin &amp; Analis Tim Siber</p>
+            <span class="text-[11px] font-semibold text-blue-600 group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-0.5">Kelola &rarr;</span>
+          </div>
         </div>
 
         <!-- 4. Studi Kasus -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all duration-200 group">
+        <div onclick="window.location.href='/admin/studi-kasus'" role="button" tabindex="0" class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:border-purple-500/50 hover:shadow-md transition-all duration-200 group cursor-pointer active:scale-[0.99]" title="Buka Modul Studi Kasus Cyber Guard">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Studi Kasus</span>
-            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider group-hover:text-purple-700 transition-colors">Studi Kasus</span>
+            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all shadow-xs">
               <i class="bi bi-patch-question text-xl"></i>
             </div>
           </div>
           <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-display font-extrabold text-slate-900" id="stat-case-studies">0</span>
+            <span class="text-3xl font-display font-extrabold text-slate-900 group-hover:text-purple-700 transition-colors" id="stat-case-studies">0</span>
             <span class="text-xs font-medium text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200">Skenario</span>
           </div>
-          <p class="text-xs text-slate-400 mt-2">Simulasi interaktif Cyber Guard</p>
+          <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100">
+            <p class="text-xs text-slate-400">Simulasi interaktif Cyber Guard</p>
+            <span class="text-[11px] font-semibold text-purple-600 group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-0.5">Kelola &rarr;</span>
+          </div>
         </div>
 
       </div>
@@ -325,15 +333,15 @@
                 </h2>
                 <p class="text-xs text-slate-400 mt-0.5">5 aduan masyarakat terkini dalam antrean penanganan sistem</p>
               </div>
-              <a href="laporan.blade.php" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:underline">
+              <a href="/admin/laporan" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:underline">
                 <span>Kelola Semua</span>
                 <i class="bi bi-arrow-right"></i>
               </a>
             </div>
 
             <!-- Responsive Table Container -->
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-sm text-slate-600">
+            <div class="overflow-x-auto scroll-smooth">
+              <table class="w-full text-left text-sm text-slate-600 min-w-[700px]">
                 <thead class="bg-slate-50 text-[11px] font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-100">
                   <tr>
                     <th class="px-5 py-3">ID &amp; Tanggal</th>
@@ -357,7 +365,7 @@
             <!-- Footer Card -->
             <div class="p-4 bg-slate-50/75 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
               <span id="reports-summary-text">Menampilkan 5 aduan terakhir.</span>
-              <a href="laporan.blade.php" class="font-semibold text-emerald-600 hover:text-emerald-700">Lihat Semua Laporan &rarr;</a>
+              <a href="/admin/laporan" class="font-semibold text-emerald-600 hover:text-emerald-700">Lihat Semua Laporan &rarr;</a>
             </div>
           </div>
 
@@ -378,39 +386,39 @@
 
             <!-- Progress Bars Breakdown -->
             <div class="space-y-3.5">
-              <div>
+              <div onclick="window.location.href='/admin/laporan?status=Selesai'" class="p-2 -mx-2 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors group" title="Filter Laporan Selesai">
                 <div class="flex justify-between text-xs mb-1">
-                  <span class="font-medium text-slate-700 flex items-center gap-1.5">
+                  <span class="font-medium text-slate-700 group-hover:text-emerald-700 flex items-center gap-1.5 transition-colors">
                     <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                     Selesai
                   </span>
-                  <span class="font-bold text-slate-800" id="rate-done-text">0%</span>
+                  <span class="font-bold text-slate-800 group-hover:text-emerald-700 transition-colors" id="rate-done-text">0%</span>
                 </div>
                 <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
                   <div id="bar-reports-done" class="bg-emerald-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
                 </div>
               </div>
 
-              <div>
+              <div onclick="window.location.href='/admin/laporan?status=Diproses'" class="p-2 -mx-2 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors group" title="Filter Laporan Diproses">
                 <div class="flex justify-between text-xs mb-1">
-                  <span class="font-medium text-slate-700 flex items-center gap-1.5">
+                  <span class="font-medium text-slate-700 group-hover:text-blue-700 flex items-center gap-1.5 transition-colors">
                     <span class="w-2 h-2 rounded-full bg-blue-500"></span>
                     Diproses
                   </span>
-                  <span class="font-bold text-slate-800" id="rate-process-text">0%</span>
+                  <span class="font-bold text-slate-800 group-hover:text-blue-700 transition-colors" id="rate-process-text">0%</span>
                 </div>
                 <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
                   <div id="bar-reports-process" class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
                 </div>
               </div>
 
-              <div>
+              <div onclick="window.location.href='/admin/laporan?status=Pending'" class="p-2 -mx-2 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors group" title="Filter Laporan Pending">
                 <div class="flex justify-between text-xs mb-1">
-                  <span class="font-medium text-slate-700 flex items-center gap-1.5">
+                  <span class="font-medium text-slate-700 group-hover:text-amber-700 flex items-center gap-1.5 transition-colors">
                     <span class="w-2 h-2 rounded-full bg-amber-500"></span>
                     Pending
                   </span>
-                  <span class="font-bold text-slate-800" id="rate-in-text">0%</span>
+                  <span class="font-bold text-slate-800 group-hover:text-amber-700 transition-colors" id="rate-in-text">0%</span>
                 </div>
                 <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
                   <div id="bar-reports-in" class="bg-amber-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -426,53 +434,12 @@
                 <i class="bi bi-clock-history text-emerald-600"></i>
                 <span>Aktivitas Sistem Terbaru</span>
               </h3>
-              <span class="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">Audit Log</span>
+              <a href="/admin/laporan" class="text-[10px] font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-full transition-colors cursor-pointer" title="Buka Riwayat Audit & Laporan">Audit Log &rarr;</a>
             </div>
 
             <!-- Feed Timeline -->
-            <div class="space-y-4 relative before:absolute before:left-3.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200" id="recent-activity-feed">
+            <div class="space-y-2 relative before:absolute before:left-3.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200" id="recent-activity-feed">
               <!-- Populated by JS -->
-            </div>
-          </div>
-
-          <!-- Widget 3: Pintasan Cepat Admin -->
-          <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
-            <h3 class="font-display font-bold text-sm text-slate-900 mb-3 flex items-center gap-2">
-              <i class="bi bi-grid-fill text-slate-700"></i>
-              <span>Pintasan Cepat Admin</span>
-            </h3>
-            <div class="grid grid-cols-1 gap-2">
-              <a href="artikel.blade.php" class="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 hover:border-emerald-400 hover:bg-emerald-50/40 text-slate-700 hover:text-emerald-800 text-xs font-semibold transition-all group">
-                <span class="flex items-center gap-2.5">
-                  <i class="bi bi-plus-circle text-emerald-600 text-sm"></i>
-                  <span>Tulis Artikel Edukasi Baru</span>
-                </span>
-                <i class="bi bi-chevron-right text-slate-400 group-hover:translate-x-0.5 transition-transform"></i>
-              </a>
-
-              <a href="laporan.blade.php" class="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 hover:border-amber-400 hover:bg-amber-50/40 text-slate-700 hover:text-amber-800 text-xs font-semibold transition-all group">
-                <span class="flex items-center gap-2.5">
-                  <i class="bi bi-search text-amber-600 text-sm"></i>
-                  <span>Verifikasi Aduan Siber</span>
-                </span>
-                <i class="bi bi-chevron-right text-slate-400 group-hover:translate-x-0.5 transition-transform"></i>
-              </a>
-
-              <a href="studi-kasus.blade.php" class="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 hover:border-purple-400 hover:bg-purple-50/40 text-slate-700 hover:text-purple-800 text-xs font-semibold transition-all group">
-                <span class="flex items-center gap-2.5">
-                  <i class="bi bi-journal-plus text-purple-600 text-sm"></i>
-                  <span>Tambah Soal Kasus Siber</span>
-                </span>
-                <i class="bi bi-chevron-right text-slate-400 group-hover:translate-x-0.5 transition-transform"></i>
-              </a>
-
-              <a href="akun.blade.php" class="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 hover:border-blue-400 hover:bg-blue-50/40 text-slate-700 hover:text-blue-800 text-xs font-semibold transition-all group">
-                <span class="flex items-center gap-2.5">
-                  <i class="bi bi-person-gear text-blue-600 text-sm"></i>
-                  <span>Kelola Akun Staf Admin</span>
-                </span>
-                <i class="bi bi-chevron-right text-slate-400 group-hover:translate-x-0.5 transition-transform"></i>
-              </a>
             </div>
           </div>
 
@@ -484,9 +451,8 @@
 
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200/90 py-4 px-6 text-center text-xs text-slate-500 mt-auto">
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto">
+      <div class="flex items-center justify-center gap-2 max-w-7xl mx-auto">
         <p>&copy; 2026 <strong class="font-semibold text-slate-700">Aswaja CyberShield</strong> &bull; Dashboard Administrator</p>
-        <p class="text-slate-400">Laravel-Ready Semantic Markup &bull; UNU Kaltim Keamanan Siber</p>
       </div>
     </footer>
   </div>
@@ -534,7 +500,7 @@
         <button type="button" onclick="closeDashboardModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl">
           Tutup
         </button>
-        <a href="laporan.blade.php" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow-sm">
+        <a href="/admin/laporan" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow-sm">
           Buka di Laporan &rarr;
         </a>
       </div>
@@ -544,6 +510,7 @@
 
   <!-- API Layer & Scripts -->
   <script src="../../js/api.js"></script>
+  <script src="../../js/ui-kit.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // 1. Auth Guard
@@ -569,7 +536,9 @@
 
       // Logout handlers
       function handleLogout() {
-        if (confirm('Keluar dari sesi administrator Aswaja CyberShield?')) {
+        if (window.AuthService && typeof window.AuthService.confirmLogout === 'function') {
+          window.AuthService.confirmLogout();
+        } else if (confirm('Keluar dari sesi administrator Aswaja CyberShield?')) {
           window.AuthService.logout();
         }
       }
@@ -579,9 +548,9 @@
       // Live Clock
       function updateClock() {
         const now = new Date();
-        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Jakarta' });
+        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Makassar' });
         const el = document.getElementById('live-clock');
-        if (el) el.textContent = `${timeStr} WIB`;
+        if (el) el.textContent = `${timeStr} WITA`;
       }
       updateClock();
       setInterval(updateClock, 1000);
@@ -718,13 +687,13 @@
           const truncUrl = safeUrl.length > 34 ? safeUrl.substring(0, 34) + '...' : safeUrl;
 
           return `
-            <tr class="hover:bg-slate-50/75 transition-colors">
+            <tr class="hover:bg-slate-50/75 transition-colors cursor-pointer group" onclick="showDashboardReportDetail('${r.id}')" title="Klik untuk melihat detail aduan #${escapeHtml(r.id)}">
               <td class="px-5 py-3.5 whitespace-nowrap">
-                <div class="font-mono font-bold text-xs text-slate-800">${escapeHtml(r.id)}</div>
+                <div class="font-mono font-bold text-xs text-slate-800 group-hover:text-emerald-700 transition-colors">${escapeHtml(r.id)}</div>
                 <div class="text-[11px] text-slate-400">${escapeHtml(r.date || '-')}</div>
               </td>
               <td class="px-4 py-3.5">
-                <div class="font-mono text-xs font-semibold text-rose-600 truncate max-w-xs" title="${safeUrl}">
+                <div class="font-mono text-xs font-semibold text-rose-600 truncate max-w-xs group-hover:underline" title="${safeUrl}">
                   ${truncUrl}
                 </div>
                 <div class="text-[11px] text-slate-400 truncate max-w-xs">${escapeHtml(r.reporter || r.reporter_name || 'Warga Anonim')}</div>
@@ -737,8 +706,8 @@
               <td class="px-4 py-3.5 whitespace-nowrap">
                 ${statusBadge}
               </td>
-              <td class="px-5 py-3.5 whitespace-nowrap text-right">
-                <button type="button" onclick="showDashboardReportDetail('${r.id}')" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 hover:border-emerald-200 transition-colors">
+              <td class="px-5 py-3.5 whitespace-nowrap text-right" onclick="event.stopPropagation()">
+                <button type="button" onclick="event.stopPropagation(); showDashboardReportDetail('${r.id}')" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 hover:border-emerald-200 transition-colors">
                   <i class="bi bi-eye"></i>
                   <span>Detail</span>
                 </button>
@@ -756,7 +725,7 @@
         }
 
         container.innerHTML = reports.map(r => `
-          <a href="laporan.blade.php" class="block p-3 hover:bg-slate-50 transition-colors">
+          <a href="/admin/laporan?id=${encodeURIComponent(r.id)}" class="block p-3 hover:bg-slate-50 transition-colors">
             <div class="flex items-center justify-between mb-1">
               <span class="font-mono font-bold text-[11px] text-slate-800">${escapeHtml(r.id)}</span>
               <span class="text-[10px] text-slate-400">${escapeHtml(r.date || 'Hari ini')}</span>
@@ -774,39 +743,50 @@
             icon: 'bi-inbox-fill text-amber-500 bg-amber-50',
             title: `Laporan Aduan #${reports[0]?.id || 'LPR081'}`,
             desc: `Tautan judol dilaporkan oleh warga. Status: ${reports[0]?.status || 'Pending'}`,
-            time: '10 menit lalu'
+            time: '10 menit lalu',
+            url: `laporan.blade.php?id=${reports[0]?.id || 'LPR081'}`
           },
           {
             icon: 'bi-shield-check text-emerald-500 bg-emerald-50',
             title: 'Verifikasi Domain Phishing',
             desc: 'Tim analis mencatat rekomendasi pemblokiran ke AduanKonten Kominfo.',
-            time: '1 jam lalu'
+            time: '1 jam lalu',
+            url: '/admin/laporan'
           },
           {
             icon: 'bi-file-text-fill text-blue-500 bg-blue-50',
             title: 'Artikel Literasi Diterbitkan',
             desc: `"${articles[0]?.title || 'Muamalah Finansial'}" telah tayang di portal publik.`,
-            time: '3 jam lalu'
+            time: '3 jam lalu',
+            url: '/admin/artikel'
           },
           {
             icon: 'bi-person-check-fill text-purple-500 bg-purple-50',
             title: 'Audit Hak Akses Staf',
             desc: 'Sesi login Super Admin aktif dengan token otentikasi terverifikasi.',
-            time: 'Hari ini'
+            time: 'Hari ini',
+            url: '/admin/akun'
+          },
+          {
+            icon: 'bi-cpu-fill text-emerald-500 bg-emerald-50',
+            title: 'Audit Sanad AI Tabayyun',
+            desc: 'Model heuristik sinkron dengan basis data CSIRT dan pola phishing terbaru.',
+            time: 'Hari ini',
+            url: '/admin/integrasi-ai'
           }
         ];
 
         feed.innerHTML = activities.map(act => `
-          <div class="relative flex items-start gap-3 pl-1">
-            <div class="w-7 h-7 rounded-xl flex items-center justify-center text-xs flex-shrink-0 z-10 ${act.icon}">
+          <div class="relative flex items-start gap-3 pl-1 p-2 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors group" onclick="window.location.href='${act.url}'" title="Buka ${act.title}">
+            <div class="w-7 h-7 rounded-xl flex items-center justify-center text-xs flex-shrink-0 z-10 ${act.icon} group-hover:scale-110 transition-transform">
               <i class="bi ${act.icon.split(' ')[0]}"></i>
             </div>
             <div class="min-w-0 flex-1 pt-0.5">
               <div class="flex items-center justify-between">
-                <p class="text-xs font-bold text-slate-800 leading-tight">${act.title}</p>
+                <p class="text-xs font-bold text-slate-800 leading-tight group-hover:text-emerald-700 transition-colors">${act.title}</p>
                 <span class="text-[10px] text-slate-400 font-mono">${act.time}</span>
               </div>
-              <p class="text-[11px] text-slate-500 mt-0.5 leading-snug">${act.desc}</p>
+              <p class="text-[11px] text-slate-500 truncate mt-0.5">${act.desc}</p>
             </div>
           </div>
         `).join('');
@@ -861,3 +841,5 @@
   </script>
 </body>
 </html>
+
+

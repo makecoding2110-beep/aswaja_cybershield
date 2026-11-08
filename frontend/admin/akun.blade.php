@@ -52,6 +52,7 @@
     }
   </script>
   <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/ui-kit.css">
 </head>
 
 <body class="h-full bg-slate-50 font-sans text-slate-800 antialiased flex flex-row overflow-x-hidden">
@@ -73,22 +74,18 @@
   <div id="sidebar-backdrop"
     class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300"></div>
 
-  <!-- Sidebar Component (Kiri) -->
-  <aside id="sidebar"
-    class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-300 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto lg:z-auto border-r border-slate-800 flex-shrink-0">
+    <!-- Sidebar Component (Kiri: Hijau Gradasi) -->
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-[#064e3b] via-[#022c22] to-[#011a14] text-emerald-100 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen border-r border-emerald-900/40 shrink-0 shadow-2xl">
     <!-- Brand Header -->
-    <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800/80 bg-slate-950/40">
-      <a href="index.blade.php" class="flex items-center gap-3 group text-decoration-none">
-        <img src="../../logo-shield.png" alt="Aswaja CyberShield"
-          class="w-9 h-9 rounded-xl object-contain ring-1 ring-emerald-500/30 shadow-md">
+    <div class="h-16 flex items-center justify-between px-5 border-b border-emerald-800/40 bg-emerald-950/40">
+      <a href="/admin" class="flex items-center gap-3 group text-decoration-none">
+        <img src="../../logo-shield.png" alt="Aswaja CyberShield" class="w-9 h-9 rounded-xl object-contain ring-1 ring-emerald-400/40 shadow-md">
         <div class="min-w-0">
           <span class="font-display font-bold text-sm text-white tracking-tight block truncate">Aswaja CyberShield</span>
-          <span class="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider block">Admin Dashboard</span>
-      </div>
+          <span class="text-[10px] text-emerald-300 font-semibold uppercase tracking-wider block">Admin Dashboard</span>
+        </div>
       </a>
-      <button id="close-sidebar-btn" type="button"
-        class="lg:hidden text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
-        aria-label="Tutup sidebar">
+      <button id="close-sidebar-btn" type="button" class="lg:hidden text-emerald-200/80 hover:text-white p-1 rounded-lg hover:bg-emerald-800/40 transition-colors" aria-label="Tutup sidebar">
         <i class="bi bi-x-lg text-lg"></i>
       </button>
     </div>
@@ -96,79 +93,61 @@
     <!-- Navigation Menu Items -->
     <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-6" aria-label="Navigasi Utama Admin">
       <div>
-        <p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Menu Utama</p>
+        <p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-emerald-300/70 mb-2">Menu Utama</p>
         <div class="space-y-1">
           <!-- 1. Dashboard -->
-          <a href="index.blade.php"
-            class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-speedometer2 text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <a href="/admin" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-speedometer2 text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Dashboard</span>
           </a>
 
           <!-- 2. Artikel -->
-          <a href="artikel.blade.php"
-            class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i
-              class="bi bi-file-earmark-text text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <a href="/admin/artikel" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-file-earmark-text text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Artikel</span>
           </a>
 
           <!-- 3. Riwayat Pelaporan -->
-          <a href="laporan.blade.php"
-            class="flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
+          <a href="/admin/laporan" class="flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
             <span class="flex items-center gap-3">
-              <i
-                class="bi bi-shield-exclamation text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+              <i class="bi bi-shield-exclamation text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
               <span>Laporan</span>
             </span>
-            <span id="badge-sidebar-reports"
-              class="bg-rose-500/20 text-rose-400 text-xs px-2 py-0.5 rounded-full font-bold border border-rose-500/30">0</span>
+            <span id="badge-sidebar-reports" class="bg-rose-500/20 text-rose-300 text-xs px-2 py-0.5 rounded-full font-bold border border-rose-500/30">0</span>
           </a>
 
-          <!-- 4. Studi Kasus -->
-          <a href="studi-kasus.blade.php"
-            class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-journal-check text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <!-- 5. Studi Kasus -->
+          <a href="/admin/studi-kasus" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-journal-check text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Studi Kasus</span>
           </a>
 
-          <!-- 5. Integrasi Dual AI -->
-          <a href="integrasi-ai.blade.php"
-            class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-cpu text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
-            <span>Integrasi Dual AI</span>
-          </a>
-
-          <!-- 6. Kelola Akun (Active) -->
-          <a href="akun.blade.php"
-            class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-950/30 transition-all">
-            <i class="bi bi-people text-base text-white"></i>
+          <!-- 4. Kelola Akun -->
+          <a href="/admin/akun" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl bg-emerald-500 text-white shadow-lg shadow-emerald-950/50 transition-all group">
+            <i class="bi bi-people text-base text-white transition-colors"></i>
             <span>Kelola Akun</span>
           </a>
         </div>
       </div>
+    </nav>
 
-      <!-- Sidebar Bottom / User Bar -->
-      <div class="p-3 border-t border-slate-800/80 bg-slate-950/40">
-        <div
-          class="flex items-center justify-between px-2.5 py-2 rounded-xl bg-slate-800/60 border border-slate-700/50">
-          <div class="flex items-center gap-2.5 min-w-0">
-            <div id="sidebar-avatar"
-              class="w-8 h-8 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
-              A
-            </div>
-            <div class="min-w-0 flex-1">
-              <p id="sidebar-user-name" class="text-xs font-semibold text-white truncate">Admin Utama</p>
-              <p id="sidebar-user-role" class="text-[10px] text-emerald-400 truncate font-mono">Super Admin</p>
-            </div>
+    <!-- Sidebar Bottom / User Bar -->
+    <div class="p-3 mt-auto shrink-0 border-t border-emerald-800/40 bg-emerald-950/50">
+      <div class="flex items-center justify-between px-2.5 py-2 rounded-xl bg-emerald-900/40 border border-emerald-700/40">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div id="sidebar-avatar" class="w-8 h-8 rounded-lg bg-emerald-500 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
+            A
           </div>
-          <button id="sidebar-btn-logout" type="button"
-            class="text-slate-400 hover:text-rose-400 p-1.5 rounded-lg hover:bg-slate-700/60 transition-colors"
-            title="Keluar">
-            <i class="bi bi-box-arrow-right"></i>
-          </button>
+          <div class="min-w-0 flex-1">
+            <p id="sidebar-user-name" class="text-xs font-semibold text-white truncate">Admin Utama</p>
+            <p id="sidebar-user-role" class="text-[10px] text-emerald-300 truncate font-mono">Super Admin</p>
+          </div>
         </div>
+        <button id="sidebar-btn-logout" type="button" class="text-emerald-200/80 hover:text-rose-400 p-1.5 rounded-lg hover:bg-emerald-800/50 transition-colors" title="Keluar">
+          <i class="bi bi-box-arrow-right"></i>
+        </button>
       </div>
+    </div>
   </aside>
 
   <!-- Main Content Wrapper (Tengah) -->
@@ -202,7 +181,7 @@
         <div
           class="hidden xl:flex items-center gap-1.5 text-xs text-slate-600 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 font-mono">
           <i class="bi bi-clock text-slate-400"></i>
-          <span id="live-clock">--:--:-- WIB</span>
+          <span id="live-clock"><?php date_default_timezone_set('Asia/Makassar'); echo date('H:i:s'); ?> WITA</span>
         </div>
 
         <button type="button" id="btn-refresh-admins"
@@ -253,7 +232,7 @@
               <p id="dropdown-user-email" class="text-xs font-semibold text-slate-800 truncate">admin@aswajacyber.id</p>
             </div>
             <div class="py-1">
-              <a href="akun.blade.php"
+              <a href="/admin/akun"
                 class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">
                 <i class="bi bi-person-gear text-slate-400"></i>
                 <span>Kelola Akun &amp; Profil</span>
@@ -349,12 +328,15 @@
       <!-- Matrix Hak Akses (Panduan Hak Akses Sistem) -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Super Admin Privileges -->
-        <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-sm space-y-2">
-          <div class="flex items-center gap-2">
-            <span class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <i class="bi bi-shield-lock-fill text-sm"></i>
-            </span>
-            <h3 class="font-display font-bold text-sm text-slate-900">Peran: Super Admin </h3>
+        <div onclick="filterByRole('Super Admin')" role="button" tabindex="0" class="p-5 rounded-2xl bg-white border border-slate-200/80 hover:border-emerald-500/50 hover:shadow-md transition-all duration-200 group cursor-pointer active:scale-[0.99] space-y-2" title="Klik untuk memfilter daftar Super Admin">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                <i class="bi bi-shield-lock-fill text-sm"></i>
+              </span>
+              <h3 class="font-display font-bold text-sm text-slate-900 group-hover:text-emerald-700 transition-colors">Peran: Super Admin</h3>
+            </div>
+            <span class="text-[11px] font-semibold text-emerald-600 group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-1">Filter Staf &rarr;</span>
           </div>
           <p class="text-xs text-slate-500 leading-relaxed">
             Memiliki wewenang mutlak untuk mengelola seluruh data platform: menambah, mengedit, dan menghapus artikel,
@@ -363,12 +345,15 @@
         </div>
 
         <!-- Admin Basic Privileges -->
-        <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-sm space-y-2">
-          <div class="flex items-center gap-2">
-            <span class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-              <i class="bi bi-shield text-sm"></i>
-            </span>
-            <h3 class="font-display font-bold text-sm text-slate-900">Peran: Admin Basic </h3>
+        <div onclick="filterByRole('Admin Basic')" role="button" tabindex="0" class="p-5 rounded-2xl bg-white border border-slate-200/80 hover:border-blue-500/50 hover:shadow-md transition-all duration-200 group cursor-pointer active:scale-[0.99] space-y-2" title="Klik untuk memfilter daftar Admin Basic">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                <i class="bi bi-shield text-sm"></i>
+              </span>
+              <h3 class="font-display font-bold text-sm text-slate-900 group-hover:text-blue-700 transition-colors">Peran: Admin Basic</h3>
+            </div>
+            <span class="text-[11px] font-semibold text-blue-600 group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-1">Filter Staf &rarr;</span>
           </div>
           <p class="text-xs text-slate-500 leading-relaxed">
             Dapat melakukan input konten edukasi, mengelola soal simulasi Cyber Guard, dan memverifikasi laporan
@@ -391,7 +376,7 @@
   <!-- Modal Tambah / Edit Akun Pengguna (Semantic Laravel-Ready Form) -->
   <div id="modal-admin" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
     <div class="min-h-full flex items-center justify-center p-4">
-      <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 my-8">
+      <div class="bg-white rounded-2xl max-w-xl md:max-w-2xl w-full p-6 sm:p-7 shadow-2xl border border-slate-200 my-8">
 
         <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
           <h4 id="modal-admin-title" class="font-display font-bold text-base text-slate-900 flex items-center gap-2">
@@ -463,15 +448,33 @@
               </div>
             </div>
 
-            <!-- Password (Opsional saat edit) -->
-            <div>
-              <label for="admin-password-input" class="block font-semibold text-slate-700 mb-1">
-                Kata Sandi (Password) <span id="pw-required-label" class="text-rose-500">*</span>
-              </label>
-              <input type="password" name="password" id="admin-password-input" placeholder="Minimal 8 karakter..."
-                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-800">
-              <span id="pw-hint" class="text-[10px] text-slate-400 block mt-1">Kosongkan jika tidak ingin mengubah kata
-                sandi saat edit.</span>
+            <!-- Password & Konfirmasi Password -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="admin-password-input" class="block font-semibold text-slate-700 mb-1">
+                  Kata Sandi (Password) <span id="pw-required-label" class="text-rose-500">*</span>
+                </label>
+                <div class="relative">
+                  <input type="password" name="password" id="admin-password-input" placeholder="Min. 8 karakter, huruf, angka, simbol" autocomplete="new-password"
+                    class="w-full px-3 py-2 pr-9 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-800">
+                  <button type="button" onclick="togglePasswordVisibility('admin-password-input', 'toggle-pw-icon')" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 focus:outline-none transition-colors" title="Tampilkan / Sembunyikan Kata Sandi">
+                    <i class="bi bi-eye text-sm" id="toggle-pw-icon"></i>
+                  </button>
+                </div>
+                <span id="pw-hint" class="text-[10px] text-slate-400 block mt-1">Kosongkan jika tidak ingin mengubah kata sandi saat edit.</span>
+              </div>
+              <div id="pw-confirm-wrapper">
+                <label for="admin-password-confirm-input" class="block font-semibold text-slate-700 mb-1">
+                  Konfirmasi Kata Sandi <span id="pw-confirm-required-label" class="text-rose-500">*</span>
+                </label>
+                <div class="relative">
+                  <input type="password" name="password_confirmation" id="admin-password-confirm-input" placeholder="Ulangi kata sandi..." autocomplete="new-password"
+                    class="w-full px-3 py-2 pr-9 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-800">
+                  <button type="button" onclick="togglePasswordVisibility('admin-password-confirm-input', 'toggle-pw-confirm-icon')" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 focus:outline-none transition-colors" title="Tampilkan / Sembunyikan Konfirmasi Kata Sandi">
+                    <i class="bi bi-eye text-sm" id="toggle-pw-confirm-icon"></i>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -494,6 +497,7 @@
 
   <!-- API Layer & Scripts -->
   <script src="../../js/api.js"></script>
+  <script src="../../js/ui-kit.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // 1. Auth Guard
@@ -523,7 +527,9 @@
       }
 
       function handleLogout() {
-        if (confirm('Keluar dari sesi administrator Aswaja CyberShield?')) {
+        if (window.AuthService && typeof window.AuthService.confirmLogout === 'function') {
+          window.AuthService.confirmLogout();
+        } else if (confirm('Keluar dari sesi administrator Aswaja CyberShield?')) {
           window.AuthService.logout();
         }
       }
@@ -533,9 +539,9 @@
       // Live Clock
       function updateClock() {
         const now = new Date();
-        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Jakarta' });
+        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Makassar' });
         const el = document.getElementById('live-clock');
-        if (el) el.textContent = `${timeStr} WIB`;
+        if (el) el.textContent = `${timeStr} WITA`;
       }
       updateClock();
       setInterval(updateClock, 1000);
@@ -646,15 +652,15 @@
           const avatarInit = (a.name || 'A').charAt(0).toUpperCase();
 
           return `
-            <tr class="hover:bg-slate-50/75 transition-colors">
+            <tr class="hover:bg-slate-50/75 transition-colors ${(isSuper || currentUser.id === a.id) ? 'cursor-pointer group' : ''}" onclick="${(isSuper || currentUser.id === a.id) ? `openEditAdminModal(${a.id})` : ''}" title="${(isSuper || currentUser.id === a.id) ? 'Klik untuk edit akun staf: ' + escapeHtml(a.name) : ''}">
               <!-- 1. Kolom: Nama -->
               <td class="px-5 py-4 whitespace-nowrap">
                 <div class="flex items-center gap-3">
-                  <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center border border-slate-200 flex-shrink-0">
+                  <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center border border-slate-200 flex-shrink-0 group-hover:bg-emerald-100 group-hover:text-emerald-800 transition-colors">
                     ${avatarInit}
                   </div>
                   <div>
-                    <div class="font-display font-bold text-xs sm:text-sm text-slate-900">${escapeHtml(a.name)}</div>
+                    <div class="font-display font-bold text-xs sm:text-sm text-slate-900 group-hover:text-emerald-700 transition-colors">${escapeHtml(a.name)}</div>
                     <div class="font-mono text-[11px] text-slate-400">@${escapeHtml(a.username || '-')}</div>
                   </div>
                 </div>
@@ -679,15 +685,15 @@
               </td>
 
               <!-- 5. Kolom: Aksi (Edit / Hapus) -->
-              <td class="px-5 py-4 whitespace-nowrap text-right">
+              <td class="px-5 py-4 whitespace-nowrap text-right" onclick="event.stopPropagation()">
                 <div class="inline-flex items-center gap-1.5">
                   ${(isSuper || currentUser.id === a.id) ? `
-                    <button type="button" onclick="openEditAdminModal(${a.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 transition-colors" title="Edit Akun">
+                    <button type="button" onclick="event.stopPropagation(); openEditAdminModal(${a.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 transition-colors" title="Edit Akun">
                       <i class="bi bi-pencil-square text-sm"></i>
                     </button>
                   ` : ''}
                   ${(isSuper && currentUser.id !== a.id) ? `
-                    <button type="button" onclick="handleDeleteAdmin(${a.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 transition-colors" title="Hapus Akun">
+                    <button type="button" onclick="event.stopPropagation(); handleDeleteAdmin(${a.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 transition-colors" title="Hapus Akun">
                       <i class="bi bi-trash text-sm"></i>
                     </button>
                   ` : ''}
@@ -698,19 +704,72 @@
         }).join('');
       }
 
+      window.filterByRole = function(role) {
+        const search = document.getElementById('search-admin');
+        if (search) {
+          search.value = role;
+          renderAdminsTable();
+          search.focus();
+        }
+      };
+
+      // Toggle Password Visibility (Hide / Unhide dengan logo mata)
+      window.togglePasswordVisibility = function (inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (!input || !icon) return;
+        const isPw = input.type === 'password';
+        input.type = isPw ? 'text' : 'password';
+        icon.className = isPw ? 'bi bi-eye-slash text-sm' : 'bi bi-eye text-sm';
+      };
+
+      function resetPasswordVisibility() {
+        const pw = document.getElementById('admin-password-input');
+        const pwConfirm = document.getElementById('admin-password-confirm-input');
+        const iconPw = document.getElementById('toggle-pw-icon');
+        const iconConfirm = document.getElementById('toggle-pw-confirm-icon');
+        if (pw) pw.type = 'password';
+        if (pwConfirm) pwConfirm.type = 'password';
+        if (iconPw) iconPw.className = 'bi bi-eye text-sm';
+        if (iconConfirm) iconConfirm.className = 'bi bi-eye text-sm';
+      }
+
       // Modal Handlers
+      const UI = window.AswajaUI;
+      const adminForm = document.getElementById('form-admin');
+      const adminDirtyTracker = UI ? UI.form.trackDirty(adminForm) : null;
+
+      if (UI) {
+        UI.enhanceModal(document.getElementById('modal-admin'), {
+          labelledBy: 'modal-admin-title',
+          initialFocus: '#admin-name-input',
+          onRequestClose: () => closeAdminModal()
+        });
+      }
+
       window.openAddAdminModal = function () {
         if (!isSuper) {
-          alert('Akses Ditolak: Hanya Super Admin yang berwenang menambah akun.');
+          UI.notice({
+            icon: 'warning',
+            title: 'Akses Ditolak',
+            message: 'Hanya Super Admin yang berwenang menambah akun administrator baru.'
+          });
           return;
         }
 
         document.getElementById('modal-admin-title').innerHTML = '<i class="bi bi-person-plus text-emerald-600"></i><span>Tambah Akun Pengguna Baru</span>';
-        document.getElementById('form-admin').reset();
+        adminForm.reset();
+        resetPasswordVisibility();
         document.getElementById('form-admin-id').value = '';
         document.getElementById('admin-password-input').required = true;
+        document.getElementById('admin-password-confirm-input').required = true;
         document.getElementById('pw-required-label').style.display = 'inline';
+        document.getElementById('pw-confirm-required-label').style.display = 'inline';
         document.getElementById('pw-hint').style.display = 'none';
+        document.getElementById('admin-role-input').disabled = false;
+        document.getElementById('admin-status-input').disabled = false;
+        if (UI) UI.form.clearErrors(adminForm);
+        if (adminDirtyTracker) adminDirtyTracker.reset();
 
         document.getElementById('modal-admin').classList.remove('hidden');
       };
@@ -726,12 +785,15 @@
         document.getElementById('admin-email-input').value = item.email || '';
         document.getElementById('admin-role-input').value = (item.role === 'Superadmin' || item.role === 'Super Admin') ? 'Super Admin' : 'Admin Basic';
         document.getElementById('admin-status-input').value = item.status || 'Aktif';
+        resetPasswordVisibility();
         document.getElementById('admin-password-input').value = '';
+        document.getElementById('admin-password-confirm-input').value = '';
         document.getElementById('admin-password-input').required = false;
+        document.getElementById('admin-password-confirm-input').required = false;
         document.getElementById('pw-required-label').style.display = 'none';
+        document.getElementById('pw-confirm-required-label').style.display = 'none';
         document.getElementById('pw-hint').style.display = 'block';
 
-        // Non-super admins cannot change roles or statuses
         if (!isSuper) {
           document.getElementById('admin-role-input').disabled = true;
           document.getElementById('admin-status-input').disabled = true;
@@ -740,64 +802,189 @@
           document.getElementById('admin-status-input').disabled = false;
         }
 
+        if (UI) UI.form.clearErrors(adminForm);
+        if (adminDirtyTracker) adminDirtyTracker.reset();
         document.getElementById('modal-admin').classList.remove('hidden');
       };
 
-      window.closeAdminModal = function () {
+      window.closeAdminModal = async function (force) {
+        if (!force && adminDirtyTracker && adminDirtyTracker.isDirty()) {
+          const discard = await UI.confirmDiscard({
+            title: 'Tutup form admin?',
+            message: 'Perubahan pada formulir akun belum disimpan. Batalkan perubahan?'
+          });
+          if (!discard) return;
+        }
+        resetPasswordVisibility();
         document.getElementById('modal-admin').classList.add('hidden');
       };
 
-      // Submit Save Admin
+      function validatePasswordStrength(pw) {
+        if (!pw || pw.length < 8) return 'Password minimal 8 karakter.';
+        const hasLetter = /[a-zA-Z]/.test(pw);
+        const hasNumber = /[0-9]/.test(pw);
+        const hasSymbol = /[^a-zA-Z0-9]/.test(pw);
+        if (!hasLetter || !hasNumber || !hasSymbol) {
+          return 'Password harus berupa kombinasi huruf, angka, dan simbol (misal: @, #, $, !).';
+        }
+        return null;
+      }
+
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      // Submit Save Admin with Full Validation & Confirmation Flow
       window.handleSaveAdmin = async function (e) {
         e.preventDefault();
         const id = document.getElementById('form-admin-id').value;
-        const name = document.getElementById('admin-name-input').value.trim();
-        const username = document.getElementById('admin-username-input').value.trim();
-        const email = document.getElementById('admin-email-input').value.trim();
-        const role = document.getElementById('admin-role-input').value;
-        const status = document.getElementById('admin-status-input').value;
-        const password = document.getElementById('admin-password-input').value;
+        const nameInput = document.getElementById('admin-name-input');
+        const usernameInput = document.getElementById('admin-username-input');
+        const emailInput = document.getElementById('admin-email-input');
+        const roleInput = document.getElementById('admin-role-input');
+        const statusInput = document.getElementById('admin-status-input');
+        const pwInput = document.getElementById('admin-password-input');
+        const pwConfirmInput = document.getElementById('admin-password-confirm-input');
 
-        const btn = document.getElementById('btn-save-admin');
-        btn.disabled = true;
-        btn.textContent = 'Menyimpan...';
+        const name = nameInput.value.trim();
+        const username = usernameInput.value.trim();
+        const email = emailInput.value.trim();
+        const role = roleInput.value;
+        const status = statusInput.value;
+        const password = pwInput.value;
+        const passwordConfirmation = pwConfirmInput.value;
 
-        try {
-          const payload = { name, username, email, role, status };
-          if (password) payload.password = password;
+        // 1. Validasi Client-Side
+        const errs = [];
+        if (!name) errs.push({ input: nameInput, label: 'Nama Lengkap', message: 'Nama lengkap wajib diisi.' });
+        if (!username) errs.push({ input: usernameInput, label: 'Username', message: 'Username login wajib diisi.' });
+        else if (username.length < 3) errs.push({ input: usernameInput, label: 'Username', message: 'Username minimal 3 karakter.' });
 
-          if (id) {
-            await window.ApiService.updateAdmin(id, payload);
-          } else {
-            await window.ApiService.createAdmin(payload);
+        if (!email) errs.push({ input: emailInput, label: 'Email', message: 'Email resmi wajib diisi.' });
+        else if (!isValidEmail(email)) errs.push({ input: emailInput, label: 'Email', message: 'Format email tidak valid (contoh: staf@aswajacyber.id).' });
+
+        // Cek duplikasi email & username di daftar lokal
+        const norm = v => String(v || '').trim().toLowerCase();
+        const otherAdmins = adminsList.filter(a => String(a.id) !== String(id));
+        if (otherAdmins.some(a => norm(a.email) === norm(email))) {
+          errs.push({ input: emailInput, label: 'Email', message: 'Email ini sudah digunakan oleh akun lain.' });
+        }
+        if (otherAdmins.some(a => norm(a.username) === norm(username))) {
+          errs.push({ input: usernameInput, label: 'Username', message: 'Username ini sudah digunakan oleh akun lain.' });
+        }
+
+        // Validasi Password
+        if (!id && !password) {
+          errs.push({ input: pwInput, label: 'Password', message: 'Kata sandi wajib diisi untuk akun baru.' });
+        } else if (password) {
+          const strengthErr = validatePasswordStrength(password);
+          if (strengthErr) errs.push({ input: pwInput, label: 'Kekuatan Password', message: strengthErr });
+          if (password !== passwordConfirmation) {
+            errs.push({ input: pwConfirmInput, label: 'Konfirmasi Password', message: 'Konfirmasi kata sandi tidak cocok dengan kata sandi baru.' });
           }
+        }
 
-          closeAdminModal();
+        if (errs.length) {
+          UI.form.showErrors(adminForm, errs, { title: 'Validasi Akun Gagal' });
+          return;
+        }
+        UI.form.clearErrors(adminForm);
+
+        // 2. Alur Konfirmasi
+        const actionLabel = id ? 'Simpan Perubahan' : 'Tambahkan Admin';
+        const titleMsg = id ? 'Simpan perubahan akun admin?' : 'Tambahkan admin baru?';
+        const confirmMsg = id
+          ? `Perbarui profil staf "${name}" (@${username})?`
+          : `Tambahkan akun "${name}" sebagai ${role}?`;
+
+        const outcome = await UI.confirm({
+          icon: 'info',
+          title: titleMsg,
+          message: confirmMsg,
+          summary: [
+            { label: 'Nama', value: name },
+            { label: 'Username', value: `@${username}` },
+            { label: 'Email', value: email },
+            { label: 'Role / Peran', value: role },
+            { label: 'Status', value: status }
+          ],
+          confirmText: actionLabel,
+          cancelText: 'Periksa Lagi',
+          loadingTitle: 'Menyimpan akun admin...',
+          loadingText: 'Mohon tunggu, kredensial akun sedang diamankan.',
+          errorTitle: 'Gagal menyimpan akun',
+          onConfirm: async () => {
+            const payload = { name, username, email, role, status };
+            if (password) {
+              payload.password = password;
+              payload.password_confirmation = passwordConfirmation;
+            }
+            if (id) {
+              return await window.ApiService.updateAdmin(id, payload);
+            } else {
+              return await window.ApiService.createAdmin(payload);
+            }
+          },
+          success: () => ({
+            title: id ? 'Akun admin berhasil diperbarui' : 'Akun admin berhasil dibuat',
+            message: `Akun administrator untuk "${name}" (@${username}) siap digunakan.`,
+            actions: [{ id: 'close', label: 'Tutup & Kembali', variant: 'primary', autofocus: true }]
+          })
+        });
+
+        if (outcome.status === 'success') {
+          if (adminDirtyTracker) adminDirtyTracker.reset();
+          closeAdminModal(true);
           await loadAdmins();
-        } catch (err) {
-          alert('Gagal menyimpan data pengguna: ' + err.message);
-        } finally {
-          btn.disabled = false;
-          btn.textContent = 'Simpan Akun';
         }
       };
 
-      // Delete Admin
+      // Universal Reusable Delete Modal for Admin Accounts (dengan proteksi akun sendiri & admin terakhir)
       window.handleDeleteAdmin = async function (id) {
         if (!isSuper) {
-          alert('Akses Ditolak: Hanya Super Admin yang berwenang menghapus akun.');
+          UI.notice({
+            icon: 'warning',
+            title: 'Akses Ditolak',
+            message: 'Hanya Super Admin yang berwenang menghapus akun staf.'
+          });
           return;
         }
 
         const item = adminsList.find(a => Number(a.id) === Number(id));
-        if (confirm(`Apakah Anda yakin ingin menghapus akun ${item?.name || 'ini'}? Tindakan ini permanen.`)) {
-          try {
-            await window.ApiService.deleteAdmin(id);
-            await loadAdmins();
-          } catch (err) {
-            alert('Gagal menghapus akun: ' + err.message);
+        const username = item ? (item.username || item.name) : String(id);
+        const isSelf = currentUser && (currentUser.id === id || currentUser.username === item?.username);
+
+        let blockedReason = null;
+        if (isSelf) {
+          blockedReason = 'Anda tidak dapat menghapus akun Anda sendiri demi mencegah kehilangan akses ke sistem.';
+        } else if (adminsList.length <= 1) {
+          blockedReason = 'Sistem harus memiliki minimal satu akun admin aktif. Anda tidak dapat menghapus akun admin terakhir.';
+        } else {
+          const isSuperRole = (a) => a && (a.role === 'Super Admin' || a.role === 'Superadmin');
+          if (isSuperRole(item) && adminsList.filter(isSuperRole).length <= 1) {
+            blockedReason = 'Akun ini adalah satu-satunya Super Admin di sistem. Anda tidak boleh menghapus Super Admin terakhir.';
           }
         }
+
+        await UI.confirmDelete({
+          type: 'akun admin',
+          name: `${item?.name || 'Admin'} (@${username})`,
+          requireText: username, // Wajibkan ketik username untuk konfirmasi akun sensitif
+          blockedReason: blockedReason,
+          blockedTitle: 'Penghapusan Akun Ditolak',
+          successMessage: `Akun administrator @${username} berhasil dihapus.`,
+          onDelete: async () => {
+            await window.ApiService.deleteAdmin(id);
+            const row = document.querySelector(`button[onclick*="handleDeleteAdmin(${id})"]`)?.closest('tr');
+            if (row) {
+              row.style.transition = 'opacity 250ms ease, transform 250ms ease';
+              row.style.opacity = '0';
+              row.style.transform = 'translateY(-6px)';
+              await new Promise(r => setTimeout(r, 260));
+            }
+            await loadAdmins();
+          }
+        });
       };
 
       function renderNotificationList(reports) {
@@ -808,7 +995,7 @@
         }
 
         container.innerHTML = reports.map(r => `
-          <a href="laporan.blade.php" class="block p-3 hover:bg-slate-50 transition-colors">
+          <a href="/admin/laporan" class="block p-3 hover:bg-slate-50 transition-colors">
             <div class="flex items-center justify-between mb-1">
               <span class="font-mono font-bold text-[11px] text-slate-800">${escapeHtml(r.id)}</span>
               <span class="text-[10px] text-slate-400">${escapeHtml(r.date || 'Hari ini')}</span>
@@ -838,3 +1025,4 @@
 </body>
 
 </html>
+

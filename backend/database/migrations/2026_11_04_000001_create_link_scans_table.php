@@ -22,7 +22,6 @@ return new class extends Migration
             // Hasil masing-masing engine disimpan terpisah untuk transparansi audit
             $table->json('suricata_result')->nullable();
             $table->json('gemini_result')->nullable();
-            $table->json('deepseek_result')->nullable();
             $table->json('ai_comparison')->nullable();
 
             // Bukti indikator kompilasi

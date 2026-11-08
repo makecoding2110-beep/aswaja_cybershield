@@ -25,8 +25,10 @@
         const isDark = savedTheme === 'dark' || (!savedTheme && localStorage.getItem('aswaja_darkmode') === '1') || (!savedTheme && !localStorage.getItem('aswaja_darkmode') && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
         if (isDark) {
           document.documentElement.classList.add('dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
         } else {
           document.documentElement.classList.remove('dark');
+          document.documentElement.setAttribute('data-theme', 'light');
         }
       } catch (e) {}
     })();
@@ -63,6 +65,7 @@
     }
   </script>
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/ui-kit.css">
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
   <!-- PAGE LOADING SCREEN -->
@@ -174,26 +177,31 @@
 
 
 
-  <main class="flex-grow">
+  <main class="flex-grow relative overflow-hidden">
+    <!-- Ambient Section Particles & Floating Orbs -->
+    <div class="section-particles absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true"></div>
+    <div class="absolute top-10 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-emerald-400/15 blur-[100px] rounded-full pointer-events-none -z-10 animate-float"></div>
+    <div class="absolute -top-20 right-10 w-96 h-96 bg-blue-400/15 blur-[90px] rounded-full pointer-events-none -z-10 animate-float-delayed"></div>
     
-  <div class="py-10 md:py-14">
+  <div class="pt-6 pb-12 sm:pt-8 sm:pb-14 relative z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Page Header -->
-      <div class="text-center max-w-3xl mx-auto mb-10">
-        <h1 class="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight mb-3">
+      <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950/70 border border-emerald-200/80 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-semibold uppercase tracking-wider mb-4 shadow-2xs">
+          <span class="material-symbols-outlined text-[16px] text-emerald-600 dark:text-emerald-400">security</span>
+          <span>Simulasi Interaktif Refleks Siber</span>
+        </div>
+        <h1 class="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tight mb-3">
           Cyber Guard Test
         </h1>
-        <p class="text-slate-600 text-base leading-relaxed">
+        <p class="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
           Ukur refleks dan kewaspadaan Tabayyun Anda dalam mengenali modus investasi menyesatkan, skema robot trading fiktif, arisan berkedok ponzi, dan tautan judol terselubung di dunia nyata.
         </p>
       </div>
 
-      <!-- 2-Column Responsive Layout (Penuh & Seimbang) -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-        <!-- Kolom Kiri: Quiz Container & Hasil (lg:col-span-8) -->
-        <div class="lg:col-span-8 space-y-6">
+      <!-- Quiz Section (Terpusat & Rapi Responsif) -->
+      <div class="max-w-4xl mx-auto space-y-6">
 
           <!-- Main Quiz Card -->
           <div id="quiz-container" class="bg-white rounded-2xl shadow-md border border-slate-200/90 p-6 sm:p-8 space-y-8">
@@ -231,7 +239,7 @@
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center justify-between mb-1">
                     <span class="font-bold text-xs text-slate-800 dark:text-slate-200" id="mockup-sender">+62 821-9981-XXXX (Ekspedisi Kilat)</span>
-                    <span class="text-[11px] text-slate-400 dark:text-slate-400">10:14 WIB</span>
+                    <span class="text-[11px] text-slate-400 dark:text-slate-400">10:14 WITA</span>
                   </div>
                   <div class="bg-white dark:bg-slate-800 p-3 rounded-xl rounded-tl-none shadow-sm border border-slate-200/80 dark:border-slate-700 max-w-sm space-y-2">
                     <p class="text-xs text-slate-700 dark:text-slate-200" id="mockup-message">Paket tertahan di gudang pusat. Mohon segera unduh foto resi untuk konfirmasi penerima:</p>
@@ -316,87 +324,6 @@
             </div>
           </div>
 
-        </div>
-
-        <!-- Kolom Kanan: Sidebar Panduan & Aksi Cepat (lg:col-span-4) -->
-        <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-28">
-
-          <!-- Widget 1: Cakupan Studi Kasus -->
-          <div class="card-hover-effect bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 class="font-display font-bold text-base text-slate-900 flex items-center gap-2">
-                <span class="material-symbols-outlined text-purple-600 text-xl">checklist</span>
-                <span>4 Skenario Uji</span>
-              </h3>
-              <span class="text-[11px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">Investasi &amp; Judol</span>
-            </div>
-            
-            <div class="space-y-2.5 text-xs text-slate-600">
-              <div class="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
-                <span class="w-5 h-5 rounded-md bg-purple-100 text-purple-800 font-bold flex items-center justify-center shrink-0 text-[10px]">1</span>
-                <div>
-                  <span class="font-bold text-slate-900 block">Robot Trading Pasif</span>
-                  <span class="text-slate-500">Janji cuan harian fiktif domain .vip.</span>
-                </div>
-              </div>
-              <div class="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
-                <span class="w-5 h-5 rounded-md bg-purple-100 text-purple-800 font-bold flex items-center justify-center shrink-0 text-[10px]">2</span>
-                <div>
-                  <span class="font-bold text-slate-900 block">Game Finansial Slot</span>
-                  <span class="text-slate-500">Kedok aplikasi dompet digital /bonus-slot.</span>
-                </div>
-              </div>
-              <div class="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
-                <span class="w-5 h-5 rounded-md bg-purple-100 text-purple-800 font-bold flex items-center justify-center shrink-0 text-[10px]">3</span>
-                <div>
-                  <span class="font-bold text-slate-900 block">Arisan Kilat Berantai</span>
-                  <span class="text-slate-500">Imbal hasil instan berujung deposit judol.</span>
-                </div>
-              </div>
-              <div class="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
-                <span class="w-5 h-5 rounded-md bg-purple-100 text-purple-800 font-bold flex items-center justify-center shrink-0 text-[10px]">4</span>
-                <div>
-                  <span class="font-bold text-slate-900 block">Afiliasi / Partner Judol</span>
-                  <span class="text-slate-500">Tawaran komisi referral jaringan maysir.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Widget 2: Uji Langsung Teks di AI Tabayyun -->
-          <div class="card-hover-effect p-6 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-800 text-white shadow-md shadow-emerald-700/20 space-y-4 cursor-pointer">
-            <div class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-white">
-              <span class="material-symbols-outlined text-2xl">bolt</span>
-            </div>
-            <div>
-              <h3 class="font-display font-bold text-base leading-tight mb-1">Dapat Tautan Mencurigakan?</h3>
-              <p class="text-xs text-emerald-100 leading-relaxed">
-                Uji tautan investasi bodong, robot trading, atau skema deposit mencurigakan langsung dengan mesin detektor AI Tabayyun.
-              </p>
-            </div>
-            <a href="tabayyun.blade.php" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white text-emerald-900 font-bold text-xs hover:bg-emerald-50 transition-all shadow-sm">
-              <span>Buka AI Tabayyun Checker</span>
-              <span class="material-symbols-outlined text-[15px]">arrow_forward</span>
-            </a>
-          </div>
-
-          <!-- Widget 3: Pusat Aduan Lapor Siber -->
-          <div class="card-hover-effect bg-red-50/80 dark:bg-red-950/30 p-5 rounded-2xl border border-red-200/80 dark:border-red-800/60 space-y-2.5 cursor-pointer">
-            <div class="flex items-center gap-2 text-red-700 dark:text-red-300 font-bold text-sm">
-              <span class="material-symbols-outlined text-lg">emergency</span>
-              <span>Pusat Aduan Korban</span>
-            </div>
-            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              Terlanjur menginstal file mencurigakan atau menemukan indikasi rekening penipu? Laporkan segera ke tim verifikasi.
-            </p>
-            <a href="lapor.blade.php" class="inline-flex items-center gap-1.5 text-xs font-bold text-red-700 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 pt-1">
-              <span>Buka Portal Pengaduan</span>
-              <span class="material-symbols-outlined text-[15px]">arrow_forward</span>
-            </a>
-          </div>
-
-        </aside>
-
       </div>
 
     </div>
@@ -404,7 +331,7 @@
 
   </main>
 
-  <footer class="bg-slate-900 text-slate-300 border-t border-slate-800 mt-0">
+  <footer class="bg-gradient-to-b from-[#064e3b] via-[#022c22] to-[#011a14] dark:bg-slate-950 text-emerald-100/90 dark:text-slate-300 border-t border-emerald-900/40 dark:border-slate-800 mt-0">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
 
@@ -414,10 +341,10 @@
           <img src="../logo-shield.png" alt="Logo Resmi Aswaja CyberShield" class="w-9 h-9 object-contain">
           <span class="font-display font-bold text-xl text-white tracking-tight">Aswaja CyberShield</span>
         </div>
-        <p class="text-sm text-slate-400 leading-relaxed max-w-md">
+        <p class="text-sm text-emerald-100/80 dark:text-slate-400 leading-relaxed max-w-md">
           Inisiatif ketahanan digital berbasis prinsip Tabayyun dan nilai Ahlussunnah wal Jama'ah untuk mendeteksi serta membentengi masyarakat dari bahaya judi online, penipuan finansial, dan jebakan investasi ilegal.
         </p>
-        <div class="pt-2 text-xs text-emerald-400 font-medium">
+        <div class="pt-2 text-xs text-emerald-300 dark:text-emerald-400 font-medium">
           Amanah &bull; Tabayyun &bull; Maslahah Ummah
         </div>
       </div>
@@ -426,10 +353,10 @@
       <div class="md:col-span-3 space-y-3">
         <h4 class="font-display font-semibold text-sm text-white uppercase tracking-wider">Navigasi Utama</h4>
         <ul class="space-y-2 text-sm">
-          <li><a href="index.blade.php" class="hover:text-emerald-400 transition-colors">Beranda Utama</a></li>
-          <li><a href="tabayyun.blade.php" class="hover:text-emerald-400 transition-colors">Analisis Tautan Tabayyun</a></li>
-          <li><a href="etika.blade.php" class="hover:text-emerald-400 transition-colors">Modul Etika &amp; Fiqih Siber</a></li>
-          <li><a href="cyber-guard.blade.php" class="hover:text-emerald-400 transition-colors">Cyber Guard Test (Kuis)</a></li>
+          <li><a href="index.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Beranda Utama</a></li>
+          <li><a href="tabayyun.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Analisis Tautan Tabayyun</a></li>
+          <li><a href="etika.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Modul Etika &amp; Fiqih Siber</a></li>
+          <li><a href="cyber-guard.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Cyber Guard Test (Kuis)</a></li>
         </ul>
       </div>
 
@@ -437,9 +364,9 @@
       <div class="md:col-span-3 space-y-3">
         <h4 class="font-display font-semibold text-sm text-white uppercase tracking-wider">Layanan Terpadu</h4>
         <ul class="space-y-2 text-sm">
-          <li><a href="lapor.blade.php" class="hover:text-red-400 transition-colors">Portal Lapor</a></li>
-          <li><a href="etika.blade.php" class="hover:text-emerald-400 transition-colors">Pedoman Literasi</a></li>
-          <li><span class="text-slate-500">Protokol Fiqih Informasi Digital</span></li>
+          <li><a href="lapor.blade.php" class="text-rose-300 hover:text-white dark:text-rose-400 dark:hover:text-rose-300 transition-colors">Portal Lapor</a></li>
+          <li><a href="etika.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Pedoman Literasi</a></li>
+          <li><span class="text-emerald-300/60 dark:text-slate-500">Protokol Fiqih Informasi Digital</span></li>
         </ul>
       </div>
 

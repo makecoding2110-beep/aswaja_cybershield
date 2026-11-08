@@ -1,0 +1,15 @@
+# ==============================================================================
+# ASWAJA CYBERSHIELD - LOCAL SURICATA NIDS RULES (EXPANDED THREAT DETECTION)
+# Deteksi 3 Teknik Penyusupan Tautan: Defacement, Open Redirect, Typosquatting
+# SID Range: 1000101 - 1000199
+# ==============================================================================
+
+# SID 1000101: Deteksi Kata Kunci Judol pada Jalur URI (indikasi Defacement / Script Injection)
+alert http any any -> any any (msg:"ASWAJA-IDS Kata kunci judol pada URI"; flow:established,to_server; http.uri; pcre:"/(slot|gacor|maxwin|togel|sbobet|scatter|rtp)/i"; classtype:policy-violation; sid:1000101; rev:1; metadata:technique web_defacement;)
+
+# SID 1000102: Deteksi Parameter Open Redirect yang membelokkan ke URL Eksternal Absolut
+alert http any any -> any any (msg:"ASWAJA-IDS Parameter open redirect ke URL eksternal"; flow:established,to_server; http.uri; pcre:"/[?&](url|redirect|to|link|dest|next|goto|return)=(https?(%3A|:)(%2F|\/){2})/i"; classtype:policy-violation; sid:1000102; rev:1; metadata:technique open_redirect;)
+
+# SID 1000103: Deteksi Query DNS Domain yang Memuat Kata Kunci Judol Eksplisit
+alert dns any any -> any any (msg:"ASWAJA-IDS Query DNS domain berkata kunci judol"; dns.query; pcre:"/(slot|gacor|maxwin|togel)/i"; classtype:policy-violation; sid:1000103; rev:1; metadata:technique keyword_judol;)
+

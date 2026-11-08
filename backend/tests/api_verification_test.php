@@ -50,7 +50,19 @@ $res = callRoute('POST', '/api/analyze-link', ['url' => 'https://cuan-trading-vi
 $json = json_decode($res->getContent(), true);
 assertTest('Analyze Link (Judol Suspicious)', $res->getStatusCode() === 200 && ($json['alertClass'] ?? '') === 'red', $res->getContent());
 
+// 2b. Analisis Tautan Bersih / Legal (Kompas.com)
+$resClean = callRoute('POST', '/api/analyze-link', ['url' => 'https://www.kompas.com/']);
+$jsonClean = json_decode($resClean->getContent(), true);
+assertTest('Analyze Link Clean (Kompas.com - Emerald & Valid Findings)', 
+    $resClean->getStatusCode() === 200 && 
+    ($jsonClean['alertClass'] ?? '') === 'emerald' && 
+    !empty($jsonClean['findings']) && 
+    count($jsonClean['findings']) >= 2, 
+    $resClean->getContent()
+);
+
 // 3. Kirim Laporan Publik
+\Illuminate\Support\Facades\RateLimiter::clear('report_submission:127.0.0.1');
 $res = callRoute('POST', '/api/reports', [
     'url' => 'https://investasi-bodong-palsu.cc/claim',
     'reporter' => 'Warga Kaltim',
@@ -71,7 +83,7 @@ assertTest('Get Public Case Studies', $res->getStatusCode() === 200, $res->getCo
 
 $res = callRoute('POST', '/api/cyber-guard/evaluate', [
     'answers' => [
-        ['caseId' => 1, 'selectedKey' => 'B']
+        ['caseId' => 1, 'selectedKey' => 'A']
     ]
 ]);
 $json = json_decode($res->getContent(), true);

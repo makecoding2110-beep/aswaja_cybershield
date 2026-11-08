@@ -7,71 +7,71 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ─── Data Soal Judol Lokal (Fallback jika API belum siap) ───────────────────
+  // ─── Data Soal Studi Kasus (Sinkron dengan public.case_studies di Database) ───
   const fallbackQuizData = [
     {
-      scenario: "Studi Kasus 01: Investasi Robot Trading Pasif",
-      sender: "Grup WhatsApp: 💰 CUAN AUTOPILOT VIP 88",
-      message: "Daftar sekarang! ROBOT TRADING otomatis kerja 24 jam. Profit PASTI 3–5% per hari tanpa risiko. Modal awal Rp 500.000 LANGSUNG CAIR. Link pendaftaran: https://robot-trading-cuan88.vip/register",
-      attachment: "Tautan: robot-trading-cuan88.vip/register",
-      attachmentType: "Tautan URL Mencurigakan",
+      scenario: "Studi Kasus 01: Jebakan Grup VIP \"Titip Dana\" & Robot Slot Otomatis",
+      sender: "Admin VIP Arbitrase Syariah (+62 812-XXXX-9981)",
+      message: "Assalamualaikum kak, slot titip dana batch ke-14 tinggal 2 kuota lagi! Modal Rp 500rb cair Rp 2.500.000 sore ini via algoritma AI Auto-Spin. Daftar di: https://vip-arbitrase-berkah88.site/join",
+      attachment: "Konteks: Anda dimasukkan secara tiba-tiba ke dalam grup Telegram 'Komunitas Cuan Berkah AI'.",
+      attachmentType: "Tautan Terkait Judol",
       icon: "trending_up",
-      question: "Anda menerima undangan grup berisi tawaran 'robot trading' dengan jaminan profit harian tanpa risiko melalui tautan ber-domain .vip. Apa tindakan Tabayyun yang paling tepat?",
+      question: "Berdasarkan kaidah Fiqih Informasi (Prinsip 4T) dan literasi keamanan siber, langkah manakah yang paling tepat?",
       options: [
-        { key: "A", text: "Langsung mendaftar dan mentransfer deposit awal karena nominalnya terjangkau dan keuntungannya menggiurkan.", correct: false },
-        { key: "B", text: "Meneruskan tautan ke grup keluarga agar anggota lain bisa ikut berinvestasi bersama.", correct: false },
-        { key: "C", text: "Menerapkan Tawaqquf: Menolak membuka tautan, memeriksa legalitas di cekfintech.ojk.go.id, dan keluar dari grup.", correct: true },
-        { key: "D", text: "Mencoba menyetor sejumlah kecil uang terlebih dahulu untuk membuktikan klaim profit.", correct: false }
+        { key: "A", text: "Mencoba transfer nominal terkecil terlebih dahulu untuk menguji kebenarannya.", correct: false },
+        { key: "B", text: "Menahan diri (Tawaqquf), tidak mengeklik tautan karena klaim profit pasti dan kata kunci spin/slot adalah ciri mutlak judi online & penipuan.", correct: true },
+        { key: "C", text: "Membagikan tautan tersebut ke grup keluarga agar ikut mendapat keuntungan.", correct: false },
+        { key: "D", text: "Membalas pesan admin dengan mengirimkan foto KTP untuk verifikasi anggota.", correct: false }
       ],
-      explanation: "Tepat sekali (Pilihan C)! Tidak ada instrumen investasi legal yang mampu menjamin profit pasti harian tanpa risiko fluktuasi. Skema ini lazim digunakan sindikat penipuan trading bodong yang berujung pada penguncian dana dan pengalihan ke platform perjudian daring. Domain .vip tidak berizin OJK/Bappebti."
+      explanation: "Dalam Fiqih Muamalah, janji keuntungan tetap tanpa risiko pada skema spekulatif adalah haram (mengandung unsur Gharar & Maysir/perjudian). Dari sisi keamanan siber, domain .site dengan iming-iming pelipatgandaan uang instan adalah modus investasi bodong berkedok slot."
     },
     {
-      scenario: "Studi Kasus 02: Aplikasi Dompet Digital Berkedok Slot",
-      sender: "Iklan Media Sosial: Dompet Cerdas Finansial",
-      message: "Kelola keuangan bulanan Anda dengan mudah! Dapatkan bonus saldo Rp 50.000 untuk pendaftar hari ini. Akses tautan:",
-      attachment: "Tautan: smart-wallet-finance.xyz/bonus-slot",
-      attachmentType: "Parameter /bonus-slot Terdeteksi",
+      scenario: "Studi Kasus 02: Situs Pinjol Kilat Tanpa Verifikasi KTP Berujung Judi",
+      sender: "DanaCepat-SyariahOfficial",
+      message: "Butuh dana darurat mendesak? Cair Rp 10 Juta dalam 3 menit tanpa BI Checking & tanpa bunga! Cukup daftar akun member dan klaim saldo awal di: https://danacepat-cair88.xyz/klaim-bonus",
+      attachment: "Konteks: Sebuah iklan di media sosial menawarkan pinjaman modal usaha tanpa syarat dokumen apa pun.",
+      attachmentType: "Tautan Terkait Judol",
       icon: "account_balance_wallet",
-      question: "Sebuah iklan menawarkan dompet digital finansial, namun struktur tautannya berakhiran '/bonus-slot' dengan domain .xyz. Bagaimana sikap Anda?",
+      question: "Mengapa tautan di atas sangat berbahaya dan bagaimana cara melakukan Tatsabbut (konfirmasi otoritas)?",
       options: [
-        { key: "A", text: "Mengunduh dan mendaftar demi mengklaim bonus saldo Rp 50.000 cuma-cuma.", correct: false },
-        { key: "B", text: "Mengenali parameter '/bonus-slot' sebagai sinyal bahaya: situs ini berkamuflase sebagai aplikasi keuangan untuk menjerat ke situs judi.", correct: true },
-        { key: "C", text: "Mencoba login dengan akun media sosial utama untuk kemudahan verifikasi.", correct: false },
-        { key: "D", text: "Mengabaikan tautan tetapi membagikan tangkapan layarnya ke forum publik tanpa peringatan.", correct: false }
+        { key: "A", text: "Aman dicoba selama tidak meminta PIN ATM.", correct: false },
+        { key: "B", text: "Berbahaya karena mengarahkan pengguna membuat akun deposit judi online berkedok pencairan pinjaman; wajib dicek di daftar resmi OJK.", correct: true },
+        { key: "C", text: "Langsung mendaftar menggunakan email utama dan nomor telepon aktif.", correct: false },
+        { key: "D", text: "Mengunduh aplikasi yang disarankan di dalam halaman web tersebut.", correct: false }
       ],
-      explanation: "Benar (Pilihan B)! Penyusupan kata kunci perjudian seperti '/bonus-slot' atau '/spin' di balik nama berbau finansial adalah taktik kamuflase maysir modern untuk menghindari pemblokiran Kominfo dan mengelabui calon korban."
+      explanation: "Banyak situs judi online menyamar sebagai layanan pinjaman kilat untuk menjebak warga yang sedang kesulitan ekonomi agar melakukan deposit awal ('biaya admin pencairan' yang ternyata top-up saldo taruhan). Selalu lakukan Tatsabbut melalui kanal resmi OJK (Kontak 157)."
     },
     {
-      scenario: "Studi Kasus 03: Undangan Arisan Kilat Berantai",
-      sender: "Kontak Teman Lama: 'Arisan Berkah'",
-      message: "Assalamualaikum ukhti/akhi, yuk gabung arisan kilat modal Rp 200.000 dalam 7 hari dapat Rp 800.000. Putaran cepat, slot terbatas! Klik:",
-      attachment: "Tautan: arisan-berkah-putaran.cc/join?ref=KL7",
-      attachmentType: "Skema Perputaran Dana Ponzi",
-      icon: "groups",
-      question: "Teman Anda mengirimkan ajakan 'arisan online' dengan pengembalian 4x lipat dalam sepekan melalui tautan tidak resmi. Bagaimana tanggapan Anda?",
+      scenario: "Studi Kasus 03: Undangan Pernikahan Digital Berformat .APK di WhatsApp",
+      sender: "+62 857-XXXX-3310 (Tidak Dikenal)",
+      message: "Kami mengharap kehadiran Bapak/Ibu pada acara resepsi pernikahan putra-putri kami. Silakan buka file undangan terlampir untuk melihat lokasi dan jadwal acara. [File: Surat-Undangan-VIP.apk - 6.4 MB]",
+      attachment: "Konteks: Anda menerima pesan WhatsApp dari nomor tidak dikenal yang mengirimkan file bernama 'Surat-Undangan-VIP.apk'.",
+      attachmentType: "Malware Pencuri OTP (.APK)",
+      icon: "phishing",
+      question: "Tindakan mitigasi apa yang wajib dilakukan saat menerima file dengan ekstensi .apk melalui pesan singkat?",
       options: [
-        { key: "A", text: "Ikut bergabung karena yang mengajak adalah teman lama yang Anda percayai.", correct: false },
-        { key: "B", text: "Meminta bukti mutasi bank teman tersebut sebelum memutuskan transfer dana.", correct: false },
-        { key: "C", text: "Menolak tegas dan menasihati teman tersebut bahwa skema perputaran uang kilat ini mengandung unsur gharar dan ponzi judol.", correct: true },
-        { key: "D", text: "Membayar slot arisan menggunakan kartu kredit atau pinjaman online.", correct: false }
+        { key: "A", text: "Membuka dan menginstal file tersebut karena penasaran siapa yang menikah.", correct: false },
+        { key: "B", text: "Menolak mengunduh/menginstal file .apk, segera menghapus pesan, dan memblokir pengirim karena file .apk adalah aplikasi berbahaya pencuri SMS OTP.", correct: true },
+        { key: "C", text: "Meneruskan file .apk tersebut ke teman lain untuk menanyakan isinya.", correct: false },
+        { key: "D", text: "Mengizinkan akses baca SMS ketika aplikasi meminta izin instalasi.", correct: false }
       ],
-      explanation: "Tepat (Pilihan C)! Arisan online dengan penggandaan uang tidak wajar dalam hitungan hari merupakan modus Ponzi yang kerap terafiliasi dengan perputaran dana judi online. Dalam Islam, transaksi ini haram karena mengandung riba, maysir (spekulasi), dan memakan harta sesama secara batil."
+      explanation: "Undangan digital resmi selalu berupa tautan web atau dokumen gambar/PDF, bukan file instalasi aplikasi (.apk). Menginstal .apk dari luar toko aplikasi resmi berisiko menyusupkan malware pencuri SMS OTP yang dapat menguras rekening mobile banking."
     },
     {
-      scenario: "Studi Kasus 04: Penawaran Partner Afiliasi Cuan Kilat",
-      sender: "Email: partner@maxwin-affiliasi-vip.online",
-      message: "SELAMAT! Profil Anda terpilih menjadi mitra passive income. Dapatkan komisi 40% dari setiap pengguna yang mendaftar melalui link referral Anda:",
-      attachment: "Tautan: maxwin-affiliasi-vip.online/partner",
-      attachmentType: "Afiliasi Jaringan Maysir",
-      icon: "diversity_3",
-      question: "Anda menerima surel penawaran komisi referral 40% dari situs dengan nama domain berunsur 'maxwin'. Apa tindakan yang mencerminkan etika Tabayyun?",
+      scenario: "Studi Kasus 04: Giveaway Saldo DANA Kaget Palsu Mengarah ke Situs Phishing",
+      sender: "Berbagi Berkah Ramadhan Official",
+      message: "Alhamdulillah rezeki hari Jumat! Ambil saldo DANA Kaget Rp 750.000 gratis khusus 50 orang tercepat. Masukkan nomor HP dan PIN DANA Anda di: https://link-dana-kaget-berkah.cc/klaim",
+      attachment: "Konteks: Beredar siaran langsung di media sosial yang menampilkan tangkapan layar bagi-bagi saldo dompet digital.",
+      attachmentType: "Phishing Kredensial Dompet Digital",
+      icon: "redeem",
+      question: "Indikator utama apa yang membuktikan bahwa tautan tersebut adalah jebakan Phishing?",
       options: [
-        { key: "A", text: "Menerima tawaran kemitraan karena tidak memerlukan modal awal dan menghasilkan uang pasif.", correct: false },
-        { key: "B", text: "Mengenali istilah 'maxwin' sebagai terminologi judi slot online, menolak menjadi agen promosi judol, dan melaporkannya.", correct: true },
-        { key: "C", text: "Membagikan tautan referral tersebut ke kenalan yang sedang membutuhkan pekerjaan.", correct: false },
-        { key: "D", text: "Mengklik tautan untuk mempelajari skema pembagian komisinya terlebih dahulu.", correct: false }
+        { key: "A", text: "Karena nominal hadiahnya kurang besar.", correct: false },
+        { key: "B", text: "Domain bukan milik resmi dana.id (link.dana.id) dan meminta input PIN serta kode OTP secara langsung di halaman web luar aplikasi.", correct: true },
+        { key: "C", text: "Karena dibagikan pada hari Jumat.", correct: false },
+        { key: "D", text: "Tautan menggunakan protokol HTTPS sehingga pasti aman 100%.", correct: false }
       ],
-      explanation: "Benar (Pilihan B)! Membantu menyebarkan tautan afiliasi judi daring adalah bentuk tolong-menolong dalam keburukan (ta'awun 'alal itsmi wal 'udwan) yang dilarang agama dan diancam pidana UU ITE di Indonesia."
+      explanation: "Fitur DANA Kaget yang asli hanya dapat diklaim langsung di dalam aplikasi resmi DANA melalui domain link.dana.id dan tidak pernah meminta pengguna mengetikkan PIN atau kode OTP pada situs web eksternal. Protokol HTTPS tidak menjamin sebuah situs bebas dari penipuan phishing."
     }
   ];
 
@@ -110,14 +110,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cases && cases.length > 0) {
           quizData = cases.map((c, i) => ({
             scenario: `Studi Kasus ${String(i + 1).padStart(2, '0')}: ${c.title}`,
-            sender: c.context || 'Platform Digital Mencurigakan',
-            message: c.scenario || '',
-            attachment: c.attachment || 'Tautan / Berkas Analisis',
-            attachmentType: 'Tautan Terkait Judol',
+            sender: c.sender || c.context || 'Platform Digital Mencurigakan',
+            message: c.message || c.scenario || '',
+            attachment: c.attachment || (c.scenario ? `Konteks: ${c.scenario}` : 'Tautan / Berkas Analisis'),
+            attachmentType: c.fiqihPrinciple ? `Kaidah: ${c.fiqihPrinciple}` : 'Tautan Terkait Judol',
             icon: c.icon || 'quiz',
             question: c.question || '',
             options: c.options || [],
-            explanation: c.explanation || ''
+            explanation: c.discussion || c.explanation || ''
           }));
         }
       }

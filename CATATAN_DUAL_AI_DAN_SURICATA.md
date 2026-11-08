@@ -1,171 +1,148 @@
-# 🛡️ Catatan Khusus: Integrasi Suricata NIDS & Parallel Dual AI (Gemini + DeepSeek)
+# 🛡️ Catatan Khusus: Integrasi Suricata NIDS, UrlThreatAnalyzer & Google Gemini AI
 ## Sistem Deteksi Tautan Judi Online (Judol) & Investasi Menyesatkan — Aswaja CyberShield
 
-Dokumen ini disusun khusus sebagai **panduan lengkap bagi Dewan Juri dan Penguji Teknis** mengenai cara kerja **Sensor Jaringan Suricata NIDS (`eve.json` & `suricata.rules`)** serta **Kecerdasan Buatan Ganda Paralel (Google Gemini + DeepSeek AI)** dalam mendeteksi tautan **Judi Online (*Judol*)** dan **Investasi Menyesatkan (*Investasi Bodong*)**.
+Dokumen ini disusun khusus sebagai **panduan teknis bagi Penguji dan Dewan Juri** mengenai cara kerja kolaborasi **Sensor Jaringan Suricata NIDS (`eve.json` & `suricata.rules`)**, **UrlThreatAnalyzer (Deteksi 3 Teknik Penyusupan Tautan)**, dan **Google Gemini AI** dalam mendeteksi ancaman kejahatan siber berbasis **Judi Online (*Judol*)** dan **Investasi Menyesatkan (*Investasi Bodong*)**.
 
 ---
 
-## 🗺️ 1. Diagram Arsitektur Kolaborasi Suricata NIDS & Parallel Dual AI
+## 🗺️ 1. Diagram Arsitektur Multi-Layer Detection
 
 ```mermaid
 flowchart TD
-    URL(["🔗 Input URL Target"]) --> Validator["1. UrlValidationService\n(SSRF Guard & Pencocokan Kata Kunci 3 Tingkat:\nKuat, Menengah, Kontekstual)"]
+    URL(["🔗 Input URL Target (Teks Murni)"]) --> ZeroFetch["1. Zero-Fetch Security Guard\n(Tanpa Membuka / Mengunduh Konten Remote)"]
 
-    Validator --> SuricataLayer["2. Layer Jaringan: Suricata NIDS\n(SuricataIntegrationService & SuricataService)"]
-    Validator --> AiPool["3. Layer Kognitif: Parallel Dual AI\n(AiOrchestratorService via Laravel Http::pool)"]
+    ZeroFetch --> Normalizer["2. Normalisasi & URL Validation\n• Dekode Percent-Encoding Bertingkat (Maks 3x)\n• Deteksi Punycode / IDN (xn--)\n• SSRF Guard (Blokir Private/Loopback IP)"]
 
-    subgraph SuricataBox["📡 Sensor Deterministik Suricata NIDS (Bobot 35%)"]
-        SuricataLayer --> EveJson["Baca Telemetri Paket (storage/logs/suricata/eve.json):\n• DNS Query (rrname)\n• TLS SNI Handshake (sni)\n• HTTP Host & URI\n• Alert Signature (SID)"]
-        EveJson --> RulesMatch["Pencocokan Aturan Signature (suricata.rules):\n• SID 1000000: Whitelist Regulator (OJK/Bappebti)\n• SID 1000001: Judol Tingkat Kuat (Priority 1)\n• SID 1000002: Judol Tingkat Menengah (Priority 2)\n• SID 1000003: Kata Kontekstual (Priority 3)\n• SID 1000004-1000008: Deposit, Fast-Flux TLD, Robot Trading, Referral"]
+    Normalizer --> ThreatEngine["3. UrlThreatAnalyzer\n(Deteksi 3 Teknik Penyusupan Judol)"]
+    Normalizer --> SuricataEngine["4. Sensor Jaringan: Suricata NIDS\n(SuricataIntegrationService & aswaja-local.rules)"]
+
+    subgraph ThreatBox["🔍 Analisis Struktur URL: UrlThreatAnalyzer (Bobot 35%)"]
+        ThreatEngine --> Tech1["• Web Defacement & Subdomain Hijacking\n(.go.id, .ac.id, .desa.id + /wp-content/uploads/ + Angka Hoki 88/138/777)"]
+        ThreatEngine --> Tech2["• Open Redirect / Cloaking\n(?url=, ?redirect=, multi-host, encoding berlapis, redirect ke TLD murah)"]
+        ThreatEngine --> Tech3["• Typosquatting & Homoglif Lembaga Resmi\n(0→o, 1→l, rn→m, vv→w, pencatutan nama instansi di domain komersial)"]
     end
 
-    subgraph DualAiBox["🧠 Mesin Kognitif Paralel Dual AI (Bobot 30% + 30%)"]
-        AiPool -->|"Request Paralel"| Gemini["🤖 Google Gemini (gemini-1.5-flash)\nSpesialis Analisis Semantik & Kontekstual:\n• Bahasa Promosi & Iming-iming Profit\n• Deteksi Leetspeak (sl0t, g4c0r)\n• Pemetaan Kaidah Fiqih 4T"]
-        AiPool -->|"Request Paralel"| DeepSeek["🔬 DeepSeek AI (deepseek-chat)\nSpesialis Audit Forensik & Penalaran:\n• Modus Rekening Penampung / QRIS Pribadi\n• Skema Turnover (TO) & Ponzi\n• Pembongkaran Klaim Lisensi Palsu"]
+    subgraph SuricataBox["📡 Sensor Jaringan: Suricata NIDS (Bobot 30%)"]
+        SuricataEngine --> EveLog["Baca Telemetri Jaringan (storage/logs/suricata/eve.json):\n• DNS Query (rrname)\n• TLS SNI Handshake (sni)\n• HTTP Host & URI\n• Alert Signature (SID 1000000 - 1000103)"]
+        EveLog --> LocalRules["Aturan Signature Khusus (infra/suricata/rules/aswaja-local.rules):\n• SID 1000101: Kata kunci judol pada URI\n• SID 1000102: Parameter open redirect ke URL eksternal\n• SID 1000103: Query DNS domain kata kunci judol"]
     end
 
-    RulesMatch --> Compare["4. AiComparisonService\n(Uji Konsensus Kategori, Hitung Selisih Skor ΔAI & Deduplikasi Bukti)"]
-    Gemini --> Compare
-    DeepSeek --> Compare
+    ThreatBox --> Gemini["5. Kognitif AI: Google Gemini AI (gemini-1.5-flash) (Bobot 30%)\n• Menerima Bukti Awal dari Threat Analyzer & Suricata\n• Analisis Semantik & Penyamaran Leetspeak (sl0t, g4c0r)\n• Evaluasi Kaidah Fiqih Siber 4T\n• Keluaran JSON Terstruktur (techniques, indicators, confidence)"]
+    SuricataBox --> Gemini
 
-    Compare --> RiskEngine["5. RiskAssessmentService\nRumus Gabungan: 35% Suricata + 30% Gemini + 30% DeepSeek + 5% Struktur URL"]
+    Gemini --> RiskEngine["6. RiskAssessmentService & Synthesis\nKalkulasi Terbobot: 35% Threat + 30% Suricata + 30% Gemini + 5% URL"]
 
-    RiskEngine --> OutJudol["🔴 Terindikasi Judi Online\n(Skor Risiko 85-100)"]
-    RiskEngine --> OutInvest["🔴 Terindikasi Investasi Menyesatkan\n(Skor Risiko 85-100)"]
-    RiskEngine --> OutSus["🟡 Mencurigakan / Belum Dapat Disimpulkan\n(Skor Risiko 35-84)"]
-    RiskEngine --> OutSafe["🟢 Aman / Normal Terverifikasi\n(Skor Risiko 0-34)"]
+    RiskEngine --> OutRendah["🟢 TINGKAT RISIKO: RENDAH (0%–25%)\n• Tema Hijau Emerald & Ikon Perisai Centang\n• Tautan bersih resmi atau indikasi awal promosi luar"]
+    RiskEngine --> OutSedang["🟡 TINGKAT RISIKO: SEDANG (26%–50%)\n• Tema Kuning Amber & Ikon Warning\n• Menggunakan kedok investasi, trading, atau bonus pendaftaran"]
+    RiskEngine --> OutTinggi["🟠 TINGKAT RISIKO: TINGGI (51%–84%)\n• Tema Oranye & Ikon Investigasi\n• Terdeteksi kata kunci fitur taruhan judi & anomali teknis"]
+    RiskEngine --> OutBerat["🔴 TINGKAT RISIKO: BERAT (85%–100%)\n• Tema Merah Danger & Ikon Bahaya Kritis\n• Mencatut instansi resmi, defacement, phishing & pencurian data"]
 ```
 
 ---
 
-## 📡 2. Apa Itu Suricata NIDS & Bagaimana Cara Kerjanya di Sistem Ini?
+## 📡 2. Suricata NIDS & Berkas Telemetri `eve.json`
 
-### 2.1. Pengertian Suricata NIDS
-**Suricata** adalah mesin pendeteksi dan pencegah intrusi jaringan (*Network Intrusion Detection & Prevention System* — NIDS/NIPS) *open-source* berstandar internasional yang dikembangkan oleh *Open Information Security Foundation* (OISF).
+### 2.1. Peran Suricata NIDS dalam Arsitektur
+**Suricata** adalah mesin pendeteksi intrusi jaringan (*Network Intrusion Detection System* — NIDS) berstandar industri. Suricata bertindak sebagai **sensor deterministik garis depan** yang memeriksa paket pada level protokol jaringan:
+1. **Kecepatan Mikrodetik:** Mencocokkan tanda ancaman secara instan berdasarkan nomor *Signature ID* (`SID`).
+2. **Inspeksi TLS SNI:** Tetap mampu membaca domain tujuan pada sambungan HTTPS (`tls.sni` saat *ClientHello*) sebelum aliran data dienkripsi.
+3. **Log EVE JSON (`eve.json`):** Berkas log standar yang diekstraksi oleh [`SuricataIntegrationService.php`](file:///d:/cybershield/backend/app/Services/SuricataIntegrationService.php).
 
-Jika model AI bekerja layaknya **"Ahli Bahasa & Detektif Forensik"** yang menganalisis kalimat dan skema penipuan, maka **Suricata bekerja layaknya "Radar Sensor Lalu Lintas Jaringan"** yang memeriksa paket data di tingkat protokol jaringan (`DNS`, `TLS/HTTPS`, dan `HTTP`) menggunakan aturan pencocokan pola pasti (*Signature Rules*).
+### 2.2. Aturan Signature Suricata Resmi
+Aturan signature disimpan di [`suricata.rules`](file:///d:/cybershield/suricata.rules) dan [`infra/suricata/rules/aswaja-local.rules`](file:///d:/cybershield/infra/suricata/rules/aswaja-local.rules):
 
-### 2.2. Mengapa Harus Menggabungkan Suricata NIDS dengan Dual AI?
-1. **Kecepatan & Kepastian Hukum (Deterministik):** Suricata mencocokkan signature paket jaringan dalam hitungan mikrodetik dan memberikan nomor bukti aturan yang pasti (**SID / *Signature ID***).
-2. **Mendeteksi Trafik Terenkripsi HTTPS lewat TLS SNI:** Meskipun isi halaman web judi dienkripsi dengan HTTPS, Suricata tetap dapat membaca nama domain server pada paket jabat tangan awal (`tls.sni` pada *ClientHello*).
-3. **Menutup Kelemahan Satu Sama Lain (*Defense-in-Depth*):** Suricata menangkap pola jaringan teknis yang tidak terlihat oleh AI, sedangkan Dual AI membongkar kalimat manipulasi psikologis yang belum terdaftar di dalam *database signature* Suricata.
-
----
-
-### 2.3. Fungsi Berkas `eve.json` dan `suricata.rules`
-
-- **Berkas Log Telemetri Jaringan:** [`backend/storage/logs/suricata/eve.json`](file:///d:/aswajaCyber/backend/storage/logs/suricata/eve.json)
-- **Berkas Aturan Signature Resmi:** [`suricata.rules`](file:///d:/aswajaCyber/suricata.rules)
-- **Modul Pembaca di Laravel:** [`SuricataIntegrationService.php`](file:///d:/aswajaCyber/backend/app/Services/SuricataIntegrationService.php) & [`SuricataService.php`](file:///d:/aswajaCyber/backend/app/Services/SuricataService.php)
-
-**Apa Fungsi [`eve.json`](file:///d:/aswajaCyber/backend/storage/logs/suricata/eve.json)?**  
-**EVE (*Extensible Event Format*)** adalah format log JSON standar keluaran Suricata yang berfungsi sebagai:
-1. **Perekam Bukti Paket Jaringan:** Mencatat 4 jenis *event* (`dns`, `tls`, `http`, dan `alert`) lengkap dengan alamat IP pengirim (`src_ip`), IP tujuan (`dest_ip`), protokol (`TCP`/`UDP`), nama domain (`rrname` / `sni`), serta nomor `signature_id` (`SID`).
-2. **Jembatan Data ke Backend Laravel:** Dibaca oleh [`SuricataIntegrationService.php`](file:///d:/aswajaCyber/backend/app/Services/SuricataIntegrationService.php#L78-L173) (mendukung format JSON Array `[...]` yang valid di IDE maupun JSON Lines bawaan Linux) untuk mengecek apakah domain yang sedang diperiksa pernah memicu peringatan bahaya di jaringan.
-3. **Penyuplai Bobot Terbesar ($35\%$):** Menjadi komponen bobot tertinggi dalam rumus penilaian risiko akhir.
-
-**Daftar 9 Signature Rules Resmi di [`suricata.rules`](file:///d:/aswajaCyber/suricata.rules):**
-
-| Nomor SID | Action & Prioritas | Target Inspeksi | Deskripsi Aturan Signature |
-| :--- | :--- | :--- | :--- |
-| **`SID: 1000000`** | `PASS` (Priority 4) | `http` / Domain | **Whitelist Resmi:** Domain lembaga negara/regulator (`.ojk.go.id`, `.bappebti.go.id`, `.bi.go.id`, `.kominfo.go.id`). |
-| **`SID: 1000001`** | `ALERT` (Priority 1) | `dns.query` / URI | **[Tingkat Kuat]** Frasa eksplisit Judi Online (`slot-gacor`, `situs-togel`, `casino-online`, `bandar-togel`, `slot88`, `slot777`). |
-| **`SID: 1000002`** | `ALERT` (Priority 2) | `http.uri` | **[Tingkat Menengah]** Istilah fitur taruhan (`maxwin`, `jackpot`, `scatter`, `free-spin`, `rtp-live`, `pragmatic`, `pgsoft`). |
-| **`SID: 1000003`** | `ALERT` (Priority 3) | `http.uri` | **[Tingkat Kontekstual]** Kata tema/mitologi (`zeus`, `dewa`, `thor`, `dragon`, `olympus`) — hanya aktif jika ada bukti pendukung. |
-| **`SID: 1000004`** | `ALERT` (Priority 1) | `tls.sni` / URI | **Transaksi & TLS Judol:** Handshake TLS SNI `gacor` & rute deposit cepat (`deposit-dana`, `deposit-qris`, `depo-pulsa`, `depo-10k`). |
-| **`SID: 1000005`** | `ALERT` (Priority 2) | `http` / Domain | **Fast-Flux TLD:** Ekstensi domain berisiko tinggi yang kerap dipakai sindikat (`.vip`, `.cc`, `.xyz`, `.top`, `.fun`, `.click`, `.icu`). |
-| **`SID: 1000006`** | `ALERT` (Priority 1) | `http.uri` | **Investasi Bodong:** Klaim keuntungan pasif tidak berizin (`robot-trading`, `profit-pasti`, `cuan-harian`, `auto-profit`). |
-| **`SID: 1000007`** | `ALERT` (Priority 3) | `http.uri` | **Afiliasi Sindikat:** Parameter perekrutan anggota judi/ponzi (`?ref=`, `?aff=`, `?agent=`, `?referral=`). |
-| **`SID: 1000008`** | `ALERT` (Priority 1) | `http.uri` | **Malware / Deposit Judol:** Parameter setoran saldo taruhan atau unduhan berkas berbahaya (`.apk`, `.exe`). |
-
----
-
-## 🧠 3. Arsitektur Parallel Dual AI (Google Gemini + DeepSeek)
-
-Berbeda dari sistem lama yang memanggil AI secara bergantian (*sequential failover*), [`AiOrchestratorService.php`](file:///d:/aswajaCyber/backend/app/Services/AiOrchestratorService.php#L204-L280) mengeksekusi **Google Gemini** dan **DeepSeek AI** secara **serentak (paralel)** menggunakan `Http::pool()`.
-
-### 3.1. Pembagian Peran Spesialis Kedua Model AI
-
-| Aspek Perbandingan | 🤖 Engine 1: Google Gemini ([`GeminiService.php`](file:///d:/aswajaCyber/backend/app/Services/GeminiService.php)) | 🔬 Engine 2: DeepSeek AI ([`DeepSeekService.php`](file:///d:/aswajaCyber/backend/app/Services/DeepSeekService.php)) |
+| Nomor SID | Target & Prioritas | Deskripsi Signature |
 | :--- | :--- | :--- |
-| **Model Default** | `gemini-1.5-flash` | `deepseek-chat` (DeepSeek-V3 / R1) |
-| **Peran Utama** | **Analis Semantik, Bahasa Persuasif & Konteks 4T** | **Auditor Forensik Teknis & Penalaran Modus Operandi** |
-| **Fokus Deteksi Judi Online** | • Membaca penyamaran huruf (*leetspeak*: `sl0t`, `g4c0r`, `m4xw1n`)<br>• Mengenali bahasa promosi gamifikasi (*"bocoran pola hari ini"*, *"anti-rungkad"*)<br>• Mengenali ciri visual CTA deposit berkedip & *fake live withdrawal* | • Mengaudit alur rekening penampung pribadi & e-wallet/QRIS dinamis<br>• Membongkar jebakan syarat *Turnover (TO)* yang mengunci saldo korban<br>• Membongkar pencatutan lisensi judi asing palsu (*PAGCOR/Curacao*) |
-| **Fokus Deteksi Investasi Bodong** | • Mendeteksi klaim keuntungan hiperbolis (*"profit 20% per hari"*)<br>• Mendeteksi klaim palsu *"100% aman tanpa risiko / resmi syariah"* | • Menganalisis struktur skema piramida/Ponzi (*member-get-member*)<br>• Memverifikasi ketiadaan izin regulator OJK & Bappebti |
+| **`SID: 1000000`** | `PASS` (Priority 4) | **Whitelist Regulator:** Domain resmi `.ojk.go.id`, `.bappebti.go.id`, `.bi.go.id`, `.kominfo.go.id`. |
+| **`SID: 1000001`** | `ALERT` (Priority 1) | **[Tingkat Kuat]** Frasa eksplisit judol (`slot-gacor`, `situs-togel`, `casino-online`, `slot88`, `slot777`). |
+| **`SID: 1000002`** | `ALERT` (Priority 2) | **[Tingkat Menengah]** Fitur taruhan (`maxwin`, `jackpot`, `scatter`, `free-spin`, `rtp-live`). |
+| **`SID: 1000003`** | `ALERT` (Priority 3) | **[Kontekstual]** Istilah mitologi (`zeus`, `dewa`, `thor`, `dragon`, `olympus`). |
+| **`SID: 1000004`** | `ALERT` (Priority 1) | **Transaksi Judol:** Rute deposit kilat (`deposit-dana`, `deposit-qris`, `depo-pulsa`) & TLS SNI gacor. |
+| **`SID: 1000005`** | `ALERT` (Priority 2) | **TLD Murahan:** Ekstensi domain murah/sindikat (`.vip`, `.cc`, `.xyz`, `.top`, `.fun`, `.click`, `.icu`). |
+| **`SID: 1000006`** | `ALERT` (Priority 1) | **Investasi Bodong:** Janji keuntungan fiktif (`robot-trading`, `profit-pasti`, `cuan-harian`, `auto-profit`). |
+| **`SID: 1000007`** | `ALERT` (Priority 3) | **Afiliasi Perekrutan:** Parameter member sindikat (`?ref=`, `?aff=`, `?agent=`, `?referral=`). |
+| **`SID: 1000008`** | `ALERT` (Priority 1) | **Berkas Berbahaya:** Unduhan APK/EXE mencurigakan yang disebarkan lewat tautan. |
+| **`SID: 1000101`** | `ALERT` (Priority 1) | **URI Judol Baru:** `http.uri` memuat kata kunci `/(slot\|gacor\|maxwin\|togel\|sbobet\|scatter\|rtp)/i`. |
+| **`SID: 1000102`** | `ALERT` (Priority 1) | **Open Redirect:** Parameter redirect mengarah ke URL eksternal `https?://` atau URL-encoded. |
+| **`SID: 1000103`** | `ALERT` (Priority 1) | **DNS Judol:** Query DNS domain yang mengandung kata kunci judol. |
 
-### 3.2. Format Kontrak Output JSON Seragam
-Kedua model AI diwajibkan mengembalikan struktur JSON terstandar yang divalidasi oleh [`AiAnalysisResultDTO.php`](file:///d:/aswajaCyber/backend/app/DTO/AiAnalysisResultDTO.php):
-```json
-{
-  "category": "judol | investasi_menyesatkan | mencurigakan | normal",
-  "risk_level": "low | medium | high | critical",
-  "risk_score": 92,
-  "indicators": [
-    {
-      "name": "strong_gambling_keyword",
-      "evidence": "slot-gacor777.top",
-      "severity": "critical",
-      "explanation": "Mengandung frasa eksplisit mesin slot gacor dan angka hoki 777 pada TLD .top"
-    }
-  ],
-  "reasoning": "Penjelasan analitis lengkap dari model AI.",
-  "confidence": 0.95
-}
-```
+### 2.3. Pengujian Sintaks & Tuning False Positive
+1. **Pengujian Rule (`suricata -T`):**
+   ```bash
+   suricata -T -c /etc/suricata/suricata.yaml -S infra/suricata/rules/aswaja-local.rules
+   ```
+2. **Menyesuaikan False Positive:**
+   - Parameter `return=` atau `url=` internal aplikasi sah dapat ditangani dengan mengecualikan subnet lokal (`!$HOME_NET`) atau menerapkan *thresholding* frekuensi alert pada `threshold.config`.
 
 ---
 
-## 🎯 4. Sistem Tiga Tingkat Pencocokan Kata Kunci (*3-Tier Keyword Matching*)
+## 🔎 3. Deteksi 3 Teknik Penyusupan Tautan (`UrlThreatAnalyzer.php`)
 
-Agar sistem **tidak mudah salah mendeteksi website biasa (seperti artikel sejarah mitologi Yunani, berita umum, atau portal edukasi) sebagai situs Judi Online**, baik [`UrlValidationService.php`](file:///d:/aswajaCyber/backend/app/Services/UrlValidationService.php#L371-L441), **Suricata**, maupun **Prompt Dual AI** menerapkan **3 Tingkat Pencocokan**:
+Menanggapi evolusi kejahatan siber di mana sindikat judol tidak lagi membuat domain baru melainkan menunggangi situs bereputasi tinggi, sistem dilengkapi analis khusus:
 
-| Tingkat | Contoh Kata Kunci | Perlakuan Sistem | Status Akhir (Jika Mandiri) | Status Akhir (Dengan Indikator Pendukung) |
-| :--- | :--- | :--- | :--- | :--- |
-| **1. Kuat (`strong`)** | `slot gacor`, `situs togel`, `casino online`, `bandar togel` | **Indikator kuat** — Langsung memicu vonis ancaman tinggi (Suricata Priority 1) | 🔴 **`terindikasi_judol`** (`red` / Bahaya) | 🔴 **`terindikasi_judol`** (`red` / Bahaya) |
-| **2. Menengah (`medium`)** | `maxwin`, `jackpot`, `scatter`, `free spin`, `rtp live` | **Perlu indikator pendukung** (TLD `.top`/`.vip`/`.xyz`, angka `777`/`88`, path `/deposit`, `?ref=`) | 🟡 **`mencurigakan`** (`amber` / Peringatan) | 🔴 **`terindikasi_judol`** (`red` / Bahaya) |
-| **3. Kontekstual (`contextual`)** | `zeus`, `dewa`, `thor`, `dragon`, `olympus` | **Perlu pemeriksaan tambahan** — Tidak boleh menuduh situs umum sebagai Judol jika berdiri sendiri | 🟢 **`aman`** (`emerald` / Aman) | 🔴 **`terindikasi_judol`** (`red`) atau 🟡 **`mencurigakan`** (`amber`) |
+1. **Web Defacement & Subdomain Hijacking:**
+   - Menyasar domain instansi bereputasi tinggi (`.go.id`, `.ac.id`, `.sch.id`, `.mil.id`, `.desa.id`).
+   - Menyusup lewat direktori upload CMS yang rentan (`/wp-content/uploads/`, `/uploads/`, `/journal/`).
+   - Membuat subdomain liar yang menyematkan angka hoki judol (`88`, `138`, `777`).
 
-### Contoh Kasus Uji Nyata (*Verified Test Cases*):
-1. **`https://ensiklopedia-mitologi-zeus-thor.com`** *(Tingkat Kontekstual Mandiri)*  
-   $\rightarrow$ Hanya memuat kata `zeus` dan `thor` pada domain `.com` tanpa indikator taruhan/deposit.  
-   $\rightarrow$ **Hasil:** 🟢 **Aman (`emerald`, Skor Keamanan 95%)** — terbukti bebas *false positive*.
-2. **`https://info-undian-jackpot.com`** *(Tingkat Menengah Mandiri)*  
-   $\rightarrow$ Memuat kata `jackpot` tanpa TLD mencurigakan atau rute deposit.  
-   $\rightarrow$ **Hasil:** 🟡 **Mencurigakan (`amber`)** — meminta verifikasi pendukung tanpa langsung memvonis merah.
-3. **`https://zeus-maxwin888.top/deposit`** *(Kombinasi Kontekstual + Menengah + Bukti Pendukung)*  
-   $\rightarrow$ Kata `zeus` + `maxwin` diperkuat oleh angka `888`, TLD `.top`, dan path `/deposit`.  
-   $\rightarrow$ **Hasil:** 🔴 **Terindikasi Judi Online (`red`, Skor Keamanan 5%)**.
-4. **`https://slot-gacor777.top`** *(Tingkat Kuat)*  
-   $\rightarrow$ Memuat kata kunci tingkat kuat `slot-gacor`.  
-   $\rightarrow$ **Hasil:** 🔴 **Terindikasi Judi Online (`red`, Skor Keamanan 5%)**.
+2. **Open Redirect (Pembelokan URL Otomatis):**
+   - Memanfaatkan parameter redirect portal resmi untuk menyamarkan tautan judol.
+   - Mendeteksi parameter manipulasi (`url`, `redirect`, `to`, `dest`, `link`, `next`, dll.).
+   - Mendeteksi multi-layer percent-encoding dan target pengalihan ke TLD murah.
+
+3. **Typosquatting & Serangan Homoglif:**
+   - Meniru nama lembaga regulator/bank resmi (OJK, Bappebti, Kominfo, BI, BCA, BRI, Mandiri, dll.).
+   - Mengganti huruf latin dengan angka atau karakter yang menyerupai (misal: `0` $\to$ `o`, `1` $\to$ `l/i`, `rn` $\to$ `m`, `vv` $\to$ `w`).
+   - Mendaftarkan nama instansi di TLD komersial dengan embel-embel tipuan (`-resmi`, `-login`, `-bansos`, `-daftar`).
 
 ---
 
-## 🧮 5. Rumus Matematika Sintesis Skor & Matriks Korelasi Keputusan
+## 🤖 4. Integrasi Google Gemini AI (`GeminiService.php`)
 
-### 5.1. Rumus Sintesis Berbobot (*Weighted Multi-Sensor Risk Synthesis*)
-Di dalam [`RiskAssessmentService.php`](file:///d:/aswajaCyber/backend/app/Services/RiskAssessmentService.php#L29-L32), skor risiko gabungan ($0$–$100$) dihitung dengan rumus:
-
-$$\text{RawScore} = \frac{(0.35 \times S_{\text{Suricata}}) + (0.30 \times S_{\text{Gemini}}) + (0.30 \times S_{\text{DeepSeek}}) + (0.05 \times S_{\text{URL}})}{\sum_{i \in \text{Aktif}} W_i}$$
-
-- **Bobot Suricata NIDS ($35\%$):** Bukti empiris lalu lintas paket jaringan (`eve.json` & signature `SID`).
-- **Bobot Google Gemini ($30\%$):** Analisis semantik dan konteks promosi.
-- **Bobot DeepSeek AI ($30\%$):** Audit forensik dan penalaran logika transaksi.
-- **Bobot Struktur URL ($5\%$):** Penalti teknis struktur domain.
-
-Skor Keamanan yang ditampilkan pada badge UI publik (`5%`–`98%`) dihitung dengan rumus invers:
-$$\text{DisplaySafetyScore} = \max\left(5, \, \min\left(98, \, 100 - \text{RiskScore}\right)\right)$$
+Google Gemini AI bertindak sebagai mesin kognitif semantik utama:
+- **Model:** `gemini-1.5-flash` (latensi ultra-rendah di bawah 1 detik).
+- **Prompt Injection Defense:** URL diperlakukan sebagai **data teks pasif murni**, bukan instruksi komputasi.
+- **Analisis Bukti Awal:** Menerima data temuan dari `UrlThreatAnalyzer` dan `Suricata NIDS` untuk diverifikasi secara semantik.
+- **Keluaran Terstruktur (JSON):**
+  ```json
+  {
+    "category": "judol",
+    "risk_level": "critical",
+    "risk_score": 92,
+    "techniques": ["web_defacement", "open_redirect"],
+    "indicators": [
+      {
+        "name": "defacement_path",
+        "evidence": "/wp-content/uploads/slot-gacor/",
+        "severity": "critical",
+        "explanation": "Penyusupan direktori upload CMS dengan konten judol."
+      }
+    ],
+    "reasoning": "Ditemukan indikasi kuat penyusupan halaman slot pada domain institusi.",
+    "confidence": 0.95
+  }
+  ```
 
 ---
 
-### 5.2. Matriks Korelasi Keputusan (6 Skenario)
+## ⚖️ 5. Sistem Skor 2-State (Aman vs Berbahaya)
 
-| Skenario | Sensor Suricata NIDS | Google Gemini | DeepSeek AI | Keputusan Akhir Sistem | Warna & Tingkat Risiko |
-| :---: | :--- | :--- | :--- | :--- | :--- |
-| **1** | **Alert (Mencurigakan)** | `judol` | `judol` | **Terindikasi Judi Online** | 🔴 `red` (Kritis: 86–100) |
-| **2** | **Alert (Mencurigakan)** | `investasi_menyesatkan` | `investasi_menyesatkan` | **Terindikasi Investasi Menyesatkan** | 🔴 `red` (Kritis: 86–100) |
-| **3** | **Normal (Bersih)** | `judol` / `investasi` | `judol` / `investasi` | **Mencurigakan (Perlu Bukti Tambahan)** | 🟡 `amber` (Tinggi: 61–85) |
-| **4** | **Alert (Mencurigakan)** | `normal` | `normal` | **Mencurigakan (Anomali Jaringan)** | 🟡 `amber` (Sedang: 31–60) |
-| **5** | **Normal (Bersih)** | `normal` | `normal` | **Normal (Aman Terverifikasi)** | 🟢 `emerald` (Rendah: 0–30) |
-| **6** | **Bebas / Alert** | `judol` | `investasi_menyesatkan` | **Belum Dapat Disimpulkan (Disparitas AI)** | 🟡 `amber` (Sedang: 40–65) |
+Mengacu pada standardisasi terbaru, sistem menghilangkan kategori perantara ("Waspada"):
+1. **Keadaan AMAN:**
+   - Menampilkan label **"Tingkat Keamanan"** dengan skor $0\% - 100\%$.
+   - Warna token: Emerald (`#059669`).
+   - Penjelasan verifikasi: Bebas dari rekam jejak pemblokiran, bebas skema taruhan/maysir, dan rekomendasi tabayyun.
+2. **Keadaan BERBAHAYA:**
+   - Menampilkan label **"Tingkat Bahaya"** dengan skor $0\% - 100\%$.
+   - Warna token: Danger Merah (`#DC2626`).
+   - Menampilkan bagian khusus **"Teknik yang Terdeteksi"** (*Web Defacement*, *Open Redirect*, *Typosquatting*) dengan bukti non-aktif (bukan link yang dapat diklik).
+   - Label penegas **"Sangat Berbahaya"** disematkan bila skor bahaya $\ge 85\%$.
 
+---
+
+## 🗄️ 6. Catatan Skema Database Audit (`link_scans`)
+
+Pada implementasi database Supabase PostgreSQL:
+- Hasil audit disimpan secara terpisah pada kolom JSONB: `suricata_result` (Layer Sensor NIDS) dan `gemini_result` (Layer Kognitif AI).
+- Seluruh teknik yang terdeteksi disimpan pada kolom `techniques` (array JSONB) dan kompilasi bukti teknis disimpan pada kolom `indicators`.
+- Nilai vonis akhir disimpan pada `final_category`, `risk_level`, dan `risk_score`.

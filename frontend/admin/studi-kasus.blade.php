@@ -49,6 +49,7 @@
     }
   </script>
   <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/ui-kit.css">
 </head>
 <body class="h-full bg-slate-50 font-sans text-slate-800 antialiased flex flex-row overflow-x-hidden">
 
@@ -68,18 +69,18 @@
   <!-- Mobile Sidebar Overlay Backdrop -->
   <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300"></div>
 
-  <!-- Sidebar Component (Kiri) -->
-  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-300 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:inset-auto lg:z-auto border-r border-slate-800 flex-shrink-0">
+    <!-- Sidebar Component (Kiri: Hijau Gradasi) -->
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-[#064e3b] via-[#022c22] to-[#011a14] text-emerald-100 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen border-r border-emerald-900/40 shrink-0 shadow-2xl">
     <!-- Brand Header -->
-    <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800/80 bg-slate-950/40">
-      <a href="index.blade.php" class="flex items-center gap-3 group text-decoration-none">
-        <img src="../../logo-shield.png" alt="Aswaja CyberShield" class="w-9 h-9 rounded-xl object-contain ring-1 ring-emerald-500/30 shadow-md">
-        <div class="flex flex-col">
-          <span class="font-display font-bold text-white text-base tracking-tight leading-none group-hover:text-emerald-400 transition-colors">Aswaja Cyber</span>
-          <span class="text-[11px] font-medium text-emerald-400 font-mono mt-0.5"> Admin Dashboard</span>
+    <div class="h-16 flex items-center justify-between px-5 border-b border-emerald-800/40 bg-emerald-950/40">
+      <a href="/admin" class="flex items-center gap-3 group text-decoration-none">
+        <img src="../../logo-shield.png" alt="Aswaja CyberShield" class="w-9 h-9 rounded-xl object-contain ring-1 ring-emerald-400/40 shadow-md">
+        <div class="min-w-0">
+          <span class="font-display font-bold text-sm text-white tracking-tight block truncate">Aswaja CyberShield</span>
+          <span class="text-[10px] text-emerald-300 font-semibold uppercase tracking-wider block">Admin Dashboard</span>
         </div>
       </a>
-      <button id="close-sidebar-btn" type="button" class="lg:hidden text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors" aria-label="Tutup sidebar">
+      <button id="close-sidebar-btn" type="button" class="lg:hidden text-emerald-200/80 hover:text-white p-1 rounded-lg hover:bg-emerald-800/40 transition-colors" aria-label="Tutup sidebar">
         <i class="bi bi-x-lg text-lg"></i>
       </button>
     </div>
@@ -87,61 +88,57 @@
     <!-- Navigation Menu Items -->
     <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-6" aria-label="Navigasi Utama Admin">
       <div>
-        <p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Menu Utama</p>
+        <p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-emerald-300/70 mb-2">Menu Utama</p>
         <div class="space-y-1">
           <!-- 1. Dashboard -->
-          <a href="index.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-speedometer2 text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <a href="/admin" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-speedometer2 text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Dashboard</span>
           </a>
 
           <!-- 2. Artikel -->
-          <a href="artikel.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-file-earmark-text text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <a href="/admin/artikel" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-file-earmark-text text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Artikel</span>
           </a>
 
           <!-- 3. Riwayat Pelaporan -->
-          <a href="laporan.blade.php" class="flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
+          <a href="/admin/laporan" class="flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
             <span class="flex items-center gap-3">
-              <i class="bi bi-shield-exclamation text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+              <i class="bi bi-shield-exclamation text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
               <span>Laporan</span>
             </span>
-            <span id="badge-sidebar-reports" class="bg-rose-500/20 text-rose-400 text-xs px-2 py-0.5 rounded-full font-bold border border-rose-500/30">0</span>
+            <span id="badge-sidebar-reports" class="bg-rose-500/20 text-rose-300 text-xs px-2 py-0.5 rounded-full font-bold border border-rose-500/30">0</span>
           </a>
 
-          <!-- 4. Studi Kasus (Active) -->
-          <a href="studi-kasus.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-950/30 transition-all">
-            <i class="bi bi-journal-check text-base text-white"></i>
+          <!-- 5. Studi Kasus -->
+          <a href="/admin/studi-kasus" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl bg-emerald-500 text-white shadow-lg shadow-emerald-950/50 transition-all group">
+            <i class="bi bi-journal-check text-base text-white transition-colors"></i>
             <span>Studi Kasus</span>
           </a>
-          <!-- 5. Integrasi Dual AI -->
-          <a href="integrasi-ai.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-cpu text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
-            <span>Integrasi Dual AI</span>
-          </a>
 
-          <!-- 6. Kelola Akun -->
-          <a href="akun.blade.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/70 transition-all group">
-            <i class="bi bi-people text-base text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+          <!-- 4. Kelola Akun -->
+          <a href="/admin/akun" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl text-emerald-100/75 hover:text-white hover:bg-emerald-800/40 transition-all group">
+            <i class="bi bi-people text-base text-emerald-300/80 group-hover:text-emerald-200 transition-colors"></i>
             <span>Kelola Akun</span>
           </a>
         </div>
       </div>
+    </nav>
 
     <!-- Sidebar Bottom / User Bar -->
-    <div class="p-3 border-t border-slate-800/80 bg-slate-950/40">
-      <div class="flex items-center justify-between px-2.5 py-2 rounded-xl bg-slate-800/60 border border-slate-700/50">
+    <div class="p-3 mt-auto shrink-0 border-t border-emerald-800/40 bg-emerald-950/50">
+      <div class="flex items-center justify-between px-2.5 py-2 rounded-xl bg-emerald-900/40 border border-emerald-700/40">
         <div class="flex items-center gap-2.5 min-w-0">
-          <div id="sidebar-avatar" class="w-8 h-8 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
+          <div id="sidebar-avatar" class="w-8 h-8 rounded-lg bg-emerald-500 text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
             A
           </div>
           <div class="min-w-0 flex-1">
             <p id="sidebar-user-name" class="text-xs font-semibold text-white truncate">Admin Utama</p>
-            <p id="sidebar-user-role" class="text-[10px] text-emerald-400 truncate font-mono">Super Admin</p>
+            <p id="sidebar-user-role" class="text-[10px] text-emerald-300 truncate font-mono">Super Admin</p>
           </div>
         </div>
-        <button id="sidebar-btn-logout" type="button" class="text-slate-400 hover:text-rose-400 p-1.5 rounded-lg hover:bg-slate-700/60 transition-colors" title="Keluar">
+        <button id="sidebar-btn-logout" type="button" class="text-emerald-200/80 hover:text-rose-400 p-1.5 rounded-lg hover:bg-emerald-800/50 transition-colors" title="Keluar">
           <i class="bi bi-box-arrow-right"></i>
         </button>
       </div>
@@ -173,7 +170,7 @@
         <!-- Live Clock Pill -->
         <div class="hidden xl:flex items-center gap-1.5 text-xs text-slate-600 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 font-mono">
           <i class="bi bi-clock text-slate-400"></i>
-          <span id="live-clock">--:--:-- WIB</span>
+          <span id="live-clock"><?php date_default_timezone_set('Asia/Makassar'); echo date('H:i:s'); ?> WITA</span>
         </div>
 
         <button type="button" id="btn-refresh-cases" class="p-2 rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" title="Segarkan Data">
@@ -215,7 +212,7 @@
               <p id="dropdown-user-email" class="text-xs font-semibold text-slate-800 truncate">admin@aswajacyber.id</p>
             </div>
             <div class="py-1">
-              <a href="akun.blade.php" class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+              <a href="/admin/akun" class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">
                 <i class="bi bi-person-gear text-slate-400"></i>
                 <span>Kelola Akun &amp; Profil</span>
               </a>
@@ -309,9 +306,8 @@
 
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200/90 py-4 px-6 text-center text-xs text-slate-500 mt-auto">
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto">
+      <div class="flex items-center justify-center gap-2 max-w-7xl mx-auto">
         <p>&copy; 2026 <strong class="font-semibold text-slate-700">Aswaja CyberShield</strong> &bull; Modul Latihan Cyber Guard</p>
-        <p class="text-slate-400">Simulasi Edukasi Literasi Siber Berbasis Fiqih Tabayyun</p>
       </div>
     </footer>
   </div>
@@ -518,6 +514,7 @@
 
   <!-- API Layer & Scripts -->
   <script src="../../js/api.js"></script>
+  <script src="../../js/ui-kit.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // 1. Auth Guard
@@ -541,7 +538,9 @@
       document.getElementById('dropdown-user-email').textContent = currentUser.email || currentUser.username || 'admin@aswajacyber.id';
 
       function handleLogout() {
-        if (confirm('Keluar dari sesi administrator Aswaja CyberShield?')) {
+        if (window.AuthService && typeof window.AuthService.confirmLogout === 'function') {
+          window.AuthService.confirmLogout();
+        } else if (confirm('Keluar dari sesi administrator Aswaja CyberShield?')) {
           window.AuthService.logout();
         }
       }
@@ -551,9 +550,9 @@
       // Live Clock
       function updateClock() {
         const now = new Date();
-        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Jakarta' });
+        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Makassar' });
         const el = document.getElementById('live-clock');
-        if (el) el.textContent = `${timeStr} WIB`;
+        if (el) el.textContent = `${timeStr} WITA`;
       }
       updateClock();
       setInterval(updateClock, 1000);
@@ -703,10 +702,10 @@
           }
 
           return `
-            <tr class="hover:bg-slate-50/75 transition-colors">
+            <tr class="hover:bg-slate-50/75 transition-colors cursor-pointer group" onclick="openPreviewModal(${c.id})" title="Klik untuk pratinjau studi kasus: ${escapeHtml(c.title)}">
               <!-- 1. Kolom: Judul Kasus -->
               <td class="px-5 py-4 max-w-sm">
-                <div class="font-display font-bold text-slate-900 text-xs sm:text-sm line-clamp-1 hover:text-emerald-700 transition-colors cursor-pointer" onclick="openPreviewModal(${c.id})">
+                <div class="font-display font-bold text-slate-900 text-xs sm:text-sm line-clamp-1 group-hover:text-emerald-700 transition-colors">
                   ${escapeHtml(c.title)}
                 </div>
                 <p class="text-[11px] text-slate-400 line-clamp-1 mt-0.5">${escapeHtml(c.message || c.scenario || '')}</p>
@@ -724,16 +723,16 @@
               </td>
 
               <!-- 4. Kolom: Aksi -->
-              <td class="px-5 py-4 whitespace-nowrap text-right">
+              <td class="px-5 py-4 whitespace-nowrap text-right" onclick="event.stopPropagation()">
                 <div class="inline-flex items-center gap-1.5">
-                  <button type="button" onclick="openPreviewModal(${c.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 transition-colors" title="Pratinjau Kuis">
+                  <button type="button" onclick="event.stopPropagation(); openPreviewModal(${c.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 transition-colors" title="Pratinjau Kuis">
                     <i class="bi bi-eye text-sm"></i>
                   </button>
-                  <button type="button" onclick="openEditCaseModal(${c.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-700 transition-colors" title="Edit Kasus">
+                  <button type="button" onclick="event.stopPropagation(); openEditCaseModal(${c.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-700 transition-colors" title="Edit Kasus">
                     <i class="bi bi-pencil-square text-sm"></i>
                   </button>
                   ${isSuper ? `
-                    <button type="button" onclick="handleDeleteCase(${c.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 transition-colors" title="Hapus Kasus">
+                    <button type="button" onclick="event.stopPropagation(); handleDeleteCase(${c.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 transition-colors" title="Hapus Kasus">
                       <i class="bi bi-trash text-sm"></i>
                     </button>
                   ` : ''}
@@ -764,30 +763,30 @@
           }
 
           return `
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+            <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm hover:border-emerald-500/40 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer group hover:scale-[1.01] active:scale-[0.99]" onclick="openPreviewModal(${c.id})" title="Klik untuk pratinjau studi kasus: ${escapeHtml(c.title)}">
               <div>
                 <div class="flex items-center justify-between gap-2 mb-2">
                   ${riskBadge}
                   <span class="text-xs text-slate-400 font-mono">${escapeHtml(c.date || '02 Nov 2026')}</span>
                 </div>
-                <h3 class="font-display font-bold text-slate-900 text-sm sm:text-base line-clamp-2">${escapeHtml(c.title)}</h3>
+                <h3 class="font-display font-bold text-slate-900 group-hover:text-emerald-700 transition-colors text-sm sm:text-base line-clamp-2">${escapeHtml(c.title)}</h3>
                 <div class="mt-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200/60 text-xs text-slate-700">
                   <span class="font-bold block text-slate-500 text-[10px] uppercase mb-0.5">${escapeHtml(c.sender || 'Pesan Broadcast')}:</span>
                   <p class="italic line-clamp-3">"${escapeHtml(c.message || c.scenario || '')}"</p>
                 </div>
               </div>
 
-              <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+              <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs" onclick="event.stopPropagation()">
                 <span class="text-slate-400 font-medium">Difficulty: ${escapeHtml(c.difficulty || 'Dasar')}</span>
                 <div class="inline-flex items-center gap-1.5">
-                  <button type="button" onclick="openPreviewModal(${c.id})" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold transition-colors">
+                  <button type="button" onclick="event.stopPropagation(); openPreviewModal(${c.id})" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold transition-colors">
                     Pratinjau
                   </button>
-                  <button type="button" onclick="openEditCaseModal(${c.id})" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-colors">
+                  <button type="button" onclick="event.stopPropagation(); openEditCaseModal(${c.id})" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-colors">
                     Edit
                   </button>
                   ${isSuper ? `
-                    <button type="button" onclick="handleDeleteCase(${c.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 transition-colors">
+                    <button type="button" onclick="event.stopPropagation(); handleDeleteCase(${c.id})" class="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 transition-colors">
                       <i class="bi bi-trash"></i>
                     </button>
                   ` : ''}
@@ -904,24 +903,47 @@
         }
       };
 
-      // Delete Case
+      const UI = window.AswajaUI;
+
+      if (UI) {
+        UI.enhanceModal(document.getElementById('modal-case'), {
+          labelledBy: 'modal-case-title',
+          initialFocus: '#case-title',
+          onRequestClose: () => closeCaseModal()
+        });
+      }
+
+      // Universal Reusable Delete Modal for Case Studies
       window.handleDeleteCase = async function(id) {
         if (!isSuper) {
-          alert('Akses Ditolak: Hanya Super Admin yang berwenang menghapus soal studi kasus.');
+          UI.notice({
+            icon: 'warning',
+            title: 'Akses Ditolak',
+            message: 'Hanya Super Admin yang berwenang menghapus soal studi kasus.'
+          });
           return;
         }
 
-        if (confirm('Apakah Anda yakin ingin menghapus studi kasus ini secara permanen?')) {
-          try {
-            await window.ApiService.deleteCaseStudy(id);
-            await loadCaseStudies();
-          } catch (err) {
-            alert('Gagal menghapus studi kasus: ' + err.message);
-          }
-        }
-      };
+        const target = casesList.find(c => Number(c.id) === Number(id));
+        const caseTitle = target ? target.title : `ID #${id}`;
 
-      // Preview Modal
+        await UI.confirmDelete({
+          type: 'studi kasus',
+          name: caseTitle,
+          successMessage: 'Soal studi kasus berhasil dihapus.',
+          onDelete: async () => {
+            await window.ApiService.deleteCaseStudy(id);
+            const row = document.querySelector(`button[onclick*="handleDeleteCase(${id})"]`)?.closest('tr');
+            if (row) {
+              row.style.transition = 'opacity 250ms ease, transform 250ms ease';
+              row.style.opacity = '0';
+              row.style.transform = 'translateY(-6px)';
+              await new Promise(r => setTimeout(r, 260));
+            }
+            await loadCaseStudies();
+          }
+        });
+      };
       window.openPreviewModal = function(id) {
         const item = casesList.find(c => Number(c.id) === Number(id));
         if (!item) return;
@@ -958,7 +980,7 @@
         }
 
         container.innerHTML = reports.map(r => `
-          <a href="laporan.blade.php" class="block p-3 hover:bg-slate-50 transition-colors">
+          <a href="/admin/laporan" class="block p-3 hover:bg-slate-50 transition-colors">
             <div class="flex items-center justify-between mb-1">
               <span class="font-mono font-bold text-[11px] text-slate-800">${escapeHtml(r.id)}</span>
               <span class="text-[10px] text-slate-400">${escapeHtml(r.date || 'Hari ini')}</span>
@@ -987,3 +1009,4 @@
   </script>
 </body>
 </html>
+

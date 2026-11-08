@@ -11,7 +11,7 @@ class AiIntegrationController extends Controller
     public function __construct(protected AiOrchestratorService $aiService) {}
 
     /**
-     * Mengambil status konfigurasi Dual AI (Gemini & DeepSeek) yang aman.
+     * Mengambil status konfigurasi Integrasi AI (Google Gemini) yang aman.
      */
     public function status(): JsonResponse
     {

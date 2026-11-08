@@ -26,7 +26,10 @@ class SuricataIntegrationService
         'alert http any any -> any any (msg:"SUSPICIOUS TLD - FAST FLUX JUDOL"; pcre:"/\\.(vip|cc|xyz|top|fun|click|site|live|club|icu|monster)(\\/|$|\\?)/i"; classtype:suspicious-filename; priority:2; sid:1000005; rev:1;)',
         'alert http any any -> any any (msg:"SUSPICIOUS PROMO - INVESTASI MENYESATKAN / ROBOT TRADING BODONG"; pcre:"/(robot-trading|profit-pasti|cuan-harian|balik-modal-cepat|auto-profit)/i"; classtype:bad-unknown; priority:1; sid:1000006; rev:1; metadata:fiqih_aswaja aklu_amwal_bil_bathil;)',
         'alert http any any -> any any (msg:"SUSPICIOUS TRAFFIC - AFILIASI SINDIKAT JUDOL"; pcre:"/(\\?|&)(ref|aff|affiliate|agent|referral)=[a-zA-Z0-9_-]+/i"; classtype:suspicious-traffic; priority:3; sid:1000007; rev:1;)',
-        'alert http any any -> any any (msg:"SUSPICIOUS PARAMETER - DEPOSIT JUDOL"; pcre:"/(deposit-(dana|gopay|qris|pulsa)|depo-pulsa|depo-10k)/i"; classtype:suspicious-traffic; priority:1; sid:1000008; rev:1;)'
+        'alert http any any -> any any (msg:"SUSPICIOUS PARAMETER - DEPOSIT JUDOL"; pcre:"/(deposit-(dana|gopay|qris|pulsa)|depo-pulsa|depo-10k)/i"; classtype:suspicious-traffic; priority:1; sid:1000008; rev:1;)',
+        'alert http any any -> any any (msg:"ASWAJA-IDS Kata kunci judol pada URI"; flow:established,to_server; http.uri; pcre:"/(slot|gacor|maxwin|togel|sbobet|scatter|rtp)/i"; classtype:policy-violation; priority:1; sid:1000101; rev:1; metadata:fiqih_aswaja maysir_sharih;)',
+        'alert http any any -> any any (msg:"ASWAJA-IDS Parameter open redirect ke URL eksternal"; flow:established,to_server; http.uri; pcre:"/[?&](url|redirect|to|link|dest|next|goto|return)=(https?(%3A|:)(%2F|\/){2})/i"; classtype:policy-violation; priority:1; sid:1000102; rev:1; metadata:technique open_redirect;)',
+        'alert dns any any -> any any (msg:"ASWAJA-IDS Query DNS domain berkata kunci judol"; dns.query; pcre:"/(slot|gacor|maxwin|togel)/i"; classtype:policy-violation; priority:1; sid:1000103; rev:1; metadata:technique keyword_judol;)'
     ];
 
     public function __construct(?string $eveLogPath = null, ?bool $enabled = null)
@@ -146,8 +149,16 @@ class SuricataIntegrationService
                     default => 'medium'
                 };
 
+                $technique = match ((int)($record['signature_id'] ?? 0)) {
+                    1000101 => null,
+                    1000102 => 'open_redirect',
+                    1000103 => null,
+                    default => null
+                };
+
                 $indicators[] = [
                     'name' => 'suricata_network_alert',
+                    'technique' => $technique,
                     'evidence' => "SID: {$record['signature_id']} - {$record['alert_signature']}",
                     'severity' => $severityName,
                     'explanation' => "Pelanggaran signature Suricata NIDS pada lalu lintas jaringan: {$record['alert_signature']}"

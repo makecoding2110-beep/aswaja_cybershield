@@ -52,7 +52,6 @@ runTest("CATATAN_DATABASE.md memuat skema resmi tabel link_scans", function () {
     return str_contains($content, 'CREATE TABLE link_scans')
         && str_contains($content, 'suricata_result JSONB')
         && str_contains($content, 'gemini_result JSONB')
-        && str_contains($content, 'deepseek_result JSONB')
         && str_contains($content, 'ai_comparison JSONB')
         && str_contains($content, 'indicators JSONB')
         && str_contains($content, 'final_category VARCHAR(50)')
@@ -74,7 +73,6 @@ runTest("Model Eloquent LinkScan memiliki konfigurasi casts dan fillable yang se
     return $model->getTable() === 'link_scans'
         && in_array('suricata_result', $model->getFillable(), true)
         && in_array('gemini_result', $model->getFillable(), true)
-        && in_array('deepseek_result', $model->getFillable(), true)
         && in_array('ai_comparison', $model->getFillable(), true)
         && in_array('final_category', $model->getFillable(), true)
         && $model->getCasts()['risk_score'] === 'integer';
@@ -105,29 +103,16 @@ runTest("ScanHistoryService mencatat pemeriksaan lengkap dengan hasil engine ter
         confidence: 0.95
     );
 
-    $deepseek = new AiAnalysisResultDTO(
-        provider: 'deepseek',
-        model: 'deepseek-chat',
-        status: 'connected',
-        category: 'judol',
-        riskLevel: 'critical',
-        riskScore: 95,
-        indicators: [['name' => 'deposit_flow', 'evidence' => 'deposit slot 10k', 'severity' => 'critical', 'explanation' => 'Pola setoran']],
-        reasoning: 'Penarikan dana judi.',
-        confidence: 0.94
-    );
+    $comparison = $comparisonService->compare($gemini, null);
+    $assessment = $riskAssessmentService->evaluate($urlAnalysis, $suricataResult, $gemini, null, $comparison);
 
-    $comparison = $comparisonService->compare($gemini, $deepseek);
-    $assessment = $riskAssessmentService->evaluate($urlAnalysis, $suricataResult, $gemini, $deepseek, $comparison);
-
-    $saved = $historyService->recordScan($urlAnalysis, $suricataResult, $gemini, $deepseek, $comparison, $assessment);
+    $saved = $historyService->recordScan($urlAnalysis, $suricataResult, $gemini, null, $comparison, $assessment);
 
     // Verifikasi struktur data yang disimpan
     $hasValidId = str_starts_with($saved['id'], 'SCN-');
     $suricataSavedSeparately = isset($saved['suricata_result']['status']) && $saved['suricata_result']['matched'] === true;
     $geminiSavedSeparately = isset($saved['gemini_result']['provider']) && $saved['gemini_result']['provider'] === 'gemini';
-    $deepseekSavedSeparately = isset($saved['deepseek_result']['provider']) && $saved['deepseek_result']['provider'] === 'deepseek';
-    $comparisonSaved = isset($saved['ai_comparison']['is_match']) && $saved['ai_comparison']['is_match'] === true;
+    $comparisonSaved = isset($saved['ai_comparison']);
 
     // Verifikasi pengambilan kembali via findById
     $retrieved = $historyService->findById($saved['id']);
@@ -135,7 +120,6 @@ runTest("ScanHistoryService mencatat pemeriksaan lengkap dengan hasil engine ter
     return $hasValidId
         && $suricataSavedSeparately
         && $geminiSavedSeparately
-        && $deepseekSavedSeparately
         && $comparisonSaved
         && $retrieved !== null
         && $retrieved['id'] === $saved['id'];

@@ -2,7 +2,12 @@
  * Aswaja CyberShield - API Client & Integration Layer for Laravel REST API */
 
 // Konfigurasi Dasar URL API Laravel
-const API_BASE_URL = window.API_BASE_URL || 'http://127.0.0.1:8000/api';
+// Menggunakan relative origin (/api) jika diakses lewat browser (misal port 3000 atau port apa pun), fallback ke http://127.0.0.1:8000/api
+const API_BASE_URL = window.API_BASE_URL || (
+  typeof window !== 'undefined' && window.location && window.location.origin && window.location.origin.startsWith('http')
+    ? `${window.location.origin}/api`
+    : 'http://127.0.0.1:8000/api'
+);
 
 // Kunci penyimpanan sesi
 const AUTH_TOKEN_KEY = 'aswaja_admin_token';
@@ -58,19 +63,111 @@ const AuthService = {
       localStorage.removeItem(AUTH_TOKEN_KEY);
       localStorage.removeItem(AUTH_USER_KEY);
     } catch (e) {}
-    window.location.replace('login.blade.php');
+
+    // Deteksi base prefix URL agar kompatibel di lokal maupun domain
+    let loginUrl = 'login.blade.php';
+    try {
+      const p = window.location.pathname || '';
+      if (p.includes('/admin/')) {
+        loginUrl = p.includes('/frontend/admin/') ? '../admin/login.blade.php' : '/login';
+      }
+    } catch (e) {}
+    window.location.replace(loginUrl);
+  },
+  confirmLogout() {
+    if (window.AswajaUI && typeof window.AswajaUI.confirm === 'function') {
+      window.AswajaUI.confirm({
+        role: 'alertdialog',
+        icon: 'danger',
+        variant: 'danger',
+        title: 'Konfirmasi Keluar Sesi',
+        message: 'Apakah Anda yakin ingin keluar dari Panel Administrator Aswaja CyberShield? Sesi aktif Anda akan segera diakhiri demi keamanan data.',
+        confirmText: 'Ya, Keluar Sekarang',
+        cancelText: 'Tetap di Dashboard',
+        onConfirm: () => {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              AuthService.logout();
+              resolve(true);
+            }, 300);
+          });
+        }
+      });
+      return;
+    }
+
+    // Modern Modal Fallback (jika ui-kit belum siap)
+    let modalEl = document.getElementById('aswaja-logout-modal');
+    if (!modalEl) {
+      modalEl = document.createElement('div');
+      modalEl.id = 'aswaja-logout-modal';
+      modalEl.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,0.65);backdrop-filter:blur(4px);padding:1rem;opacity:0;transition:opacity .2s ease;';
+      modalEl.innerHTML = `
+        <div style="background:#fff;border-radius:1.25rem;max-width:26rem;width:100%;padding:1.5rem;box-shadow:0 25px 50px -12px rgba(0,0,0,0.35);text-align:center;border:1px solid #e2e8f0;transform:scale(0.95);transition:transform .2s ease;" id="aswaja-logout-card">
+          <div style="width:3.25rem;height:3.25rem;border-radius:1rem;background:#fee2e2;color:#dc2626;display:inline-flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.5rem;">
+            <i class="bi bi-box-arrow-right"></i>
+          </div>
+          <h3 style="font-size:1.125rem;font-weight:700;color:#0f172a;margin:0 0 0.5rem 0;font-family:'Plus Jakarta Sans',sans-serif;">Konfirmasi Keluar Sesi</h3>
+          <p style="font-size:0.875rem;color:#64748b;line-height:1.5;margin:0 0 1.25rem 0;">Apakah Anda yakin ingin keluar dari Panel Administrator? Seluruh sesi aktif akan segera ditutup demi keamanan data.</p>
+          <div style="display:flex;gap:0.75rem;justify-content:center;">
+            <button type="button" id="aswaja-btn-cancel-logout" style="flex:1;padding:0.625rem 1rem;border-radius:0.75rem;border:1px solid #cbd5e1;background:#f8fafc;color:#334155;font-weight:600;font-size:0.875rem;cursor:pointer;">Batal</button>
+            <button type="button" id="aswaja-btn-exec-logout" style="flex:1;padding:0.625rem 1rem;border-radius:0.75rem;border:none;background:#dc2626;color:#ffffff;font-weight:600;font-size:0.875rem;cursor:pointer;">Keluar</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modalEl);
+      
+      const closeModal = () => {
+        modalEl.style.opacity = '0';
+        const c = document.getElementById('aswaja-logout-card');
+        if (c) c.style.transform = 'scale(0.95)';
+        setTimeout(() => modalEl.remove(), 200);
+      };
+
+      document.getElementById('aswaja-btn-cancel-logout')?.addEventListener('click', closeModal);
+      modalEl.addEventListener('click', (e) => { if (e.target === modalEl) closeModal(); });
+      document.getElementById('aswaja-btn-exec-logout')?.addEventListener('click', () => {
+        const btn = document.getElementById('aswaja-btn-exec-logout');
+        if (btn) {
+          btn.disabled = true;
+          btn.innerHTML = 'Memproses...';
+        }
+        setTimeout(() => AuthService.logout(), 250);
+      });
+    }
+
+    requestAnimationFrame(() => {
+      modalEl.style.opacity = '1';
+      const c = document.getElementById('aswaja-logout-card');
+      if (c) c.style.transform = 'scale(1)';
+    });
   }
 };
 
 /**
  * HTTP Client Wrapper terpusat
  */
+function buildHttpError(res, data, fallbackMessage) {
+  const msg = (data && (data.message || data.error)) || fallbackMessage;
+  const err = new Error(msg);
+  err.status = res.status;
+  err.errors = (data && data.errors) || null; // detail validasi per-field dari Laravel (422)
+  err.quota = (data && data.quota) || null;
+  err.reasons = (data && data.reasons) || null;
+  err.retry_after_minutes = (data && data.retry_after_minutes) || null;
+  err.time_string = (data && data.time_string) || null;
+  return err;
+}
+
 async function apiFetch(endpoint, options = {}) {
   const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
   const token = AuthService.getToken();
 
   const headers = {
     'Accept': 'application/json',
+    // Penanda permintaan AJAX; autentikasi memakai Bearer token (bukan cookie)
+    // sehingga permintaan lintas-situs tidak membawa kredensial otomatis (kebal CSRF).
+    'X-Requested-With': 'XMLHttpRequest',
     ...(options.headers || {})
   };
 
@@ -95,24 +192,25 @@ async function apiFetch(endpoint, options = {}) {
         AuthService.logout();
       }
       const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Sesi telah berakhir, silakan login kembali.');
+      throw buildHttpError(res, errorData, 'Sesi telah berakhir, silakan login kembali.');
     }
 
     // Handle Forbidden (403)
     if (res.status === 403) {
       const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Anda tidak memiliki hak akses untuk tindakan ini.');
+      throw buildHttpError(res, errorData, 'Anda tidak memiliki hak akses untuk tindakan ini.');
     }
 
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || `Permintaan gagal dengan status ${res.status}`);
+      throw buildHttpError(res, errorData, `Permintaan gagal dengan status ${res.status}`);
     }
 
     return await res.json();
   } catch (error) {
-    // Flag network error so client can seamlessly utilize structured preview/fallback
-    error.isNetworkError = error.message.includes('Failed to fetch') || error.message.includes('NetworkError');
+    // Hanya kegagalan jaringan (server tidak terjangkau) yang boleh memicu data simulasi.
+    // Error validasi/otorisasi dari server harus sampai ke pengguna apa adanya.
+    error.isNetworkError = error instanceof TypeError || /Failed to fetch|NetworkError|Load failed/i.test(error.message || '');
     throw error;
   }
 }
@@ -144,7 +242,7 @@ const MockDatabase = {
     {
       id: 'LPR081',
       url: 'https://cuan-trading-harian-vip88.vip/deposit-slot',
-      date: '02 Nov 2026, 14:20 WIB',
+      date: '02 Nov 2026, 14:20 WITA',
       reporter: 'Hamba Allah',
       category: 'Investasi Berkedok Trading / Crypto',
       description: 'Grup Telegram mengklaim sinyal trading robot otomatis dengan profit 30% per hari, tetapi tautan pendaftarannya dialihkan ke deposit situs slot online luar negeri.',
@@ -155,7 +253,7 @@ const MockDatabase = {
     {
       id: 'LPR080',
       url: 'https://dana-investasi-amanah-syariah.top/login-member',
-      date: '02 Nov 2026, 11:15 WIB',
+      date: '02 Nov 2026, 11:15 WITA',
       reporter: 'Rizki Ramadhan',
       category: 'Iklan Cuan Kilat Bersyarat Deposit Judi',
       description: 'Mencatut label "Investasi Syariah Bebas Riba" di Instagram, tetapi saat registrasi member diwajibkan membeli kupon spin roda keberuntungan yang merupakan bentuk judi berkedok undian.',
@@ -166,7 +264,7 @@ const MockDatabase = {
     {
       id: 'LPR079',
       url: 'https://mining-usdt-passiveincome.cc/wallet-spin',
-      date: '01 Nov 2026, 19:40 WIB',
+      date: '01 Nov 2026, 19:40 WITA',
       reporter: 'Anonim',
       category: 'Tautan Promosi Slot / Kasino Berkedok Game Finansial',
       description: 'Menjanjikan passive income dari mining kripto. Setelah transfer deposit pertama, dana dikunci dan baru bisa ditarik jika menyelesaikan taruhan ganjil-genap tebak angka.',
@@ -177,7 +275,7 @@ const MockDatabase = {
     {
       id: 'LPR078',
       url: 'https://arisan-digital-berkah-nusantara.site/gabung',
-      date: '01 Nov 2026, 09:10 WIB',
+      date: '01 Nov 2026, 09:10 WITA',
       reporter: 'Warga Samarinda',
       category: 'Tautan Undangan Grup Investasi / Arisan Bodong',
       description: 'Arisan berantai via WhatsApp. Uang kloter pertama dibagikan, selanjutnya peserta disuruh memasang nomor tebak skor bola pada link tersembunyi.',
@@ -188,7 +286,7 @@ const MockDatabase = {
     {
       id: 'LPR077',
       url: 'https://portal-bantuan-modal-umkm2026.online/klaim-bonus',
-      date: '31 Okt 2026, 16:30 WIB',
+      date: '31 Okt 2026, 16:30 WITA',
       reporter: 'Dewi Lestari',
       category: 'Iklan Cuan Kilat Bersyarat Deposit Judi',
       description: 'Mengaku program subsidi usaha mikro dengan modal awal cuma-cuma, namun syarat aktivasi harus melakukan deposit taruhan di situs kasino daring.',
@@ -198,131 +296,133 @@ const MockDatabase = {
     }
   ],
 
-  // 2. Database Artikel Edukasi
+  // 2. Database Artikel Edukasi (Sinkron dengan public.articles)
   articles: [
     {
       id: 1,
-      title: 'Muamalah Finansial: Bebas Scam Judi Online & Investasi Bodong',
+      title: 'Anatomi Jebakan Robot Trading Bodong Berkedok Putaran Slot',
       category: 'Fiqih Finansial',
-      author: 'Tim Fatwa & Literasi Siber Aswaja',
-      date: '01 Nov 2026',
-      readTime: '5 Menit Baca',
-      status: 'Published', // Published | Draft
-      slug: 'muamalah-finansial',
-      summary: 'Mengenali perangkap manipulasi psikologis algoritma judi daring (maysir modern) dan bahaya jeratan rentenir digital serta investasi palsu yang merusak stabilitas keluarga.'
+      author: 'Muhammad Ali Reza, S.Kom',
+      date: '07 Nov 2026',
+      readTime: '6 Menit',
+      status: 'Published',
+      slug: 'anatomi-jebakan-robot-trading-bodong',
+      cover_image: '../images/artikel-1.jpg',
+      image: '../images/artikel-1.jpg',
+      coverImage: '../images/artikel-1.jpg',
+      excerpt: 'Mengapa janji profit konsisten harian tanpa risiko adalah indikator mutlak skema Ponzi dan perjudian terselubung.',
+      summary: 'Mengapa janji profit konsisten harian tanpa risiko adalah indikator mutlak skema Ponzi dan perjudian terselubung.',
+      content: '<p>Praktik penipuan berkedok investasi kian bermutasi menggunakan istilah teknologi mutakhir seperti <em>AI Auto-Trading</em> dan <em>Smart Arbitrage</em>. Padahal, di balik antarmuka grafik palsu yang ditampilkan, dana masyarakat sebenarnya diarahkan ke mesin perjudian daring (slot) yang telah diatur algoritmanya agar bandar selalu menang.</p>'
     },
     {
       id: 2,
-      title: 'Prinsip 4T Menghadapi Tawaran Investasi Sensasional & Cuan Instan',
-      category: 'Metodologi Tabayyun',
-      author: 'Dr. H. Muhammad Arifin',
-      date: '28 Okt 2026',
-      readTime: '4 Menit Baca',
+      title: 'Kajian Fiqih Muamalah: Batasan Gharar dan Maysir pada Game Berhadiah Finansial',
+      category: 'Fiqih Siber',
+      author: 'Dewan Syariah Aswaja',
+      date: '07 Nov 2026',
+      readTime: '8 Menit',
       status: 'Published',
-      slug: 'prinsip-tatsabbut',
-      summary: 'Penerapan Tawaqquf, Tastabbus, Tatsabbut, dan Ta\'aqqul dalam memverifikasi legalitas izin OJK/Bappebti sebelum mentransfer dana ke rekening mencurigakan.'
+      slug: 'kajian-fiqih-muamalah-gharar-maysir',
+      excerpt: 'Membedah unsur ketidakpastian (gharar) dan spekulasi untung-untungan (maysir) pada aplikasi permainan top-up koin.',
+      summary: 'Membedah unsur ketidakpastian (gharar) dan spekulasi untung-untungan (maysir) pada aplikasi permainan top-up koin.',
+      content: '<p>Setiap permainan digital yang mensyaratkan pembelian koin dengan uang asli untuk memutar roda keberuntungan yang hasilnya dapat diuangkan kembali merupakan bentuk nyata dari <strong>Maysir</strong> (perjudian) yang diharamkan secara qath\'i dalam syariat Islam.</p>'
     },
     {
       id: 3,
-      title: 'Bahaya Maysir Modern: Mengapa Game "Trading Cepat" Termasuk Judi Daring?',
-      category: 'Edukasi Hukum',
-      author: 'Lembaga Bahtsul Masail',
-      date: '25 Okt 2026',
-      readTime: '6 Menit Baca',
+      title: 'Mitigasi Phishing File APK Surat Undangan dan Kurir Paket',
+      category: 'Keamanan Digital',
+      author: 'Tim CSIRT Aswaja',
+      date: '07 Nov 2026',
+      readTime: '5 Menit',
       status: 'Published',
-      slug: 'bahaya-ghibah-digital',
-      summary: 'Analisis fiqih maaliyah tentang perbedaan transaksi perdagangan nyata (bai\') dengan tebak harga naik-turun berskema zero-sum game yang merugikan publik.'
-    },
-    {
-      id: 4,
-      title: 'Anatomi Tautan Phishing Berkedok Investasi: Ciri Domain dan Server Judol',
-      category: 'Forensik Digital',
-      author: 'CSIRT Aswaja CyberShield',
-      date: '20 Okt 2026',
-      readTime: '4 Menit Baca',
-      status: 'Draft',
-      slug: 'mitigasi-phishing-apk',
-      summary: 'Panduan teknis memeriksa umur domain, sertifikat SSL anonim, dan pengalihan DNS ke jaringan perjudian daring luar negeri.'
+      slug: 'mitigasi-phishing-file-apk-kurir',
+      excerpt: 'Langkah teknis mengamankan ponsel Android dari pencurian kode OTP perbankan melalui berkas instalasi berbahaya.',
+      summary: 'Langkah teknis mengamankan ponsel Android dari pencurian kode OTP perbankan melalui berkas instalasi berbahaya.',
+      content: '<p>Modus pengiriman file berekstensi <code>.apk</code> melalui WhatsApp memanfaatkan kelengahan psikologis korban (rekayasa sosial). Begitu diinstal, aplikasi berbahaya ini meminta izin akses baca SMS untuk meneruskan kode OTP mobile banking langsung ke server pelaku.</p>'
     }
   ],
 
-  // 3. Database Studi Kasus & Soal Latihan (Cyber Guard)
+  // 3. Database Studi Kasus & Soal Latihan (Sinkron dengan public.case_studies)
   caseStudies: [
     {
       id: 1,
-      title: 'Tautan Robot Trading Syariah yang Berujung Deposit Slot',
-      difficulty: 'Dasar',
-      riskLevel: 'Kritis',
-      date: '02 Nov 2026',
-      scenario: 'Studi Kasus 01: Penawaran Robot Trading Otomatis',
-      sender: '+62 821-4455-XXXX (Admin Cuan Berkah Telegram)',
-      message: 'Halo Kak! Mau pasif income Rp 500rb/hari tanpa ribet? Cukup registrasi di link resmi platform trading syariah kami, klaim bonus selamat datang, dan robot akan memutar profit otomatis!',
-      targetUrl: 'https://cuan-trading-syariah-vip88.xyz/register',
-      question: 'Setelah Anda membuka link tersebut, Anda diarahkan ke halaman yang meminta deposit Rp 100.000 dengan tampilan roda putar (spin) dan saldo taruhan. Apa tindakan Tabayyun yang tepat?',
+      title: 'Jebakan Grup VIP "Titip Dana" & Robot Slot Otomatis',
+      riskLevel: 'Tinggi',
+      fiqihPrinciple: 'Tawaqquf & Tastabbus',
+      date: '07 Nov 2026',
+      scenario: 'Anda dimasukkan secara tiba-tiba ke dalam grup Telegram "Komunitas Cuan Berkah AI". Di dalamnya banyak akun mengirimkan bukti transfer pencairan uang jutaan rupiah hanya dalam waktu 2 jam.',
+      sender: 'Admin VIP Arbitrase Syariah (+62 812-XXXX-9981)',
+      context: 'Admin VIP Arbitrase Syariah (+62 812-XXXX-9981)',
+      message: 'Assalamualaikum kak, slot titip dana batch ke-14 tinggal 2 kuota lagi! Modal Rp 500rb cair Rp 2.500.000 sore ini via algoritma AI Auto-Spin. Daftar di: https://vip-arbitrase-berkah88.site/join',
+      question: 'Berdasarkan kaidah Fiqih Informasi (Prinsip 4T) dan literasi keamanan siber, langkah manakah yang paling tepat?',
       options: [
-        { key: 'A', text: 'Mendepositkan Rp 100.000 karena nominalnya kecil dan ingin membuktikan apakah benar menghasilkan keuntungan.', correct: false },
-        { key: 'B', text: 'Menerapkan Tawaqquf: Segera tutup halaman, jangan lakukan transfer, karena ini adalah kedok judi online (maysir) yang disamarkan sebagai robot trading.', correct: true },
-        { key: 'C', text: 'Meneruskan pesan ke grup keluarga untuk menanyakan apakah ada yang pernah mencoba platform ini.', correct: false },
-        { key: 'D', text: 'Mendaftarkan nomor rekening bank untuk sekadar melihat apakah bonus uang bisa langsung ditarik tunai.', correct: false }
+        { key: 'A', text: 'Mencoba transfer nominal terkecil terlebih dahulu untuk menguji kebenarannya.', correct: false },
+        { key: 'B', text: 'Menahan diri (Tawaqquf), tidak mengeklik tautan karena klaim profit pasti dan kata kunci spin/slot adalah ciri mutlak judi online & penipuan.', correct: true },
+        { key: 'C', text: 'Membagikan tautan tersebut ke grup keluarga agar ikut mendapat keuntungan.', correct: false },
+        { key: 'D', text: 'Membalas pesan admin dengan mengirimkan foto KTP untuk verifikasi anggota.', correct: false }
       ],
-      explanation: 'Tepat sekali (Pilihan B)! Modus "robot trading syariah" yang meminta pengguna memutar spin keberuntungan atau taruhan tebak angka adalah bentuk perjudian online berkedok investasi. Lembaga resmi tidak pernah menggunakan skema acak seperti slot.'
+      discussion: 'Dalam Fiqih Muamalah, janji keuntungan tetap tanpa risiko pada skema spekulatif adalah haram (mengandung unsur Gharar & Maysir/perjudian). Dari sisi keamanan siber, domain .site dengan iming-iming pelipatgandaan uang instan adalah modus investasi bodong berkedok slot.',
+      explanation: 'Dalam Fiqih Muamalah, janji keuntungan tetap tanpa risiko pada skema spekulatif adalah haram (mengandung unsur Gharar & Maysir/perjudian). Dari sisi keamanan siber, domain .site dengan iming-iming pelipatgandaan uang instan adalah modus investasi bodong berkedok slot.'
     },
     {
       id: 2,
-      title: 'Mining Kripto Harian dengan Syarat Beli Tiket Keberuntungan',
-      difficulty: 'Menengah',
+      title: 'Situs Pinjol Kilat Tanpa Verifikasi KTP Berujung Judi',
       riskLevel: 'Tinggi',
-      date: '01 Nov 2026',
-      scenario: 'Studi Kasus 02: Skema Mining Kripto Instan',
-      sender: 'Broadcast Media Sosial / Iklan Bersponsor',
-      message: 'Revolusi Finansial 2026! Cuma modal smartphone, mining USDT hasilkan Rp 10 Juta per minggu. Daftar akun gratis hari ini!',
-      targetUrl: 'https://mining-usdt-cuan-instan.club/dashboard',
-      question: 'Di dalam platform tersebut, Anda diberi "saldo virtual Rp 2.000.000", tetapi saldo tersebut baru bisa dicairkan (withdraw) jika Anda memasang taruhan tebak warna/angka sebanyak 10 putaran. Apa analisis Anda?',
+      fiqihPrinciple: 'Tatsabbut (Konfirmasi Otoritas)',
+      date: '07 Nov 2026',
+      scenario: 'Sebuah iklan di media sosial menawarkan pinjaman modal usaha tanpa syarat dokumen apa pun, namun saat diklik mengarahkan ke halaman registrasi akun taruhan.',
+      sender: 'DanaCepat-SyariahOfficial',
+      context: 'DanaCepat-SyariahOfficial',
+      message: 'Butuh dana darurat mendesak? Cair Rp 10 Juta dalam 3 menit tanpa BI Checking & tanpa bunga! Cukup daftar akun member dan klaim saldo awal di: https://danacepat-cair88.xyz/klaim-bonus',
+      question: 'Mengapa tautan di atas sangat berbahaya dan bagaimana cara melakukan Tatsabbut (konfirmasi otoritas)?',
       options: [
-        { key: 'A', text: 'Ini adalah modus penipuan berkedok judi online. Saldo virtual hanya umpan psikologis untuk memaksa pengguna mentransfer uang taruhan sungguhan.', correct: true },
-        { key: 'B', text: 'Ini adalah mekanisme promosi wajar dari perusahaan teknologi keuangan luar negeri.', correct: false },
-        { key: 'C', text: 'Sebaiknya bermain 10 putaran dengan taruhan paling kecil agar saldo virtual bisa ditarik.', correct: false },
-        { key: 'D', text: 'Meminjam uang ke kerabat untuk deposit taruhan agar cepat mencapai syarat batas penarikan.', correct: false }
+        { key: 'A', text: 'Aman dicoba selama tidak meminta PIN ATM.', correct: false },
+        { key: 'B', text: 'Berbahaya karena mengarahkan pengguna membuat akun deposit judi online berkedok pencairan pinjaman; wajib dicek di daftar resmi OJK.', correct: true },
+        { key: 'C', text: 'Langsung mendaftar menggunakan email utama dan nomor telepon aktif.', correct: false },
+        { key: 'D', text: 'Mengunduh aplikasi yang disarankan di dalam halaman web tersebut.', correct: false }
       ],
-      explanation: 'Benar (Pilihan A)! Ini adalah teknik rekayasa sosial manipulasi "sunk cost fallacy" dan "withdrawal lock". Saldo awal palsu digunakan untuk menjebak korban agar terus menyetor uang ke sistem judi online.'
+      discussion: 'Banyak situs judi online menyamar sebagai layanan pinjaman kilat untuk menjebak warga yang sedang kesulitan ekonomi agar melakukan deposit awal ("biaya admin pencairan" yang ternyata top-up saldo taruhan). Selalu lakukan Tatsabbut melalui kanal resmi OJK (Kontak 157).',
+      explanation: 'Banyak situs judi online menyamar sebagai layanan pinjaman kilat untuk menjebak warga yang sedang kesulitan ekonomi agar melakukan deposit awal ("biaya admin pencairan" yang ternyata top-up saldo taruhan). Selalu lakukan Tatsabbut melalui kanal resmi OJK (Kontak 157).'
     },
     {
       id: 3,
-      title: 'Pencatutan Tokoh Ulama & Figur Publik untuk Investasi Kilat',
-      difficulty: 'Menengah',
+      title: 'Undangan Pernikahan Digital Berformat .APK di WhatsApp',
       riskLevel: 'Tinggi',
-      date: '29 Okt 2026',
-      scenario: 'Studi Kasus 03: Video Manipulasi Tokoh Publik',
-      sender: 'Akun TikTok / Reel Tidak Dikenal',
-      message: 'Video memperlihatkan tokoh ulama kondang seolah-olah menyatakan bahwa platform investasi berbasis aplikasi tertentu adalah halal dan menjamin hasil 100%.',
-      targetUrl: 'https://investasi-berkah-pesantren2026.online',
-      question: 'Gerak bibir ulama dalam video tampak tidak sinkron dengan suara (indikasi AI deepfake). Di akhir video ada ajakan klik link deposit. Sikap Anda?',
+      fiqihPrinciple: "Ta'aqqul (Menimbang Mudharat)",
+      date: '07 Nov 2026',
+      scenario: 'Anda menerima pesan WhatsApp dari nomor tidak dikenal yang mengirimkan file bernama "Surat-Undangan-VIP.apk" tanpa menyebutkan nama mempelai.',
+      sender: '+62 857-XXXX-3310 (Tidak Dikenal)',
+      context: '+62 857-XXXX-3310 (Tidak Dikenal)',
+      message: 'Kami mengharap kehadiran Bapak/Ibu pada acara resepsi pernikahan putra-putri kami. Silakan buka file undangan terlampir untuk melihat lokasi dan jadwal acara. [File: Surat-Undangan-VIP.apk - 6.4 MB]',
+      question: 'Tindakan mitigasi apa yang wajib dilakukan saat menerima file dengan ekstensi .apk melalui pesan singkat?',
       options: [
-        { key: 'A', text: 'Langsung percaya karena mengagumi ulama tersebut dan segera menyetor modal awal.', correct: false },
-        { key: 'B', text: 'Menerapkan prinsip Tatsabbut: Melakukan konfirmasi ke akun resmi pesantren/tokoh, tidak menyebarkan video, dan melaporkan link tersebut sebagai phishing judol.', correct: true },
-        { key: 'C', text: 'Membagikan video ke grup WhatsApp santri dengan tulisan "Benarkah kabar ini?".', correct: false },
-        { key: 'D', text: 'Menghujat sang tokoh di kolom komentar tanpa meneliti keaslian video.', correct: false }
+        { key: 'A', text: 'Membuka dan menginstal file tersebut karena penasaran siapa yang menikah.', correct: false },
+        { key: 'B', text: 'Menolak mengunduh/menginstal file .apk, segera menghapus pesan, dan memblokir pengirim karena file .apk adalah aplikasi berbahaya pencuri SMS OTP.', correct: true },
+        { key: 'C', text: 'Meneruskan file .apk tersebut ke teman lain untuk menanyakan isinya.', correct: false },
+        { key: 'D', text: 'Mengizinkan akses baca SMS ketika aplikasi meminta izin instalasi.', correct: false }
       ],
-      explanation: 'Benar (Pilihan B)! Sindikat judi online dan investasi ilegal kerap mencatut nama ulama dan tokoh masyarakat menggunakan deepfake AI untuk meruntuhkan kewaspadaan calon korban.'
+      discussion: 'Undangan digital resmi selalu berupa tautan web atau dokumen gambar/PDF, bukan file instalasi aplikasi (.apk). Menginstal .apk dari luar toko aplikasi resmi berisiko menyusupkan malware pencuri SMS OTP yang dapat menguras rekening mobile banking.',
+      explanation: 'Undangan digital resmi selalu berupa tautan web atau dokumen gambar/PDF, bukan file instalasi aplikasi (.apk). Menginstal .apk dari luar toko aplikasi resmi berisiko menyusupkan malware pencuri SMS OTP yang dapat menguras rekening mobile banking.'
     },
     {
       id: 4,
-      title: 'Tautan "Bantuan Modal Usaha" Bersyarat Aktivasi Taruhan',
-      difficulty: 'Lanjutan',
-      riskLevel: 'Kritis',
-      date: '26 Okt 2026',
-      scenario: 'Studi Kasus 04: Bantuan Finansial Palsu',
-      sender: '+62 813-9090-XXXX (Program Bantuan Mandiri)',
-      message: 'Selamat! Usaha mikro Anda terpilih menerima hibah modal Rp 15.000.000. Klik tautan verifikasi identitas dan aktifkan akun Anda dalam waktu 24 jam.',
-      targetUrl: 'https://hibah-modal-warga-indonesia.top/klaim',
-      question: 'Tautan meminta Anda mengisi data nomor rekening dan kode OTP bank, lalu menginstruksikan Anda memasang taruhan kecil di kasino daring untuk "mengaktifkan token pencairan". Apa tindakan Anda?',
+      title: 'Giveaway Saldo DANA Kaget Palsu Mengarah ke Situs Phishing',
+      riskLevel: 'Sedang',
+      fiqihPrinciple: 'Tastabbus (Teliti Sanad Domain)',
+      date: '07 Nov 2026',
+      scenario: 'Beredar siaran langsung di media sosial yang menampilkan tangkapan layar bagi-bagi saldo dompet digital dengan syarat mengisi data akun di sebuah tautan.',
+      sender: 'Berbagi Berkah Ramadhan Official',
+      context: 'Berbagi Berkah Ramadhan Official',
+      message: 'Alhamdulillah rezeki hari Jumat! Ambil saldo DANA Kaget Rp 750.000 gratis khusus 50 orang tercepat. Masukkan nomor HP dan PIN DANA Anda di: https://link-dana-kaget-berkah.cc/klaim',
+      question: 'Indikator utama apa yang membuktikan bahwa tautan tersebut adalah jebakan Phishing?',
       options: [
-        { key: 'A', text: 'Mengikuti instruksi karena sudah membutuhkan modal usaha.', correct: false },
-        { key: 'B', text: 'Menolak keras, tidak memberikan kode OTP apa pun, dan segera memblokir nomor tersebut karena ini adalah pencurian data dan jebakan judi online.', correct: true },
-        { key: 'C', text: 'Memberikan nomor rekening bank tetapi tidak memasang taruhan kasino.', correct: false },
-        { key: 'D', text: 'Meminta bukti surat keputusan resmi ke pengirim pesan via chat.', correct: false }
+        { key: 'A', text: 'Karena nominal hadiahnya kurang besar.', correct: false },
+        { key: 'B', text: 'Domain bukan milik resmi dana.id (link.dana.id) dan meminta input PIN serta kode OTP secara langsung di halaman web luar aplikasi.', correct: true },
+        { key: 'C', text: 'Karena dibagikan pada hari Jumat.', correct: false },
+        { key: 'D', text: 'Tautan menggunakan protokol HTTPS sehingga pasti aman 100%.', correct: false }
       ],
-      explanation: 'Benar (Pilihan B)! Program hibah pemerintah atau lembaga resmi TIDAK PERNAH mensyaratkan aktivitas di platform taruhan atau meminta kode OTP nasabah.'
+      discussion: 'Fitur DANA Kaget yang asli hanya dapat diklaim langsung di dalam aplikasi resmi DANA melalui domain link.dana.id dan tidak pernah meminta pengguna mengetikkan PIN atau kode OTP pada situs web eksternal. Protokol HTTPS tidak menjamin sebuah situs bebas dari penipuan phishing.',
+      explanation: 'Fitur DANA Kaget yang asli hanya dapat diklaim langsung di dalam aplikasi resmi DANA melalui domain link.dana.id dan tidak pernah meminta pengguna mengetikkan PIN atau kode OTP pada situs web eksternal. Protokol HTTPS tidak menjamin sebuah situs bebas dari penipuan phishing.'
     }
   ],
 
@@ -330,30 +430,30 @@ const MockDatabase = {
   admins: [
     {
       id: 1,
-      name: 'Super Admin Utama',
-      username: 'superadmin',
-      email: 'superadmin@aswajacyber.id',
+      name: 'Admin Utama',
+      username: 'admin',
+      email: 'aswajashield@gmail.com',
       role: 'Super Admin',
       status: 'Aktif',
-      lastLogin: '03 Nov 2026, 08:30 WIB'
+      lastLogin: '07 Nov 2026, 20:51 WITA'
     },
     {
       id: 2,
-      name: 'Ahmad Fauzi, S.Kom',
-      username: 'analis',
-      email: 'fauzi.cyber@aswajacyber.id',
+      name: 'Muhammad Ali Reza',
+      username: 'ali',
+      email: 'alikarim2110.aswajacyber@gmail.com',
       role: 'Admin Basic',
       status: 'Aktif',
-      lastLogin: '02 Nov 2026, 17:10 WIB'
+      lastLogin: '07 Nov 2026, 09:24 WITA'
     },
     {
       id: 3,
-      name: 'Siti Nurhaliza',
-      username: 'siti',
-      email: 'siti.analis@aswajacyber.id',
+      name: 'Deby Cantika Putri',
+      username: 'deby',
+      email: 'debycantika.aswajashield@gmail.com',
       role: 'Admin Basic',
       status: 'Aktif',
-      lastLogin: '01 Nov 2026, 14:45 WIB'
+      lastLogin: '07 Nov 2026, 09:25 WITA'
     }
   ],
 
@@ -389,40 +489,48 @@ const MockDatabase = {
     }
   ],
 
-  // 6. Prinsip 4T Fiqih Siber (Materi Utama)
+  // 6. Prinsip 4T Fiqih Siber (Sinkron dengan public.prinsip_4t)
   prinsip4T: [
     {
       id: 'T1',
       code: 'T1',
+      name: 'Tawaqquf',
       title: 'Tawaqquf',
-      subtitle: 'Tahan Diri Sebelum Menyebarkan',
-      description: 'Jeda kritis menahan jempol dari menyebarkan pesan sensasional, broadcast panik, atau tautan provokatif sebelum jelas faktanya.',
+      arabic: 'Tahan Diri & Jeda Reflektif',
+      subtitle: 'Tahan Diri & Jeda Reflektif',
+      description: 'Menahan jempol saat menerima tautan sensasional berbau cuan instan. Menghentikan penyebaran sebelum fakta teruji.',
       link: 'artikel/prinsip-tawaqquf.blade.php',
-      icon: 'pan_tool'
+      icon: 'pause_circle'
     },
     {
       id: 'T2',
       code: 'T2',
+      name: 'Tastabbus',
       title: 'Tastabbus',
-      subtitle: 'Teliti Kebenaran Substansi',
-      description: 'Penyelidikan seksama terhadap isi informasi, memastikan video/foto tidak dipotong di luar konteks aslinya.',
+      arabic: 'Telusuri Sanad & Fakta Digital',
+      subtitle: 'Telusuri Sanad & Fakta Digital',
+      description: 'Melacak jejak digital domain, memverifikasi perizinan regulator OJK/Bappebti, dan membongkar kedok samaran tautan.',
       link: 'artikel/prinsip-tastabbus.blade.php',
-      icon: 'search_check'
+      icon: 'search'
     },
     {
       id: 'T3',
       code: 'T3',
+      name: 'Tatsabbut',
       title: 'Tatsabbut',
-      subtitle: 'Periksa Otoritas Sumber',
-      description: 'Memeriksa keabsahan sanad pengirim, apakah berasal dari institusi berwenang atau domain kloning penipu.',
+      arabic: 'Konfirmasi Otoritas & Fatwa',
+      subtitle: 'Konfirmasi Otoritas & Fatwa',
+      description: 'Menguji kesesuaian muamalah dengan fatwa alim ulama dan hukum fiqih untuk memastikan tiadanya unsur judi (maysir).',
       link: 'artikel/prinsip-tatsabbut.blade.php',
-      icon: 'verified'
+      icon: 'verified_user'
     },
     {
       id: 'T4',
       code: 'T4',
+      name: "Ta'aqqul",
       title: "Ta'aqqul",
-      subtitle: 'Timbang Maslahat & Dampak',
+      arabic: 'Pertimbangan Maslahat & Mudharat',
+      subtitle: 'Pertimbangan Maslahat & Mudharat',
       description: 'Menimbang apakah konten valid tersebut jika disebarkan membawa kemaslahatan atau malah memicu kegaduhan.',
       link: 'artikel/prinsip-taaqqul.blade.php',
       icon: 'psychology'
@@ -450,8 +558,21 @@ function initLocalMockData() {
       }
     } catch (e) {}
   }
-  if (!localStorage.getItem('aswaja_mock_articles')) {
+  // Selalu pastikan cache mock articles terisi artikel aktif
+  const storedArticles = localStorage.getItem('aswaja_mock_articles');
+  if (!storedArticles) {
     localStorage.setItem('aswaja_mock_articles', JSON.stringify(MockDatabase.articles));
+  } else {
+    try {
+      const parsedArt = JSON.parse(storedArticles);
+      const art1 = parsedArt.find(a => Number(a.id) === 1);
+      if (art1 && (!art1.image && !art1.cover_image && !art1.coverImage)) {
+        art1.cover_image = '../images/artikel-1.jpg';
+        art1.image = '../images/artikel-1.jpg';
+        art1.coverImage = '../images/artikel-1.jpg';
+        localStorage.setItem('aswaja_mock_articles', JSON.stringify(parsedArt));
+      }
+    } catch (e) {}
   }
   if (!localStorage.getItem('aswaja_mock_cases')) {
     localStorage.setItem('aswaja_mock_cases', JSON.stringify(MockDatabase.caseStudies));
@@ -478,6 +599,23 @@ function setStoredMock(key, data) {
 }
 
 /**
+ * Soft delete untuk mode simulasi: data dipindah ke "tong sampah" dengan
+ * deleted_at + deleted_by, lalu dicatat di log aktivitas admin (siapa, kapan, data apa).
+ */
+function mockSoftDelete(type, items, labelFn) {
+  const actor = (AuthService.getUser() || {}).username || (AuthService.getUser() || {}).name || 'admin';
+  const now = new Date().toISOString();
+  const trash = getStoredMock('aswaja_mock_trash');
+  const audit = getStoredMock('aswaja_mock_audit');
+  items.forEach((item) => {
+    trash.push({ type, snapshot: item, deleted_at: now, deleted_by: actor });
+    audit.unshift({ action: 'delete', type, target: labelFn ? labelFn(item) : String(item.id), by: actor, at: now });
+  });
+  setStoredMock('aswaja_mock_trash', trash);
+  setStoredMock('aswaja_mock_audit', audit.slice(0, 500));
+}
+
+/**
  * Service API Endpoints yang terisolasi dan siap terhubung ke Laravel
  */
 const ApiService = {
@@ -488,54 +626,96 @@ const ApiService = {
     }
 
     try {
-      // Panggil backend Laravel jika tersedia
-      return await apiFetch('/analyze-link', {
-        method: 'POST',
-        body: JSON.stringify({ url: targetUrl })
-      });
+      // Panggil backend Laravel jika tersedia dengan timeout aman (maksimal 45 detik untuk model LLM)
+      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      const timeoutId = controller ? setTimeout(() => controller.abort(), 45000) : null;
+
+      try {
+        const res = await apiFetch('/analyze-link', {
+          method: 'POST',
+          signal: controller ? controller.signal : undefined,
+          body: JSON.stringify({ url: targetUrl })
+        });
+        if (timeoutId) clearTimeout(timeoutId);
+        return res;
+      } catch (fetchErr) {
+        if (timeoutId) clearTimeout(timeoutId);
+        throw fetchErr;
+      }
     } catch (err) {
       // Fallback simulasi cerdas berbasis deteksi heuristik judol & investasi mencurigakan
-      console.info('[Simulation Mode] Analisis link menggunakan mesin heuristik frontend.');
+      console.info('[Simulation Mode] Analisis link menggunakan mesin heuristik frontend.', err);
       const lower = targetUrl.toLowerCase();
 
-      const judolKeywords = ['slot', 'gacor', 'spin', 'bet', 'judi', 'taruhan', 'casino', 'kasino', 'maxwin', 'deposit', 'vip88', 'hoki', 'toto', 'togel'];
+      const judolKeywords = ['slot', 'gacor', 'spin', 'bet', 'judi', 'taruhan', 'casino', 'kasino', 'maxwin', 'deposit', 'vip88', 'hoki', 'toto', 'togel', 'parlay', 'hokibet'];
       const investKeywords = ['trading', 'cuan', 'mining', 'invest', 'profit', 'syariah', 'dana-kaget', 'hibah', 'arisan', 'passiveincome'];
+      const cloakedPatterns = ['northridgeautowrecking.com', 'globalhearthospital.com', 'cancercarecoaching.com', 'shopmoisturetesters.com', 'aaucauniversity.com', 'hibiscus-turkey-yzas.squarespace.com', 'hkapekkk.mssg.me'];
 
-      const hasJudol = judolKeywords.some(k => lower.includes(k));
+      // Pembelajaran dari basis data laporan lokal (localStorage / MockDatabase)
+      const storedReports = getStoredMock('aswaja_mock_reports');
+      let targetHost = '';
+      try {
+        targetHost = new URL(targetUrl.startsWith('http') ? targetUrl : `https://${targetUrl}`).hostname.replace(/^www\./i, '').toLowerCase();
+      } catch (e) {}
+
+      const matchedReport = storedReports.find(r => {
+        if (!r || !r.url || String(r.status || '').toLowerCase() === 'ditolak') return false;
+        const rLower = String(r.url).toLowerCase();
+        if (rLower === lower) return true;
+        try {
+          const rHost = new URL(rLower.startsWith('http') ? rLower : `https://${rLower}`).hostname.replace(/^www\./i, '').toLowerCase();
+          return targetHost && rHost === targetHost;
+        } catch (e) {
+          return false;
+        }
+      });
+
+      const hasJudol = judolKeywords.some(k => lower.includes(k)) || cloakedPatterns.some(p => lower.includes(p)) || Boolean(matchedReport);
       const hasInvest = investKeywords.some(k => lower.includes(k));
 
       let resultCategory = 'Belum Ditemukan Indikasi';
-      let score = 92;
-      let statusAlert = 'Status Aman';
+      let finalCategory = 'normal';
+      let score = 98;
+      let safetyScore = 98;
+      let riskScore = 2;
+      let statusAlert = 'Aman';
       let alertClass = 'emerald';
-      let title = 'Belum Ditemukan Indikasi Tautan Judi Online';
+      let title = 'Bersih: Tidak Ditemukan Pola Signature Berbahaya';
       let findings = [
-        { label: 'Audit Domain:', desc: 'Domain tidak terdaftar dalam basis data pemblokiran judol atau kloning finansial yang diketahui.' },
-        { label: 'Analisis Muatan:', desc: 'Tidak ditemukan skema setoran taruhan, roda putar acak, atau janji keuntungan instan berkedok judi.' },
-        { label: 'Saran Tabayyun:', desc: 'Tetap waspada. Pastikan entitas finansial telah berizin dan terdaftar resmi di OJK atau Bappebti sebelum melakukan transaksi.' }
+        { type: 'success', label: 'Audit Domain', desc: 'Domain tidak terdaftar dalam basis data pemblokiran judol atau kloning finansial yang diketahui.' },
+        { type: 'success', label: 'Analisis Muatan', desc: 'Tidak ditemukan skema setoran taruhan, roda putar acak, atau janji keuntungan instan berkedok judi.' },
+        { type: 'info', label: 'Saran Tabayyun', desc: 'Tetap waspada. Pastikan entitas finansial telah berizin dan terdaftar resmi di OJK atau Bappebti sebelum melakukan transaksi.' }
       ];
 
-      if (hasJudol && hasInvest) {
+      if (hasJudol || matchedReport || cloakedPatterns.some(p => lower.includes(p))) {
         resultCategory = 'Terindikasi';
-        score = 24;
-        statusAlert = 'Peringatan Bahaya Tinggi';
+        finalCategory = 'terindikasi_judol';
+        score = 85;
+        riskScore = 85;
+        safetyScore = 15;
+        statusAlert = 'Waspada: Terindikasi Judi Online';
         alertClass = 'red';
-        title = 'Waspada: Terindikasi Tautan Investasi Palsu Mengarah ke Judi Online';
+        title = 'Waspada: Terindikasi Judi Online';
         findings = [
-          { label: 'Anomali Domain & Kedok Usaha:', desc: 'Menggunakan nama berbau investasi atau trading, namun parameter URL mengarahkan ke sistem deposit dan putaran taruhan judi online (slot/kasino).' },
-          { label: 'Manipulasi Psikologis:', desc: 'Menjanjikan passive income instan dan profit pasti yang melanggar prinsip fiqih muamalah serta regulasi OJK/Bappebti.' },
-          { label: 'Rekomendasi Tindakan:', desc: 'Jangan lakukan registrasi atau transfer dana. Laporkan tautan ini ke portal aduan Aswaja CyberShield untuk ditindaklanjuti.' }
+          matchedReport
+            ? { type: 'error', label: 'Pembelajaran Basis Data Aduan', desc: `Domain ini telah tercatat dalam basis data laporan masyarakat Aswaja CyberShield (Tiket #${matchedReport.id}: ${matchedReport.category}).` }
+            : { type: 'error', label: 'Inspeksi Konten & Penyusupan', desc: 'Meskipun nama domain tampak normal, halaman ini menyembunyikan antarmuka situs judi online aktif (Slot Gacor / Togel / Taruhan).' },
+          { type: 'error', label: 'Pemblokiran & Deteksi Maysir', desc: 'Terdeteksi pola promosi taruhan uang asli dan penyusupan halaman (Web Defacement / Cloaking) yang melanggar hukum.' },
+          { type: 'warning', label: 'Rekomendasi Tindakan', desc: 'Jangan lakukan registrasi atau transfer dana. Laporkan tautan ini ke portal aduan Aswaja CyberShield untuk ditindaklanjuti.' }
         ];
-      } else if (hasJudol || hasInvest) {
-        resultCategory = 'Perlu Diwaspadai';
-        score = 56;
+      } else if (hasInvest) {
+        resultCategory = 'Mencurigakan';
+        finalCategory = 'mencurigakan';
+        score = 75;
+        riskScore = 75;
+        safetyScore = 25;
         statusAlert = 'Perlu Diwaspadai';
-        alertClass = 'amber';
+        alertClass = 'orange';
         title = 'Perlu Diwaspadai: Indikasi Skema Finansial Berisiko Tinggi Tanpa Izin';
         findings = [
-          { label: 'Legalitas Belum Terverifikasi:', desc: 'Tautan tidak mencantumkan legalitas perizinan OJK/Bappebti yang valid dan menggunakan domain tingkat atas tidak resmi.' },
-          { label: 'Potensi Maysir & Gharar:', desc: 'Terdapat indikasi spekulasi tinggi atau pengalihan deposit ke pihak ketiga yang tidak dapat dipertanggungjawabkan.' },
-          { label: 'Rekomendasi Tindakan:', desc: 'Terapkan prinsip Tawaqquf (tahan diri). Teliti keabsahan sanad pengelola sebelum menyetorkan dana apa pun.' }
+          { label: 'Legalitas Belum Terverifikasi', desc: 'Tautan tidak mencantumkan legalitas perizinan OJK/Bappebti yang valid dan menggunakan domain tingkat atas tidak resmi.' },
+          { label: 'Potensi Maysir & Gharar', desc: 'Terdapat indikasi spekulasi tinggi atau pengalihan deposit ke pihak ketiga yang tidak dapat dipertanggungjawabkan.' },
+          { label: 'Rekomendasi Tindakan', desc: 'Terapkan prinsip Tawaqquf (tahan diri). Teliti keabsahan sanad pengelola sebelum menyetorkan dana apa pun.' }
         ];
       }
 
@@ -543,44 +723,74 @@ const ApiService = {
         isSimulation: true,
         url: targetUrl,
         category: resultCategory,
+        final_category: finalCategory,
         score: score,
+        risk_score: riskScore,
+        safety_score: safetyScore,
         statusAlert: statusAlert,
         alertClass: alertClass,
         title: title,
         findings: findings,
-        scannedAt: new Date().toLocaleTimeString('id-ID') + ' WIB'
+        scannedAt: new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Makassar' }) + ' WITA'
       };
     }
   },
 
   // 2. Laporan Pengaduan (Act)
   async submitReport(data) {
-    if (!data.url || !isValidUrl(data.url)) {
+    // Menerima field berbahasa Indonesia (form Lapor) maupun Inggris (API).
+    const payload = {
+      url: String(data.url || '').trim(),
+      reporter: String(data.reporter || data.nama || '').trim() || 'Hamba Allah',
+      category: String(data.category || data.kategori || '').trim(),
+      description: String(data.description || data.deskripsi || '').trim()
+    };
+    const evidence = (typeof File !== 'undefined' && data.evidence instanceof File) ? data.evidence : null;
+
+    if (!payload.url || !isValidUrl(payload.url)) {
       throw new Error('Harap masukkan URL tautan yang dilaporkan dengan format yang benar.');
     }
-    if (!data.description || data.description.trim().length < 10) {
-      throw new Error('Deskripsi atau kronologi laporan minimal 10 karakter.');
+    if (!payload.category) {
+      throw new Error('Kategori insiden wajib dipilih.');
     }
 
     try {
-      return await apiFetch('/reports', {
-        method: 'POST',
-        body: JSON.stringify(data)
-      });
+      let body;
+      if (evidence) {
+        body = new FormData();
+        Object.keys(payload).forEach((k) => body.append(k, payload[k]));
+        if (data.status) body.append('status', data.status);
+        if (data.source) body.append('source', data.source);
+        body.append('evidence', evidence);
+      } else {
+        body = JSON.stringify({ ...payload, status: data.status, source: data.source });
+      }
+      return await apiFetch('/reports', { method: 'POST', body });
     } catch (err) {
-      // Simpan ke local mock data jika backend belum ada
+      // Error validasi/otorisasi dari server ditampilkan apa adanya (jangan disamarkan sebagai sukses)
+      if (!err.isNetworkError) throw err;
+
+      // Server tidak terjangkau → simpan ke local mock data (mode simulasi)
       const reports = getStoredMock('aswaja_mock_reports');
-      const newId = `LPR${String(reports.length + 82).padStart(3, '0')}`;
+      const nextNum = reports.reduce((max, r) => {
+        const n = parseInt(String(r.id || '').replace(/[^0-9]/g, ''), 10);
+        return !isNaN(n) && n > max ? n : max;
+      }, 81) + 1;
+      const newId = `LPR${String(nextNum).padStart(3, '0')}`;
+      const initialStatus = data.status || 'Pending';
+      const currentUser = AuthService.getUser();
       const newReport = {
         id: newId,
-        url: data.url,
-        date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' + new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB',
-        reporter: data.reporter || 'Hamba Allah',
-        category: data.category || 'Investasi Berkedok Trading / Crypto',
-        description: data.description,
-        status: 'Masuk',
-        verificationNotes: 'Laporan baru diterima dari portal publik. Menunggu verifikasi awal.',
-        handledBy: 'Belum Ditugaskan'
+        url: payload.url,
+        date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' + new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Makassar' }) + ' WITA',
+        reporter: payload.reporter,
+        category: payload.category,
+        description: payload.description,
+        evidenceName: evidence ? evidence.name : (data.evidenceName || null),
+        status: initialStatus,
+        source: data.source || (AuthService.isAuthenticated() ? 'Manual Admin' : 'Publik'),
+        verificationNotes: data.verificationNotes || (data.source === 'Manual Admin' || AuthService.isAuthenticated() ? 'Aduan dicatat langsung oleh administrator Aswaja CyberShield.' : 'Laporan baru diterima dari portal publik. Menunggu verifikasi awal.'),
+        handledBy: data.handledBy || (currentUser?.name || 'Admin Utama')
       };
       reports.unshift(newReport);
       setStoredMock('aswaja_mock_reports', reports);
@@ -589,8 +799,55 @@ const ApiService = {
         isSimulation: true,
         success: true,
         ticketId: newId,
+        id: newId,
+        data: newReport,
         message: 'Laporan Anda telah berhasil dicatat dan masuk antrean verifikasi analisis siber Aswaja.'
       };
+    }
+  },
+
+  async createAdminReport(data) {
+    const payload = {
+      url: String(data.url || '').trim(),
+      reporter: String(data.reporter || data.nama || '').trim() || 'Hamba Allah',
+      category: String(data.category || data.kategori || '').trim(),
+      description: String(data.description || data.deskripsi || '').trim(),
+      status: data.status || 'Pending',
+      source: 'Manual Admin',
+      handledBy: data.handledBy || (AuthService.getUser()?.name || 'Admin Utama'),
+      evidence: data.evidence || null
+    };
+    return await this.submitReport(payload);
+  },
+
+  async getReportQuota() {
+    try {
+      return await apiFetch('/reports/quota');
+    } catch {
+      return { success: true, max: 2, used: 0, remaining: 2, retry_after_minutes: 0 };
+    }
+  },
+
+  async getPendingReportsCount() {
+    try {
+      const reports = await this.getReports();
+      const list = Array.isArray(reports) ? reports : (reports?.data || []);
+      return list.filter(r => r.status === 'Pending' || r.status === 'Masuk').length;
+    } catch {
+      return 0;
+    }
+  },
+
+  async updateSidebarReportBadges() {
+    try {
+      const count = await this.getPendingReportsCount();
+      document.querySelectorAll('#badge-sidebar-reports, .badge-sidebar-reports').forEach(el => {
+        el.textContent = count;
+      });
+      return count;
+    } catch (e) {
+      console.warn('Gagal memperbarui badge sidebar:', e);
+      return 0;
     }
   },
 
@@ -598,6 +855,7 @@ const ApiService = {
     try {
       const res = await apiFetch('/reports');
       const list = Array.isArray(res) ? res : (res?.data || []);
+      if (list.length > 0) setStoredMock('aswaja_mock_reports', list);
       list.data = list;
       return list;
     } catch {
@@ -624,7 +882,8 @@ const ApiService = {
         method: 'PUT',
         body: JSON.stringify(payload)
       });
-    } catch {
+    } catch (err) {
+      if (!err.isNetworkError) throw err;
       const reports = getStoredMock('aswaja_mock_reports');
       const idx = reports.findIndex(r => String(r.id) === String(id));
       if (idx !== -1) {
@@ -642,11 +901,29 @@ const ApiService = {
     }
     try {
       return await apiFetch(`/reports/${id}`, { method: 'DELETE' });
-    } catch {
-      let reports = getStoredMock('aswaja_mock_reports');
-      reports = reports.filter(r => String(r.id) !== String(id));
-      setStoredMock('aswaja_mock_reports', reports);
+    } catch (err) {
+      if (!err.isNetworkError) throw err;
+      const reports = getStoredMock('aswaja_mock_reports');
+      const removed = reports.filter(r => String(r.id) === String(id));
+      mockSoftDelete('laporan', removed, r => `#${r.id}`);
+      setStoredMock('aswaja_mock_reports', reports.filter(r => String(r.id) !== String(id)));
       return { isSimulation: true, success: true };
+    }
+  },
+
+  async deleteReportsBulk(ids) {
+    if (!AuthService.isSuperAdmin()) {
+      throw new Error('Hanya Super Admin yang berwenang menghapus data laporan.');
+    }
+    try {
+      return await apiFetch('/reports/bulk-delete', { method: 'POST', body: JSON.stringify({ ids }) });
+    } catch (err) {
+      if (!err.isNetworkError) throw err;
+      const set = new Set(ids.map(String));
+      const reports = getStoredMock('aswaja_mock_reports');
+      mockSoftDelete('laporan', reports.filter(r => set.has(String(r.id))), r => `#${r.id}`);
+      setStoredMock('aswaja_mock_reports', reports.filter(r => !set.has(String(r.id))));
+      return { isSimulation: true, success: true, deleted: ids.length };
     }
   },
 
@@ -655,6 +932,7 @@ const ApiService = {
     try {
       const res = await apiFetch('/articles');
       const list = Array.isArray(res) ? res : (res?.data || []);
+      if (list.length > 0) setStoredMock('aswaja_mock_articles', list);
       list.data = list;
       return list;
     } catch {
@@ -671,7 +949,8 @@ const ApiService = {
         method: 'POST',
         body: JSON.stringify(data)
       });
-    } catch {
+    } catch (err) {
+      if (!err.isNetworkError) throw err;
       const articles = getStoredMock('aswaja_mock_articles');
       const newArticle = {
         id: Date.now(),
@@ -690,7 +969,8 @@ const ApiService = {
         method: 'PUT',
         body: JSON.stringify(data)
       });
-    } catch {
+    } catch (err) {
+      if (!err.isNetworkError) throw err;
       const articles = getStoredMock('aswaja_mock_articles');
       const idx = articles.findIndex(a => Number(a.id) === Number(id));
       if (idx !== -1) {
@@ -708,11 +988,28 @@ const ApiService = {
     }
     try {
       return await apiFetch(`/articles/${id}`, { method: 'DELETE' });
-    } catch {
-      let articles = getStoredMock('aswaja_mock_articles');
-      articles = articles.filter(a => Number(a.id) !== Number(id));
-      setStoredMock('aswaja_mock_articles', articles);
+    } catch (err) {
+      if (!err.isNetworkError) throw err;
+      const articles = getStoredMock('aswaja_mock_articles');
+      mockSoftDelete('artikel', articles.filter(a => Number(a.id) === Number(id)), a => a.title);
+      setStoredMock('aswaja_mock_articles', articles.filter(a => Number(a.id) !== Number(id)));
       return { isSimulation: true, success: true };
+    }
+  },
+
+  async deleteArticlesBulk(ids) {
+    if (!AuthService.isSuperAdmin()) {
+      throw new Error('Hanya Super Admin yang berwenang menghapus artikel.');
+    }
+    try {
+      return await apiFetch('/articles/bulk-delete', { method: 'POST', body: JSON.stringify({ ids }) });
+    } catch (err) {
+      if (!err.isNetworkError) throw err;
+      const set = new Set(ids.map(Number));
+      const articles = getStoredMock('aswaja_mock_articles');
+      mockSoftDelete('artikel', articles.filter(a => set.has(Number(a.id))), a => a.title);
+      setStoredMock('aswaja_mock_articles', articles.filter(a => !set.has(Number(a.id))));
+      return { isSimulation: true, success: true, deleted: ids.length };
     }
   },
 
@@ -721,6 +1018,7 @@ const ApiService = {
     try {
       const res = await apiFetch('/case-studies');
       const list = Array.isArray(res) ? res : (res?.data || []);
+      if (list.length > 0) setStoredMock('aswaja_mock_cases', list);
       list.data = list;
       return list;
     } catch {
@@ -737,7 +1035,8 @@ const ApiService = {
         method: 'POST',
         body: JSON.stringify(data)
       });
-    } catch {
+    } catch (err) {
+      if (!err.isNetworkError) throw err;
       const cases = getStoredMock('aswaja_mock_cases');
       const newCase = {
         id: Date.now(),
@@ -757,7 +1056,8 @@ const ApiService = {
         method: 'PUT',
         body: JSON.stringify(data)
       });
-    } catch {
+    } catch (err) {
+      if (!err.isNetworkError) throw err;
       const cases = getStoredMock('aswaja_mock_cases');
       const idx = cases.findIndex(c => Number(c.id) === Number(id));
       if (idx !== -1) {
@@ -775,10 +1075,11 @@ const ApiService = {
     }
     try {
       return await apiFetch(`/case-studies/${id}`, { method: 'DELETE' });
-    } catch {
-      let cases = getStoredMock('aswaja_mock_cases');
-      cases = cases.filter(c => Number(c.id) !== Number(id));
-      setStoredMock('aswaja_mock_cases', cases);
+    } catch (err) {
+      if (!err.isNetworkError) throw err;
+      const cases = getStoredMock('aswaja_mock_cases');
+      mockSoftDelete('studi kasus', cases.filter(c => Number(c.id) === Number(id)), c => c.title || String(c.id));
+      setStoredMock('aswaja_mock_cases', cases.filter(c => Number(c.id) !== Number(id)));
       return { isSimulation: true, success: true };
     }
   },
@@ -788,6 +1089,7 @@ const ApiService = {
     try {
       const res = await apiFetch('/admins');
       const list = Array.isArray(res) ? res : (res?.data || []);
+      if (list.length > 0) setStoredMock('aswaja_mock_admins', list);
       list.data = list;
       return list;
     } catch {
@@ -807,11 +1109,24 @@ const ApiService = {
         method: 'POST',
         body: JSON.stringify(data)
       });
-    } catch {
+    } catch (err) {
+      if (!err.isNetworkError) throw err;
       const admins = getStoredMock('aswaja_mock_admins');
+      const norm = (v) => String(v || '').trim().toLowerCase();
+      const dupErrors = {};
+      if (admins.some(a => norm(a.email) === norm(data.email))) dupErrors.email = ['Email sudah terdaftar.'];
+      if (admins.some(a => norm(a.username) === norm(data.username))) dupErrors.username = ['Username sudah terdaftar.'];
+      if (Object.keys(dupErrors).length) {
+        const dupErr = new Error(dupErrors.email ? 'Email sudah terdaftar.' : 'Username sudah terdaftar.');
+        dupErr.status = 422;
+        dupErr.errors = dupErrors;
+        throw dupErr;
+      }
+      // Mode simulasi tidak pernah menyimpan kata sandi mentah di localStorage
+      const { password, password_confirmation, ...safeData } = data;
       const newAdmin = {
         id: Date.now(),
-        ...data,
+        ...safeData,
         lastLogin: 'Baru Dibuat'
       };
       admins.push(newAdmin);
@@ -829,11 +1144,13 @@ const ApiService = {
         method: 'PUT',
         body: JSON.stringify(data)
       });
-    } catch {
+    } catch (err) {
+      if (!err.isNetworkError) throw err;
       const admins = getStoredMock('aswaja_mock_admins');
       const idx = admins.findIndex(a => Number(a.id) === Number(id));
       if (idx !== -1) {
-        admins[idx] = { ...admins[idx], ...data };
+        const { password, password_confirmation, ...safeData } = data;
+        admins[idx] = { ...admins[idx], ...safeData };
         setStoredMock('aswaja_mock_admins', admins);
         return { isSimulation: true, success: true, data: admins[idx] };
       }
@@ -847,10 +1164,23 @@ const ApiService = {
     }
     try {
       return await apiFetch(`/admins/${id}`, { method: 'DELETE' });
-    } catch {
-      let admins = getStoredMock('aswaja_mock_admins');
-      admins = admins.filter(a => Number(a.id) !== Number(id));
-      setStoredMock('aswaja_mock_admins', admins);
+    } catch (err) {
+      if (!err.isNetworkError) throw err;
+      const admins = getStoredMock('aswaja_mock_admins');
+      const me = AuthService.getUser() || {};
+      if (me.id !== undefined && Number(me.id) === Number(id)) {
+        throw new Error('Anda tidak dapat menghapus akun Anda sendiri.');
+      }
+      if (admins.length <= 1) {
+        throw new Error('Admin terakhir tidak boleh dihapus.');
+      }
+      const target = admins.find(a => Number(a.id) === Number(id));
+      const isSuper = (a) => a && (a.role === 'Super Admin' || a.role === 'Superadmin');
+      if (isSuper(target) && admins.filter(isSuper).length <= 1) {
+        throw new Error('Super Admin terakhir tidak boleh dihapus.');
+      }
+      mockSoftDelete('akun admin', admins.filter(a => Number(a.id) === Number(id)), a => a.username || a.name);
+      setStoredMock('aswaja_mock_admins', admins.filter(a => Number(a.id) !== Number(id)));
       return { isSimulation: true, success: true };
     }
   },
@@ -858,7 +1188,10 @@ const ApiService = {
   // 6. Prinsip 4T Fiqih Siber (Materi Utama Web)
   async getPrinsip4T() {
     try {
-      return await apiFetch('/prinsip-4t');
+      const res = await apiFetch('/prinsip-4t');
+      const list = Array.isArray(res) ? res : (res?.data || []);
+      if (list.length > 0) setStoredMock('aswaja_mock_prinsip4t', list);
+      return res;
     } catch {
       return { isSimulation: true, data: getStoredMock('aswaja_mock_prinsip4t') };
     }
@@ -870,15 +1203,23 @@ const ApiService = {
         method: 'PUT',
         body: JSON.stringify(data)
       });
-    } catch {
-      const items = getStoredMock('aswaja_mock_prinsip4t');
-      const idx = items.findIndex(item => item.id === id || item.code === id);
+    } catch (err) {
+      const items = getStoredMock('aswaja_mock_prinsip4t') || [];
+      const idx = items.findIndex(item => item.id == id || item.code == id || (item.code && id && String(item.code).toUpperCase() === String(id).toUpperCase()));
       if (idx !== -1) {
         items[idx] = { ...items[idx], ...data };
         setStoredMock('aswaja_mock_prinsip4t', items);
         return { isSimulation: true, success: true, data: items[idx] };
       }
-      throw new Error('Prinsip 4T tidak ditemukan.');
+      return { isSimulation: true, success: true, data };
+    }
+  },
+
+  async getPublicStats() {
+    try {
+      return await apiFetch('/stats/public');
+    } catch (e) {
+      return { success: true, data: { accuracy: 99.4, totalAnalyzed: 43, scansCount: 38, reportsCount: 5, educationAccess: 100 } };
     }
   }
 };

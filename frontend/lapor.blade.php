@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
   /**
    * Formulir Portal Lapor Siber - Aswaja CyberShield */
@@ -13,6 +12,7 @@
       'Lainnya'
   ];
 ?>
+<!DOCTYPE html>
 
 <html lang="id" class="scroll-smooth" data-theme="aswaja">
 <head>
@@ -40,8 +40,10 @@
         const isDark = savedTheme === 'dark' || (!savedTheme && localStorage.getItem('aswaja_darkmode') === '1') || (!savedTheme && !localStorage.getItem('aswaja_darkmode') && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
         if (isDark) {
           document.documentElement.classList.add('dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
         } else {
           document.documentElement.classList.remove('dark');
+          document.documentElement.setAttribute('data-theme', 'light');
         }
       } catch (e) {}
     })();
@@ -78,6 +80,7 @@
     }
   </script>
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/ui-kit.css">
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
   <!-- PAGE LOADING SCREEN -->
@@ -189,9 +192,13 @@
 
 
 
-  <main class="flex-grow">
+  <main class="flex-grow relative overflow-hidden">
+    <!-- Ambient Section Particles & Floating Orbs -->
+    <div class="section-particles absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true"></div>
+    <div class="absolute top-10 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-emerald-400/15 blur-[100px] rounded-full pointer-events-none -z-10 animate-float"></div>
+    <div class="absolute -top-20 right-10 w-96 h-96 bg-blue-400/15 blur-[90px] rounded-full pointer-events-none -z-10 animate-float-delayed"></div>
     
-  <div class="py-12 md:py-16">
+  <div class="py-12 md:py-16 relative z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Page Header -->
@@ -204,35 +211,66 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+      <div class="max-w-4xl mx-auto space-y-10 sm:space-y-12">
 
-        <!-- Form Column -->
-        <div class="lg:col-span-7 bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-200/90 dark:border-slate-700 p-6 sm:p-8 space-y-6">
-          <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-700">
+        <!-- Form Column (Terpusat & Rapi) -->
+        <section id="form-lapor" data-scroll-focus="#lapor-target" aria-labelledby="form-lapor-title" class="ui-card shadow-md p-6 sm:p-8 space-y-6">
+          <div class="flex items-center justify-between gap-3 pb-4 border-b ui-divider">
             <div>
-              <h2 class="font-display font-bold text-lg text-slate-900 dark:text-white">Formulir Aduan Insiden</h2>
-              <p class="text-xs text-slate-500 dark:text-slate-400">Identitas pelapor dijamin aman dan terlindungi secara kriptografis.</p>
+              <h2 id="form-lapor-title" class="font-display font-bold text-lg ui-heading">Formulir Aduan Insiden</h2>
+              <p class="text-xs ui-muted">Identitas pelapor dijamin aman dan terlindungi secara kriptografis.</p>
             </div>
-            <span class="px-2.5 py-1 rounded-lg text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 dark:border-emerald-800 flex items-center gap-1">
-              <span class="material-symbols-outlined text-sm">lock</span>
+            <span class="ui-badge-soft shrink-0">
+              <span class="material-symbols-outlined text-sm" aria-hidden="true">lock</span>
               <span>Kerahasiaan Aman</span>
             </span>
           </div>
 
-          <form id="form-lapor-siber" class="space-y-5">
+          <!-- Indikator Batas Kuota Pelaporan (Rate Limiting: Max 2x / 2 Jam) -->
+          <div id="quota-container" class="rounded-2xl border p-4 transition-all duration-300 bg-emerald-50/70 border-emerald-200/80 text-emerald-950 dark:bg-emerald-950/20 dark:border-emerald-800/60 dark:text-emerald-200">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div id="quota-icon-wrap" class="w-9 h-9 rounded-xl bg-emerald-600/10 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300 flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-xl" aria-hidden="true">speed</span>
+                </div>
+                <div>
+                  <div class="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                    <span>Kuota Pelaporan: <strong>Maksimal 2x / 2 Jam</strong></span>
+                  </div>
+                  <p id="quota-desc-text" class="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
+                    Demi menjaga kualitas investigasi dan stabilitas server dari spam otomatis.
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 self-start sm:self-auto shrink-0">
+                <span id="quota-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-600 text-white shadow-xs tracking-wide">
+                  Sisa Kuota: 2 / 2
+                </span>
+              </div>
+            </div>
+            
+            <!-- Dynamic Countdown Alert if Quota Exhausted -->
+            <div id="quota-warning-box" class="hidden mt-3 pt-3 border-t border-emerald-200/60 dark:border-emerald-800/40 text-xs">
+              <div class="flex items-start gap-2 text-amber-800 dark:text-amber-300 font-medium">
+                <span class="material-symbols-outlined text-base shrink-0 mt-0.5">hourglass_top</span>
+                <div>
+                  <span id="quota-countdown-text">Batas kuota pelaporan tercapai. Anda dapat mengirimkan laporan kembali dalam <strong>2 jam</strong>.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- novalidate: validasi ditangani JS agar error tampil lewat pop up/toast bertema -->
+          <form id="form-lapor-siber" class="space-y-5" novalidate>
             <div>
-              <label for="lapor-nama" class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
-                Nama Pelapor (Opsional / Boleh Samaran):
-              </label>
-              <input type="text" id="lapor-nama" placeholder="Hamba Allah / Muhammad / Anonim" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white dark:focus:bg-slate-900 transition-all">
+              <label for="lapor-nama" class="ui-label">Nama Pelapor (Opsional / Boleh Samaran):</label>
+              <input type="text" id="lapor-nama" name="nama" maxlength="100" autocomplete="off" placeholder="Hamba Allah / Muhammad / Anonim" class="ui-input">
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 stagger-children">
               <div>
-                <label for="lapor-kategori" class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
-                  Kategori Insiden: <span class="text-red-500">*</span>
-                </label>
-                <select id="lapor-kategori" name="kategori" required class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white dark:focus:bg-slate-900 transition-all">
+                <label for="lapor-kategori" class="ui-label">Kategori Insiden: <span class="ui-required" aria-hidden="true">*</span></label>
+                <select id="lapor-kategori" name="kategori" required aria-required="true" class="ui-input">
                   <option value="">-- Pilih Kategori Laporan --</option>
                   <?php foreach ($kategoriList as $kat): ?>
                     <option value="<?= $kat ?>"><?= $kat ?></option>
@@ -241,232 +279,167 @@
               </div>
 
               <div>
-                <label for="lapor-target" class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
-                  URL Tautan Mencurigakan yang Dilaporkan: <span class="text-red-500">*</span>
-                </label>
-                <input type="url" id="lapor-target" name="url" required value="<?= $prefilledUrl ?>" placeholder="https://contoh-investasi-judol.xyz/slot" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white dark:focus:bg-slate-900 transition-all">
+                <label for="lapor-target" class="ui-label">URL Tautan Mencurigakan yang Dilaporkan: <span class="ui-required" aria-hidden="true">*</span></label>
+                <input type="url" id="lapor-target" name="url" required aria-required="true" inputmode="url" autocomplete="off" value="<?= $prefilledUrl ?>" placeholder="https://contoh-investasi-judol.xyz/slot" class="ui-input">
               </div>
             </div>
 
             <div>
-              <label for="lapor-deskripsi" class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
-                Kronologi Kejadian (Opsional):
-              </label>
-              <textarea id="lapor-deskripsi" rows="4" placeholder="Ceritakan ringkas bagaimana Anda menemukan tautan ini, apakah ada tawaran profit/cuan, desakan deposit, atau rekrutmen referal yang mencurigakan..." class="w-full p-4 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white dark:focus:bg-slate-900 transition-all resize-none"></textarea>
+              <label for="lapor-deskripsi" class="ui-label">Kronologi Kejadian (Opsional):</label>
+              <textarea id="lapor-deskripsi" name="deskripsi" rows="4" maxlength="5000" placeholder="Ceritakan ringkas bagaimana Anda menemukan tautan ini, apakah ada tawaran profit/cuan, desakan deposit, atau rekrutmen referal yang mencurigakan..." class="ui-input resize-none"></textarea>
             </div>
 
             <!-- Upload Area -->
             <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
-                Unggah Bukti Tangkapan Layar atau Dokumen (Opsional):
-              </label>
-              <div id="upload-dropzone" class="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-emerald-500 rounded-2xl p-6 text-center cursor-pointer bg-slate-50/50 dark:bg-slate-900/60 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                <span class="material-symbols-outlined text-3xl text-slate-400 mb-1">upload_file</span>
-                <p class="text-xs text-slate-600 dark:text-slate-300 font-medium">
-                  Klik untuk memilih file tangkapan layar atau seret ke area ini
-                </p>
-                <span class="text-[11px] text-slate-400 dark:text-slate-500 block mt-1">Format gambar JPG, PNG, atau PDF (Maks. 5MB)</span>
-                <input type="file" id="file-upload" class="hidden" accept="image/*,application/pdf">
+              <span id="upload-label" class="ui-label">Unggah Bukti Tangkapan Layar atau Dokumen (Opsional):</span>
+              <div id="upload-dropzone" class="ui-dropzone" role="button" tabindex="0" aria-labelledby="upload-label" aria-describedby="upload-help">
+                <span class="material-symbols-outlined text-3xl ui-muted mb-1" aria-hidden="true">upload_file</span>
+                <div class="text-xs font-medium ui-text">Klik untuk memilih file tangkapan layar atau seret ke area ini</div>
+                <span id="upload-help" class="text-[11px] ui-muted block mt-1">Format JPG, PNG, atau PDF (Maks. 5 MB)</span>
+                <input type="file" id="file-upload" name="evidence" class="hidden" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" tabindex="-1">
               </div>
-              <div id="file-preview" class="hidden mt-2 p-3 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 rounded-xl items-center justify-between text-xs text-emerald-800 dark:text-emerald-300">
-                <span id="file-name" class="font-medium truncate max-w-xs">bukti_screenshot.png</span>
-                <button type="button" id="btn-remove-file" class="text-red-600 dark:text-red-400 hover:underline">Hapus</button>
+              <div id="file-preview" class="hidden mt-2">
+                <div class="ui-file-chip">
+                  <span id="file-name" class="font-medium truncate max-w-xs">bukti_screenshot.png</span>
+                  <button type="button" id="btn-remove-file" class="font-semibold underline" style="color:var(--color-danger-text)">Hapus</button>
+                </div>
               </div>
             </div>
 
             <div class="pt-2">
-              <button type="submit" id="btn-submit-lapor" class="w-full py-3.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-sm shadow-md shadow-red-600/20 transition-all flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined text-[18px]">send</span>
+              <button type="submit" id="btn-submit-lapor" class="ui-btn ui-btn--danger w-full py-3.5 shadow-md">
+                <span class="material-symbols-outlined text-[18px]" aria-hidden="true">send</span>
                 <span id="btn-submit-lapor-text">Kirim Laporan Tabayyun</span>
               </button>
             </div>
 
             <!-- Transparansi Penggunaan Layanan Pihak Ketiga -->
-            <div class="mt-3 p-3 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800 flex items-start gap-2.5">
-              <span class="material-symbols-outlined text-blue-600 dark:text-blue-400 text-lg shrink-0 mt-0.5">info</span>
-              <p class="text-[11px] text-blue-900/80 dark:text-blue-200 leading-relaxed">
-                <strong class="font-semibold text-blue-900 dark:text-blue-200">Transparansi Penggunaan:</strong> Laporan yang Anda kirimkan akan diteruskan ke <strong>sistem penanganan aduan</strong> untuk diproses dan ditindaklanjuti. Identitas pelapor <strong>tetap aman dan terjaga (anonim)</strong>. Informasi ini semata-mata digunakan untuk membantu mencegah penipuan agar tidak memakan korban lain.
-              </p>
+            <div class="ui-note">
+              <span class="material-symbols-outlined text-lg shrink-0 mt-0.5" style="color:var(--color-primary)" aria-hidden="true">info</span>
+              <div class="text-[11px] leading-relaxed ui-text">
+                <strong class="font-semibold ui-heading">Transparansi Penggunaan:</strong> Laporan yang Anda kirimkan akan diteruskan ke <strong>sistem penanganan aduan</strong> untuk diproses dan ditindaklanjuti. Identitas pelapor <strong>tetap aman dan terjaga (anonim)</strong>. Informasi ini semata-mata digunakan untuk membantu mencegah penipuan agar tidak memakan korban lain.
+              </div>
             </div>
           </form>
-        </div>
+        </section>
 
-        <!-- Sidebar Guidelines Column -->
-        <div class="lg:col-span-5 space-y-6">
-
-          <!-- Alur Penanganan -->
-          <div class="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm space-y-4">
-            <h3 class="font-display font-bold text-base text-slate-900 flex items-center gap-2">
-              <span class="material-symbols-outlined text-emerald-600">route</span>
-              <span>Protokol Verifikasi Aduan</span>
-            </h3>
-            <ol class="space-y-4 text-xs text-slate-600 stagger-children">
-              <li class="flex items-start gap-3">
-                <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center shrink-0">1</span>
-                <div>
-                  <strong class="text-slate-800 block mb-0.5">Penerimaan & Verifikasi</strong>
-                  Sistem mengamankan bukti dan menyamarkan identitas pelapor.
-                </div>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center shrink-0">2</span>
-                <div>
-                  <strong class="text-slate-800 block mb-0.5">Audit Sanad Siber</strong>
-                  Tim analis mencocokkan indikator ancaman ke database CSIRT / BSSN.
-                </div>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center shrink-0">3</span>
-                <div>
-                  <strong class="text-slate-800 block mb-0.5">Tindakan & Eskalasi</strong>
-                  Rekomendasi blokir domain dan peringatan publik jika terbukti bahaya masif.
-                </div>
-              </li>
-            </ol>
-          </div>
-
-          <!-- Card Bantuan Cepat Darurat -->
-          <div class="p-6 rounded-2xl bg-gradient-to-br from-red-50 to-orange-50 border border-red-200 text-slate-800">
-            <div class="flex items-center gap-2 text-red-700 font-bold text-sm mb-2">
-              <span class="material-symbols-outlined text-xl">support_agent</span>
-              <span>Bantuan Cepat Darurat</span>
-            </div>
-            <p class="text-xs text-slate-600 leading-relaxed mb-4">
-              Untuk insiden pembobolan rekening atau pencurian identitas WhatsApp yang sedang berlangsung:
-            </p>
-            <div class="space-y-1.5 text-xs font-semibold text-slate-900">
-              <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/90 border border-red-100">
-                <span>Hotline Bebas Pulsa:</span>
-                <span class="text-red-700 font-mono font-bold">1500-xxx</span>
-              </div>
-              <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/90 border border-red-100">
-                <span>Email Respon Cepat:</span>
-                <span class="text-red-700 font-mono">aduan@aswajacybershield.id</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- Tabel Rekapitulasi Laporan Publik -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200/90 p-6 sm:p-8">
+        <!-- Tabel Rekapitulasi Laporan Publik -->
+        <section id="rekap-laporan" class="ui-card shadow-sm p-6 sm:p-8 ui-scroll-target mt-10 sm:mt-12" aria-labelledby="rekap-title">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
-            <h2 class="font-display font-bold text-lg text-slate-900">Rekapitulasi Pelaporan Publik</h2>
-            <p class="text-xs text-slate-500">Transparansi penanganan aduan masyarakat yang telah disamarkan demi privasi.</p>
+            <h2 id="rekap-title" class="font-display font-bold text-lg ui-heading">Rekapitulasi Pelaporan Publik</h2>
+            <p class="text-xs ui-muted">Transparansi penanganan aduan masyarakat yang telah disamarkan demi privasi.</p>
           </div>
           <div class="w-full sm:w-64">
-            <input type="text" id="table-search-input" placeholder="Cari status atau tiket..." class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            <label for="table-search-input" class="sr-only">Cari status atau tiket</label>
+            <input type="search" id="table-search-input" placeholder="Cari status atau tiket..." class="ui-input" style="padding:.5rem .875rem;font-size:.75rem">
           </div>
         </div>
 
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs sm:text-sm">
-            <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+            <caption class="sr-only">Daftar laporan publik yang telah disamarkan</caption>
+            <thead class="ui-table-head">
               <tr>
-                <th class="py-3 px-4">No. Tiket</th>
-                <th class="py-3 px-4">Kategori &amp; Objek Laporan</th>
-                <th class="py-3 px-4">Status Penanganan</th>
-                <th class="py-3 px-4">Waktu</th>
-                <th class="py-3 px-4 text-right">Tindakan</th>
+                <th scope="col" class="py-3 px-4 font-semibold">No. Tiket</th>
+                <th scope="col" class="py-3 px-4 font-semibold">Kategori &amp; Objek Laporan</th>
+                <th scope="col" class="py-3 px-4 font-semibold">Status Penanganan</th>
+                <th scope="col" class="py-3 px-4 font-semibold">Waktu</th>
               </tr>
             </thead>
-            <tbody id="table-reports-body" class="divide-y divide-slate-100 text-slate-700">
-              <tr class="hover:bg-slate-50/70 transition-colors">
-                  <td class="py-3.5 px-4 font-mono font-semibold text-slate-900">#CY-8821</td>
-                  <td class="py-3.5 px-4">
-                    <strong class="font-semibold text-slate-900 block">Phishing WhatsApp</strong>
-                    <span class="text-xs text-slate-400 truncate max-w-[200px] block">Mengatasnamakan Kurir J&amp;T Resi .APK</span>
-                  </td>
-                  <td class="py-3.5 px-4">
-                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Terblokir &amp; Eskalasi
-                    </span>
-                  </td>
-                  <td class="py-3.5 px-4 text-slate-400 text-xs">10 menit lalu</td>
-                  <td class="py-3.5 px-4 text-right">
-                    <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-xs font-medium">Peringatan Publik</span>
-                  </td>
-                </tr><tr class="hover:bg-slate-50/70 transition-colors">
-                  <td class="py-3.5 px-4 font-mono font-semibold text-slate-900">#CY-8819</td>
-                  <td class="py-3.5 px-4">
-                    <strong class="font-semibold text-slate-900 block">Fitnah &amp; Hoaks SARA</strong>
-                    <span class="text-xs text-slate-400 truncate max-w-[200px] block">Broadcast manipulasi fatwa ormas</span>
-                  </td>
-                  <td class="py-3.5 px-4">
-                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                      <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span> Validasi Sanad
-                    </span>
-                  </td>
-                  <td class="py-3.5 px-4 text-slate-400 text-xs">25 menit lalu</td>
-                  <td class="py-3.5 px-4 text-right">
-                    <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-xs font-medium">Klarifikasi Tim</span>
-                  </td>
-                </tr><tr class="hover:bg-slate-50/70 transition-colors">
-                  <td class="py-3.5 px-4 font-mono font-semibold text-slate-900">#CY-8815</td>
-                  <td class="py-3.5 px-4">
-                    <strong class="font-semibold text-slate-900 block">Promosi Judi Daring</strong>
-                    <span class="text-xs text-slate-400 truncate max-w-[200px] block">Injeksi situs domain institusi pendidikan</span>
-                  </td>
-                  <td class="py-3.5 px-4">
-                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                      <span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span> Takedown Diajukan
-                    </span>
-                  </td>
-                  <td class="py-3.5 px-4 text-slate-400 text-xs">2 jam lalu</td>
-                  <td class="py-3.5 px-4 text-right">
-                    <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-xs font-medium">Eskalasi Kominfo</span>
-                  </td>
-                </tr><tr class="hover:bg-slate-50/70 transition-colors">
-                  <td class="py-3.5 px-4 font-mono font-semibold text-slate-900">#CY-8809</td>
-                  <td class="py-3.5 px-4">
-                    <strong class="font-semibold text-slate-900 block">Pencurian Akun &amp; OTP</strong>
-                    <span class="text-xs text-slate-400 truncate max-w-[200px] block">Modus call center palsu perbankan</span>
-                  </td>
-                  <td class="py-3.5 px-4">
-                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
-                      <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Selesai Ditangani
-                    </span>
-                  </td>
-                  <td class="py-3.5 px-4 text-slate-400 text-xs">5 jam lalu</td>
-                  <td class="py-3.5 px-4 text-right">
-                    <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-xs font-medium">Pemulihan Akun</span>
-                  </td>
-                </tr>
+            <tbody id="table-reports-body" aria-live="polite">
+              <tr>
+                <td colspan="4" class="py-8 px-4 text-center text-xs ui-muted">Memuat data laporan…</td>
+              </tr>
             </tbody>
           </table>
         </div>
+      </section>
+
       </div>
 
     </div>
   </div>
 
   
-  <dialog id="modal-sukses-lapor" class="backdrop:bg-slate-900/60 p-0 rounded-2xl shadow-2xl max-w-md w-full border border-slate-200">
-    <div class="bg-white p-6 sm:p-8 text-center space-y-4">
-      <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
-        <span class="material-symbols-outlined text-4xl">task_alt</span>
+
+  <!-- Modal Penjelasan 4 Alasan Batasan Kuota Pelaporan (Maksimal 2x / 2 Jam) -->
+  <div id="modal-quota-reasons" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-labelledby="modal-quota-title">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl space-y-5 animate-scale-up">
+      <div class="flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-2xl">policy</span>
+          </div>
+          <div>
+            <h3 id="modal-quota-title" class="font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white">
+              Mengapa Pelaporan Dibatasi 2x / 2 Jam?
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Kebijakan ketahanan digital & integritas investigasi aduan.</p>
+          </div>
+        </div>
+        <button type="button" id="btn-close-quota-modal" class="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer" aria-label="Tutup modal">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
       </div>
-      <h3 class="font-display font-bold text-2xl text-slate-900">Laporan Berhasil Terkirim!</h3>
-      <p class="text-sm text-slate-600 leading-relaxed">
-        Jazakumullahu khairan atas peran aktif Anda dalam menjaga kebersihan ruang siber nasional. Laporan Anda telah masuk ke dalam antrean verifikasi tim Tabayyun.
-      </p>
-      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center">
-        <span class="text-xs text-slate-500 uppercase tracking-wider block mb-1">Nomor Tiket Anda:</span>
-        <span id="modal-ticket-id" class="font-mono font-extrabold text-2xl text-emerald-700 tracking-wider">#CY-8822</span>
-        <span class="text-[11px] text-slate-400 block mt-1">Simpan nomor tiket ini untuk pengecekan status.</span>
+
+      <div class="space-y-3 text-xs sm:text-[13px] text-slate-600 dark:text-slate-300">
+        <!-- Poin 1 -->
+        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-start gap-3">
+          <span class="material-symbols-outlined text-lg text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">security</span>
+          <div>
+            <strong class="font-bold text-slate-900 dark:text-white block mb-0.5">1. Mencegah Serangan Spam dan DDoS</strong>
+            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Membatasi frekuensi kiriman (request) mencegah pihak tidak bertanggung jawab atau bot otomatis membanjiri server dengan ribuan laporan palsu dalam waktu singkat yang bisa membuat website menjadi lambat atau tumbang (down).
+            </p>
+          </div>
+        </div>
+
+        <!-- Poin 2 -->
+        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-start gap-3">
+          <span class="material-symbols-outlined text-lg text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">checklist</span>
+          <div>
+            <strong class="font-bold text-slate-900 dark:text-white block mb-0.5">2. Efisiensi Validasi Tim Penyelidik</strong>
+            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Menghindari penumpukan laporan duplikat atau berulang-ulang untuk masalah yang sama. Hal ini membantu tim admin atau investigator fokus memproses laporan yang benar-benar valid dan unik.
+            </p>
+          </div>
+        </div>
+
+        <!-- Poin 3 -->
+        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-start gap-3">
+          <span class="material-symbols-outlined text-lg text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">cloud_done</span>
+          <div>
+            <strong class="font-bold text-slate-900 dark:text-white block mb-0.5">3. Optimalisasi Bandwidth dan Penyimpanan</strong>
+            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Menghemat ruang penyimpanan basis data (database) server dari data sampah atau spam yang tidak perlu.
+            </p>
+          </div>
+        </div>
+
+        <!-- Poin 4 -->
+        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-start gap-3">
+          <span class="material-symbols-outlined text-lg text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">rate_review</span>
+          <div>
+            <strong class="font-bold text-slate-900 dark:text-white block mb-0.5">4. Mendorong Kualitas Laporan</strong>
+            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Memastikan pengguna lebih berhati-hati, detail, dan serius saat menyusun isi laporan mereka karena adanya keterbatasan kuota pengiriman.
+            </p>
+          </div>
+        </div>
       </div>
-      <button type="button" id="btn-close-dialog" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-all">
-        Tutup &amp; Kembali
-      </button>
+
+      <div class="pt-2 flex justify-end">
+        <button type="button" id="btn-dismiss-quota-modal" class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-emerald-600 hover:bg-emerald-700 text-white transition-colors shadow-sm cursor-pointer">
+          Saya Mengerti
+        </button>
+      </div>
     </div>
-  </dialog>
+  </div>
 
   </main>
 
-  <footer class="bg-slate-900 text-slate-300 border-t border-slate-800 mt-0">
+  <footer class="bg-gradient-to-b from-[#064e3b] via-[#022c22] to-[#011a14] dark:bg-slate-950 text-emerald-100/90 dark:text-slate-300 border-t border-emerald-900/40 dark:border-slate-800 mt-0">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
 
@@ -476,10 +449,10 @@
           <img src="../logo-shield.png" alt="Logo Resmi Aswaja CyberShield" class="w-9 h-9 object-contain">
           <span class="font-display font-bold text-xl text-white tracking-tight">Aswaja CyberShield</span>
         </div>
-        <p class="text-sm text-slate-400 leading-relaxed max-w-md">
+        <p class="text-sm text-emerald-100/80 dark:text-slate-400 leading-relaxed max-w-md">
           Inisiatif ketahanan digital berbasis prinsip Tabayyun dan nilai Ahlussunnah wal Jama'ah untuk mendeteksi serta membentengi masyarakat dari bahaya judi online, penipuan finansial, dan jebakan investasi ilegal.
         </p>
-        <div class="pt-2 text-xs text-emerald-400 font-medium">
+        <div class="pt-2 text-xs text-emerald-300 dark:text-emerald-400 font-medium">
           Amanah &bull; Tabayyun &bull; Maslahah Ummah
         </div>
       </div>
@@ -488,10 +461,10 @@
       <div class="md:col-span-3 space-y-3">
         <h4 class="font-display font-semibold text-sm text-white uppercase tracking-wider">Navigasi Utama</h4>
         <ul class="space-y-2 text-sm">
-          <li><a href="index.blade.php" class="hover:text-emerald-400 transition-colors">Beranda Utama</a></li>
-          <li><a href="tabayyun.blade.php" class="hover:text-emerald-400 transition-colors">Analisis Tautan Tabayyun</a></li>
-          <li><a href="etika.blade.php" class="hover:text-emerald-400 transition-colors">Modul Etika &amp; Fiqih Siber</a></li>
-          <li><a href="cyber-guard.blade.php" class="hover:text-emerald-400 transition-colors">Cyber Guard Test (Kuis)</a></li>
+          <li><a href="index.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Beranda Utama</a></li>
+          <li><a href="tabayyun.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Analisis Tautan Tabayyun</a></li>
+          <li><a href="etika.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Modul Etika &amp; Fiqih Siber</a></li>
+          <li><a href="cyber-guard.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Cyber Guard Test (Kuis)</a></li>
         </ul>
       </div>
 
@@ -499,9 +472,9 @@
       <div class="md:col-span-3 space-y-3">
         <h4 class="font-display font-semibold text-sm text-white uppercase tracking-wider">Layanan Terpadu</h4>
         <ul class="space-y-2 text-sm">
-          <li><a href="lapor.blade.php" class="hover:text-red-400 transition-colors">Portal Lapor</a></li>
-          <li><a href="etika.blade.php" class="hover:text-emerald-400 transition-colors">Pedoman Literasi</a></li>
-          <li><span class="text-slate-500">Protokol Fiqih Informasi Digital</span></li>
+          <li><a href="lapor.blade.php" class="text-rose-300 hover:text-white dark:text-rose-400 dark:hover:text-rose-300 transition-colors">Portal Lapor</a></li>
+          <li><a href="etika.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Pedoman Literasi</a></li>
+          <li><span class="text-emerald-300/60 dark:text-slate-500">Protokol Fiqih Informasi Digital</span></li>
         </ul>
       </div>
 
@@ -513,11 +486,11 @@
   <script src="../js/navbar.js"></script>
   <script src="../js/scroll-reveal.js"></script>
   <script src="../js/api.js"></script>
+  <script src="../js/ui-kit.js"></script>
   <script src="../js/lapor.js"></script>
   <script src="../js/animations.js"></script>
 </body>
 </html>
-
 
 
 

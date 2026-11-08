@@ -3,13 +3,13 @@
 namespace App\DTO;
 
 /**
- * Data Transfer Object untuk hasil analisis AI independen (Google Gemini atau DeepSeek)
+ * Data Transfer Object untuk hasil analisis AI independen (Google Gemini AI)
  * Sesuai Dokumen Spesifikasi Bagian 5.4 & Bagian 10
  */
 class AiAnalysisResultDTO
 {
     /**
-     * @param string $provider Nama provider ('gemini' | 'deepseek')
+     * @param string $provider Nama provider ('gemini')
      * @param string $model Nama model yang digunakan
      * @param string $status Status koneksi/hasil ('connected' | 'unconfigured' | 'error' | 'timeout')
      * @param string|null $category Kategori: 'judol' | 'investasi_menyesatkan' | 'normal' | 'suspicious' | 'unknown'
@@ -32,7 +32,8 @@ class AiAnalysisResultDTO
         public readonly string $reasoning,
         public readonly float $confidence,
         public readonly ?string $errorMessage = null,
-        public readonly ?array $rawResponse = null
+        public readonly ?array $rawResponse = null,
+        public readonly array $techniques = []
     ) {}
 
     /**
@@ -93,6 +94,7 @@ class AiAnalysisResultDTO
             'risk_level' => $this->riskLevel,
             'risk_score' => $this->riskScore,
             'indicators' => $this->indicators,
+            'techniques' => $this->techniques,
             'reasoning' => $this->reasoning,
             'confidence' => $this->confidence,
             'error_message' => $this->errorMessage,

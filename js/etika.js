@@ -14,15 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Filter & Search Logic ────────────────────────────────────────
   const searchInput = document.getElementById('module-search-input');
   const filterBtns = document.querySelectorAll('.filter-btn');
-  const moduleItems = document.querySelectorAll('.module-item');
 
   let currentCategory = 'all';
 
   function applyFilters() {
     const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    const moduleItems = document.querySelectorAll('.module-item');
     moduleItems.forEach((item) => {
-      const cat = item.getAttribute('data-category') || '';
-      const title = item.getAttribute('data-title') || '';
+      const cat = (item.getAttribute('data-category') || '').toLowerCase();
+      const title = (item.getAttribute('data-title') || '').toLowerCase();
 
       const matchCat = currentCategory === 'all' || cat.includes(currentCategory);
       const matchSearch = !query || title.includes(query) || (item.textContent || '').toLowerCase().includes(query);
@@ -54,31 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnCloseReader = document.getElementById('btn-close-reader');
   const btnDoneReader = document.getElementById('btn-done-reader');
 
-  document.querySelectorAll('.btn-read-more').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const title = btn.getAttribute('data-title') || '';
-      const badge = btn.getAttribute('data-badge') || 'Materi';
-      const content = btn.getAttribute('data-content') || '';
-
-      if (readerTitle) readerTitle.textContent = title;
-      if (readerBadge) readerBadge.textContent = badge;
-      if (readerBody) readerBody.innerHTML = `<p class="leading-relaxed">${content}</p>`;
-
-      if (modalReader && typeof modalReader.showModal === 'function') {
-        modalReader.showModal();
-        modalReader.style.opacity = '0';
-        modalReader.style.transform = 'scale(0.95)';
-        modalReader.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            modalReader.style.opacity = '1';
-            modalReader.style.transform = 'scale(1)';
-          });
-        });
-      }
-    });
-  });
-
   function closeModal() {
     if (!modalReader) return;
     modalReader.style.opacity = '0';
@@ -101,44 +76,187 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── Render Dynamic Prinsip 4T from ApiService / Storage ─────────
+  function escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function getCategoryIcon(category) {
+    const c = String(category || '').toLowerCase();
+    if (c.includes('forensik') || c.includes('investigasi')) return 'search_check';
+    if (c.includes('algoritma') || c.includes('script')) return 'code';
+    if (c.includes('infiltrasi') || c.includes('malware') || c.includes('phishing')) return 'phishing';
+    if (c.includes('finansial') || c.includes('maysir') || c.includes('judi')) return 'casino';
+    if (c.includes('fatwa') || c.includes('fiqih') || c.includes('syariah')) return 'balance';
+    if (c.includes('tabayyun') || c.includes('4t')) return 'verified';
+    if (c.includes('regulasi') || c.includes('hukum')) return 'gavel';
+    return 'menu_book';
+  }
+
+  function bindCardInteractions(container) {
+    if (!container) return;
+    container.querySelectorAll('.module-item[data-href]').forEach((card) => {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('a, button')) return;
+        const href = card.getAttribute('data-href');
+        if (href) window.location.href = href;
+      });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const href = card.getAttribute('data-href');
+          if (href) window.location.href = href;
+        }
+      });
+    });
+  }
+
+  // ── 1. Sinkronisasi Prinsip 4T dari Database (public.prinsip_4t) ──
   async function syncPrinsip4T() {
     const grid = document.getElementById('prinsip-4t-public-grid');
     if (!grid || !window.ApiService) return;
 
     try {
       const res = await window.ApiService.getPrinsip4T();
-      const list = res.data || res;
+      const list = Array.isArray(res) ? res : (res?.data || []);
       if (!list || !list.length) return;
 
-      const icons = {
-        'T1': 'pan_tool',
-        'T2': 'search_check',
-        'T3': 'verified',
+      const defaultLinks = {
+        'T1': 'artikel/prinsip-tawaqquf.blade.php',
+        'T2': 'artikel/prinsip-tastabbus.blade.php',
+        'T3': 'artikel/prinsip-tatsabbut.blade.php',
+        'T4': 'artikel/prinsip-taaqqul.blade.php'
+      };
+
+      const defaultIcons = {
+        'T1': 'pause_circle',
+        'T2': 'search',
+        'T3': 'verified_user',
         'T4': 'psychology'
       };
 
-      grid.innerHTML = list.map(item => `
-        <a href="${item.link || '#'}" class="card-hover-effect group p-4 rounded-xl bg-slate-50 hover:bg-emerald-50/60 border border-slate-200/70 hover:border-emerald-300 space-y-2 transition-all block shadow-xs hover:shadow-sm">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors">${item.code || item.id}</span>
-            <span class="material-symbols-outlined text-emerald-600 text-lg group-hover:scale-110 transition-transform">${item.icon || icons[item.code] || 'shield'}</span>
-          </div>
-          <h3 class="font-display font-bold text-base text-slate-900 group-hover:text-emerald-700 transition-colors">${item.title || item.name || 'Kaidah 4T'}</h3>
-          <span class="text-xs font-semibold text-emerald-700 block">${item.subtitle || item.tagline || item.arabic || ''}</span>
-          <p class="text-xs text-slate-600 leading-relaxed">
-            ${item.description || ''}
-          </p>
-          <div class="pt-2 flex items-center gap-1 text-[11px] font-bold text-emerald-600 group-hover:text-emerald-700">
-            <span>Kaji Selengkapnya</span>
-            <span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
-          </div>
-        </a>
-      `).join('');
+      grid.innerHTML = list.map(item => {
+        const code = item.code || item.id || 'T1';
+        const href = item.link || defaultLinks[code] || '#';
+        const icon = item.icon || defaultIcons[code] || 'shield';
+        const title = item.name || item.title || 'Kaidah 4T';
+        const subtitle = item.arabic || item.subtitle || item.tagline || '';
+        const desc = item.description || '';
+
+        return `
+          <a href="${escapeHtml(href)}" class="card-hover-effect group p-4 rounded-xl bg-slate-50 dark:bg-slate-750 hover:bg-emerald-50/60 dark:hover:bg-emerald-950/40 border border-slate-200/70 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-600 space-y-2 transition-all block shadow-xs hover:shadow-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors">${escapeHtml(code)}</span>
+              <span class="material-symbols-outlined text-emerald-600 text-lg group-hover:scale-110 transition-transform">${escapeHtml(icon)}</span>
+            </div>
+            <h3 class="font-display font-bold text-base text-slate-900 dark:text-white group-hover:text-emerald-700 transition-colors">${escapeHtml(title)}</h3>
+            <span class="font-serif text-sm font-semibold text-emerald-700 dark:text-emerald-400 block" dir="rtl">${escapeHtml(subtitle)}</span>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              ${escapeHtml(desc)}
+            </p>
+            <div class="pt-2 flex items-center gap-1 text-[11px] font-bold text-emerald-600 group-hover:text-emerald-700">
+              <span>Kaji Selengkapnya</span>
+              <span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+          </a>
+        `;
+      }).join('');
     } catch (e) {
       console.warn('Fallback static 4T digunakan:', e);
     }
   }
 
+  // ── 2. Sinkronisasi Artikel Edukasi dari Database (public.articles) ──
+  async function syncArticles() {
+    const grid = document.getElementById('module-cards-grid');
+    if (!grid || !window.ApiService || typeof window.ApiService.getArticles !== 'function') return;
+
+    try {
+      const res = await window.ApiService.getArticles();
+      const allArticles = Array.isArray(res) ? res : (res?.data || []);
+      if (!allArticles || !allArticles.length) return;
+
+      const published = allArticles.filter(item => {
+        const st = String(item.status || 'Published').toLowerCase();
+        return st === 'published' || st === 'tayang';
+      });
+
+      const listToRender = published.length > 0 ? published : allArticles;
+
+      const countBadge = document.getElementById('etika-module-count-label');
+      if (countBadge) {
+        countBadge.textContent = `${listToRender.length} Modul Literasi Praktis`;
+      }
+
+      grid.innerHTML = listToRender.map((item, idx) => {
+        const title = item.title || 'Modul Literasi Siber';
+        const category = item.category || 'Literasi Siber';
+        const dateStr = item.date || 'Terbaru';
+        const summary = item.summary || item.excerpt || '';
+        const slug = item.slug || '';
+        const href = `artikel/baca.blade.php?id=${encodeURIComponent(item.id)}&slug=${encodeURIComponent(slug)}`;
+        const icon = getCategoryIcon(category);
+
+        const rawImg = item.cover_image || item.coverImage || item.image || (Number(item.id) === 1 ? '../images/artikel-1.jpg' : '');
+        const hasUploadedImg = rawImg && (
+          rawImg.startsWith('data:image/') ||
+          rawImg.startsWith('http://') ||
+          rawImg.startsWith('https://') ||
+          rawImg.startsWith('/') ||
+          rawImg.includes('images/')
+        );
+
+        const thumbnailHtml = hasUploadedImg
+          ? `
+            <div class="relative overflow-hidden group" style="height:200px; background:linear-gradient(135deg,#065f46,#059669);">
+              <div class="absolute inset-0 flex items-center justify-center opacity-10">
+                <span class="material-symbols-outlined text-white" style="font-size:120px;">${escapeHtml(icon)}</span>
+              </div>
+              <img src="${escapeHtml(rawImg)}" alt="${escapeHtml(title)}" class="relative z-10 w-full h-full object-cover transition-transform duration-500 hover:scale-105" onerror="this.onerror=null; this.remove();">
+            </div>
+          `
+          : `
+            <div class="relative overflow-hidden" style="height:200px; background:linear-gradient(135deg,#065f46,#059669);">
+              <div class="absolute inset-0 flex items-center justify-center opacity-10">
+                <span class="material-symbols-outlined text-white" style="font-size:120px;">${escapeHtml(icon)}</span>
+              </div>
+            </div>
+          `;
+
+        return `
+          <article class="module-item card-hover-effect bg-white dark:bg-slate-800 rounded-3xl border border-slate-200/90 dark:border-slate-700 overflow-hidden shadow-md hover:shadow-xl flex flex-col justify-between hover:border-emerald-300 dark:hover:border-emerald-600 transition-all" data-category="${escapeHtml(category.toLowerCase())}" data-title="${escapeHtml(title.toLowerCase())}" data-index="${idx}" data-href="${escapeHtml(href)}" role="link" tabindex="0">
+            ${thumbnailHtml}
+            <div class="p-5 flex flex-col flex-grow">
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">${escapeHtml(category)} &bull; ${escapeHtml(dateStr)}</p>
+              </div>
+              <h3 class="font-display font-bold text-lg text-slate-900 dark:text-white mb-3 leading-snug flex-grow">
+                ${escapeHtml(title)}
+              </h3>
+              <p class="text-sm text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed mb-4">
+                ${escapeHtml(summary)}
+              </p>
+              <a href="${escapeHtml(href)}" class="group/btn text-sm font-bold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 inline-flex items-center gap-1.5 transition-all mt-auto">
+                <span>Baca Selengkapnya</span>
+                <span class="material-symbols-outlined text-[16px] group-hover/btn:translate-x-1 transition-transform duration-200">arrow_forward</span>
+              </a>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      bindCardInteractions(grid);
+      applyFilters();
+    } catch (e) {
+      console.warn('Gagal menyinkronkan artikel dari basis data:', e);
+    }
+  }
+
+  bindCardInteractions(document.getElementById('module-cards-grid'));
   syncPrinsip4T();
+  syncArticles();
 });

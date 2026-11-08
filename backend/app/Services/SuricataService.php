@@ -104,6 +104,36 @@ class SuricataService
             'msg' => 'Tautan Referal / Afiliasi Perekrutan Pemain Judi',
             'pcre' => '/(\?|&)(ref|aff|affiliate|agent|referral)=[a-zA-Z0-9_-]+/i',
             'metadata' => 'fiqih_aswaja taawun_alal_itsmi'
+        ],
+        [
+            'sid' => 1000101,
+            'rev' => 1,
+            'action' => 'ALERT',
+            'priority' => 1,
+            'classtype' => 'policy-violation',
+            'msg' => 'ASWAJA-IDS Kata kunci judol pada URI',
+            'pcre' => '/(slot|gacor|maxwin|togel|sbobet|scatter|rtp)/i',
+            'metadata' => 'fiqih_aswaja maysir_sharih'
+        ],
+        [
+            'sid' => 1000102,
+            'rev' => 1,
+            'action' => 'ALERT',
+            'priority' => 1,
+            'classtype' => 'policy-violation',
+            'msg' => 'ASWAJA-IDS Parameter open redirect ke URL eksternal',
+            'pcre' => '/[?&](url|redirect|to|link|dest|next|goto|return)=(https?(%3A|:)(%2F|\/){2})/i',
+            'metadata' => 'technique open_redirect'
+        ],
+        [
+            'sid' => 1000103,
+            'rev' => 1,
+            'action' => 'ALERT',
+            'priority' => 1,
+            'classtype' => 'policy-violation',
+            'msg' => 'ASWAJA-IDS Query DNS domain berkata kunci judol',
+            'pcre' => '/(slot|gacor|maxwin|togel)/i',
+            'metadata' => 'technique keyword_judol'
         ]
     ];
 

@@ -13,3 +13,9 @@ alert http any any -> any any (msg:"SUSPICIOUS PROMO - INVESTASI MENYESATKAN / R
 alert http any any -> any any (msg:"SUSPICIOUS TRAFFIC - AFILIASI SINDIKAT JUDOL"; pcre:"/(\?|&)(ref|aff|affiliate|agent|referral)=[a-zA-Z0-9_-]+/i"; classtype:suspicious-traffic; priority:3; sid:1000007; rev:1;)
 alert http any any -> any any (msg:"SUSPICIOUS PARAMETER - DEPOSIT JUDOL"; pcre:"/(deposit-(dana|gopay|qris|pulsa)|depo-pulsa|depo-10k)/i"; classtype:suspicious-traffic; priority:1; sid:1000008; rev:1;)
 
+# Aturan Tambahan 3 Teknik Penyusupan Tautan (SID 1000101 - 1000103)
+alert http any any -> any any (msg:"ASWAJA-IDS Kata kunci judol pada URI"; flow:established,to_server; http.uri; pcre:"/(slot|gacor|maxwin|togel|sbobet|scatter|rtp)/i"; classtype:policy-violation; priority:1; sid:1000101; rev:1; metadata:technique web_defacement;)
+alert http any any -> any any (msg:"ASWAJA-IDS Parameter open redirect ke URL eksternal"; flow:established,to_server; http.uri; pcre:"/[?&](url|redirect|to|link|dest|next|goto|return)=(https?(%3A|:)(%2F|\/){2})/i"; classtype:policy-violation; priority:1; sid:1000102; rev:1; metadata:technique open_redirect;)
+alert dns any any -> any any (msg:"ASWAJA-IDS Query DNS domain berkata kunci judol"; dns.query; pcre:"/(slot|gacor|maxwin|togel)/i"; classtype:policy-violation; priority:1; sid:1000103; rev:1; metadata:technique keyword_judol;)
+
+
