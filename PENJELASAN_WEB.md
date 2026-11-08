@@ -120,3 +120,13 @@ Sistem menghasilkan **panduan biner 2-state**:
    - Pemisahan peran Super Admin & Admin Basic.
    - Proteksi sesi otomatis: *Inactivity Timeout* 5 menit dan *Account Lockout Cooldown* berjenjang anti-brute force.
 
+---
+
+## 9. Kesiapan Infrastruktur Cloud Vercel (Opsi 1 Full-Stack)
+
+1. **Monorepo Serverless Modern:** Menggabungkan antarmuka Blade PHP dan backend Laravel ke dalam satu repositori terpadu via runtime `vercel-php@0.7.3`.
+2. **Serverless Bridge (`api/index.php`):** Mengatasi sistem berkas read-only serverless dengan mengalihkan cache dan storage Laravel ke `/tmp/storage`.
+3. **Koneksi Pooler Berkecepatan Tinggi:** Terhubung ke basis data Supabase PostgreSQL Singapore via pooler IPv4 (`aws-0-ap-southeast-1.pooler.supabase.com:5432`) untuk latensi minimal.
+4. **Global Edge CDN:** Aset antarmuka (`css/`, `js/`, gambar) disajikan langsung dari jaringan tepi Vercel secara instan dan bebas latensi.
+
+

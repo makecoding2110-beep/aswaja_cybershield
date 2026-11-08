@@ -152,14 +152,25 @@ SURICATA_EVE_PATH=storage/logs/suricata/eve.json
 
 ---
 
-## 6. Hasil Pengujian Otomatis (PHP 8.5)
+## 6. Panduan Deployment Vercel Cloud (Opsi 1 Full-Stack)
+
+Aplikasi telah dikonfigurasi penuh untuk deploy monorepo di **Vercel** menggunakan serverless entrypoint [`api/index.php`](file:///d:/cybershield/api/index.php) dan runtime `vercel-php@0.7.3`:
+
+1. **Push ke GitHub:** Pastikan cabang `main` telah sinkron dengan commit terbaru.
+2. **Import ke Vercel:** Buka [vercel.com](https://vercel.com), buat New Project, dan import repositori ini.
+3. **Konfigurasi Environment:** Masukkan variabel lingkungan dari tabel di atas (`APP_KEY`, `DB_*`, `GEMINI_API_KEY`, dll.) pada Dashboard Vercel Settings.
+4. **Deploy Otomatis:** Vercel menjalankan `npm run vercel-build` untuk menginstal dependensi Composer di `backend/` dan menyajikan web Anda secara instan di domain `.vercel.app`.
+
+---
+
+## 7. Hasil Pengujian Otomatis (PHP 8.5)
 
 * **Threat Analyzer Test Suite:** `6 / 6 PASS (100%)` — Deteksi Web Defacement, Subdomain Hijacking, Open Redirect, dan Typosquatting dengan *False Positive = 0*.
 * **REST API & RBAC Test Suite:** `15 / 15 PASS (100%)` — Validasi seluruh endpoint publik, sanitasi input, evaluasi kuis, autentikasi admin, dan proteksi hak akses Super Admin.
 
 ---
 
-## 7. Dokumen Teknis Pendukung
+## 8. Dokumen Teknis Pendukung
 
 * [`CATATAN_DATABASE.md`](file:///d:/cybershield/CATATAN_DATABASE.md): Dokumentasi terpadu database Supabase PostgreSQL, 8 tabel master, DDL, dan kontrak sinkronisasi live data.
 * [`CATATAN_BACKEND.md`](file:///d:/cybershield/CATATAN_BACKEND.md): Dokumentasi arsitektur Backend Laravel, 10 service utama, unified routing `index.php`, dan formulasi risiko.
@@ -167,6 +178,8 @@ SURICATA_EVE_PATH=storage/logs/suricata/eve.json
 * [`CATATAN_DUAL_AI_DAN_SURICATA.md`](file:///d:/cybershield/CATATAN_DUAL_AI_DAN_SURICATA.md): Integrasi Suricata NIDS, UrlThreatAnalyzer, dan Google Gemini AI.
 * [`CATATAN_INDIKATOR_JUDOL.md`](file:///d:/cybershield/CATATAN_INDIKATOR_JUDOL.md): Dokumentasi mendalam 3 teknik penyusupan judol, matriks indikator, dan rule Suricata.
 * [`SISTEM_KERJA_WEB.md`](file:///d:/cybershield/SISTEM_KERJA_WEB.md): Alur kerja sistem web menyeluruh dari awal hingga akhir.
+* [`PENJELASAN_WEB.md`](file:///d:/cybershield/PENJELASAN_WEB.md): Ringkasan konsep, perumusan masalah, arsitektur panel admin, dan naskah presentasi.
+
 ---
 
 &copy; 2026 Aswaja CyberShield &bull; Inisiatif Ketahanan Digital Berbasis Tradisi Tabayyun dan Nilai-Nilai Islam Moderat.

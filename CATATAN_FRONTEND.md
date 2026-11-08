@@ -404,6 +404,25 @@ Seluruh komponen kartu statistik, status breakdown, tabel aduan, dan riwayat akt
   - [`frontend/admin/akun.blade.php`](file:///d:/cybershield/frontend/admin/akun.blade.php)
   - [`frontend/admin/integrasi-ai.blade.php`](file:///d:/cybershield/frontend/admin/integrasi-ai.blade.php)
 
+---
+
+## ⚡ 23. Optimasi Pengiriman Aset Frontend & Vercel Edge CDN
+
+- **Penyajian Aset Tanpa Beban Komputasi Serverless:**
+  - Konfigurasi [`vercel.json`](file:///d:/cybershield/vercel.json) memetakan direktori aset statis (`css/`, `js/`, `images/`, `logo-shield.png`, `favicon.svg`) langsung ke Vercel Edge CDN.
+  - Setiap aset dilayani secara instan tanpa mengeksekusi runtime PHP serverless, memangkas latensi pemuatan halaman dan menghemat kuota serverless secara optimal.
+- **Dukungan Clean URL Serverless:**
+  - Permintaan halaman frontend publik dan admin (`/`, `/tabayyun`, `/etika`, `/cyber-guard`, `/lapor`, `/login`, `/admin/...`, `/artikel/...`) diteruskan ke [`api/index.php`](file:///d:/cybershield/api/index.php) yang mengaktifkan smart router [`index.php`](file:///d:/cybershield/index.php) secara terisolasi di memori sementara.
+
+---
+
+## 🏷️ 24. Standar Komentar Kode Ringkas (Header-Only Standard)
+
+- **Kode Bersih Tanpa Paragraf Penjelasan:**
+  - Seluruh berkas frontend (JavaScript, Blade template, dan konfigurasi) menerapkan gaya komentar judul ringkas (contoh: `// Theme Anti-FOUC Script`, `// Tailwind CSS Play CDN`, `// 1. Assets`, `// 2. Static Files`).
+  - Dokumentasi naratif, panduan pengguna, dan spesifikasi arsitektur dialihkan secara terpusat ke berkas markdown proyek agar performa parsing browser dan keterbacaan kode tetap maksimal.
+
+
 
 
 

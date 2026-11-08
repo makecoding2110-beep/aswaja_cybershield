@@ -112,11 +112,32 @@ Saat pengguna memasukkan URL di [`frontend/tabayyun.blade.php`](file:///d:/cyber
 ### Tahap 5: Alur Kerja Panel Admin (`/admin`)
 
 1. **Login Staf Admin (`/login`):**
-   - Dilengkapi proteksi sesi [`js/admin-guard.js`](file:///d:/cybershield/js/admin-guard.js) dan indikator verifikasi terpusat (*centered spinner*).
-   - Akun staf administrator langsung aktif tanpa memerlukan tahapan verifikasi email (*no email verification required*).
-2. **Arsitektur Sidebar Modern:**
-   - Navigasi sidebar terfokus dan terstruktur rapi dengan wadah profil pengguna (*Admin Utama / Super Admin*) yang menempel di bagian paling bawah sidebar (`mt-auto shrink-0`).
-   - Dialog modal konfirmasi logout yang modern dan aman.
-3. **Manajemen Laporan (`/admin/laporan`):** Memverifikasi aduan masyarakat, mengubah status tiket (`Pending` $\to$ `Diproses` $\to$ `Selesai`), dan mencatat hasil analisis forensik.
-4. **Manajemen Konten & Kaidah 4T (`/admin/artikel`):** CRUD artikel literasi siber dan editor kaidah 4T interaktif (`#modal-4t`) dengan *optimistic UI rendering* dan sinkronisasi live ke Supabase PostgreSQL.
-5. **Manajemen Akun (`/admin/akun`):** Pengelolaan staf admin dengan pembagian wewenang peran RBAC (*Super Admin* vs *Admin Basic*).
+   - Dilengkapi proteksi sesi [`js/admin-guard.js`](file:///d:/cybershield/js/admin-guard.js), batas waktu ketidakaktifan (*Inactivity Timeout* 5 menit), dan penundaan login bertingkat anti-brute force (*Lockout Throttling*).
+2. **Dashboard Monitoring Interaktif (`/admin`):**
+   - 4 Kartu KPI (*Total Artikel, Laporan Masuk, Akun Aktif, Studi Kasus*) dapat diklik langsung melompat ke modul terkait.
+   - Tabel aduan terkini dapat diklik per baris untuk membuka modal pratinjau cepat (*quick report preview*).
+3. **Manajemen & Penugasan Laporan (`/admin/laporan`):**
+   - Verifikasi aduan masyarakat dan pengubahan status tiket (*Pending $\to$ Diproses $\to$ Selesai*).
+   - Penugasan staf penangan (*Admin Penangani*) melalui dropdown dinamis yang terhubung langsung ke basis data pengguna Supabase.
+4. **Manajemen Konten Edukasi & Kaidah 4T (`/admin/artikel`):**
+   - Standarisasi 3 rumpun kategori judol (*Umum, IT, dan Agama*).
+   - Kartu 4T interaktif dilengkapi tombol ganda: *Edit Kaidah* dan *Edit Artikel* (langsung membuka artikel pilar terkait di editor).
+   - Pemuatan instan *Zero-Latency Instant Fallback Rendering* tanpa tertahan loading jaringan.
+5. **Manajemen Akun Staf (`/admin/akun`):**
+   - Pengelolaan akun admin (Super Admin vs Admin Basic) dengan toggle visibilitas kata sandi dan filter matriks peran. Berada di posisi paling bawah pada menu sidebar navigasi.
+
+---
+
+### Tahap 6: Eksekusi Runtime Produksi di Cloud Vercel (Opsi 1 Serverless Monorepo)
+
+1. **Permintaan Pengunjung Diterima Vercel Edge:**
+   - Permintaan aset statis (`css/`, `js/`, `images/`, `logo-shield.png`, `favicon.svg`) langsung disajikan dari Vercel CDN tanpa komputasi serverless.
+2. **Penyaluran ke Serverless Entrypoint ([`api/index.php`](file:///d:/cybershield/api/index.php)):**
+   - Seluruh rute dinamis web dan API diteruskan ke serverless function berbasis runtime `vercel-php@0.7.3`.
+   - Mengalihkan penyimpanan framework storage ke `/tmp/storage` untuk mematuhi sistem berkas read-only serverless.
+3. **Penyaluran Cerdas (*Smart Routing*):**
+   - Rute `/api/*` dieksekusi langsung oleh kernel REST API Laravel.
+   - Rute halaman publik dan admin dieksekusi oleh front controller [`index.php`](file:///d:/cybershield/index.php) dengan proteksi pengalihan otomatis 302 jika admin mengakses tautan tanpa prefix.
+4. **Koneksi Terpadu Supabase & Gemini AI:**
+   - Terhubung secara persisten ke database Supabase PostgreSQL (`aws-0-ap-southeast-1.pooler.supabase.com:5432`) dan model Google Gemini AI (`gemini-1.5-flash`).
+

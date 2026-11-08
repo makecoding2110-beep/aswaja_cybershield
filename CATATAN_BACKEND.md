@@ -355,54 +355,27 @@ Berkas `eve.json` (*Extensible Event Format*) menampung stream telemetri JSON Li
 
 ## ☁️ 17. Arsitektur & Panduan Deployment Vercel (Frontend & Backend)
 
-Untuk menerapkan proyek **Aswaja CyberShield** ke cloud Vercel, tersedia dua pendekatan arsitektur:
+Platform **Aswaja CyberShield** telah dikonfigurasi penuh untuk mendukung arsitektur deployment serverless di Vercel:
 
-### Opsi 1: Split Architecture (Sangat Direkomendasikan untuk Keandalan Maksimal)
-Arsitektur ini memisahkan frontend serverless dan backend berbasis container/VPS:
-1. **Frontend (Vercel):**
-   - Repositori frontend atau build statis dideploy langsung ke Vercel Edge Network.
-   - Variabel `API_BASE_URL` diarahkan ke domain backend produksi (contoh: `https://api.aswaja-cybershield.my.id`).
-2. **Backend REST API (Railway / Render / Fly.io / VPS Ubuntu):**
-   - Menjalankan PHP 8.2+ & runtime Laravel dengan Nginx atau Octane.
-   - Sensor Suricata NIDS dan worker background dapat beroperasi penuh secara kontinu.
-3. **Database (Supabase PostgreSQL):**
-   - Database PostgreSQL hosted di Supabase Singapore (`ap-southeast-1`) terhubung melalui Transaction/Session Pooler.
+### Opsi 1 (Telah Diterapkan & Aktif): Full-Stack Monorepo Serverless di Vercel
+Mengintegrasikan antarmuka frontend Blade PHP dan REST API backend Laravel ke dalam satu repositori tunggal:
 
-### Opsi 2: Full Monorepo Serverless di Vercel (via Community PHP Runtime)
-Jika ingin menyatukan frontend Blade PHP dan backend Laravel ke dalam satu deployment Vercel:
-1. **Konfigurasi `vercel.json` di Root Proyek:**
-   ```json
-   {
-     "version": 2,
-     "functions": {
-       "api/index.php": {
-         "runtime": "vercel-php@0.7.3"
-       }
-     },
-     "routes": [
-       {
-         "src": "/api/(.*)",
-         "dest": "/api/index.php"
-       },
-       {
-         "src": "/admin/(.*)",
-         "dest": "/frontend/admin/$1.blade.php"
-       },
-       {
-         "src": "/artikel/(.*)",
-         "dest": "/frontend/artikel/baca.blade.php"
-       },
-       {
-         "src": "/(.*)",
-         "dest": "/index.php"
-       }
-     ]
-   }
-   ```
-2. **Penyesuaian Serverless:**
-   - Buat file adaptor `api/index.php` yang mem-bootstrap Laravel.
-   - Pindahkan storage Laravel (`storage/framework/views`, `cache`, `sessions`) ke direktori sementara `/tmp` karena filesystem Vercel bersifat *read-only*.
-   - Pasang seluruh variabel environment (`SUPABASE_*`, `GEMINI_API_KEY`, `APP_KEY`) pada Dashboard Vercel Project Settings.
+1. **Serverless Entrypoint Adaptor ([`api/index.php`](file:///d:/cybershield/api/index.php)):**
+   - Mengalihkan penyimpanan framework storage (`views`, `cache`, `sessions`, `logs`) ke direktori sementara `/tmp/storage` guna mengatasi batasan *read-only filesystem* lingkungan serverless Vercel.
+   - Mengarahkan request `/api/*` ke bootstrap Laravel (`backend/public/index.php`) dan request web lainnya ke smart front controller [`index.php`](file:///d:/cybershield/index.php).
+2. **Konfigurasi Vercel ([`vercel.json`](file:///d:/cybershield/vercel.json)):**
+   - Runtime: `vercel-php@0.7.3`.
+   - `includeFiles`: Memaketkan `backend/**`, `frontend/**`, `index.php`, dan aset ke dalam fungsi serverless.
+   - Perutean statis langsung melayani direktori `css/`, `js/`, `images/`, `logo-shield.png`, dan `favicon.svg` melalui Vercel Edge CDN.
+3. **Automasi Build Composer ([`package.json`](file:///d:/cybershield/package.json)):**
+   - Menjalankan script `vercel-build`: `cd backend && composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction`.
+4. **Storage Override ([`backend/bootstrap/app.php`](file:///d:/cybershield/backend/bootstrap/app.php)):**
+   - Mendeteksi `env('APP_STORAGE')` dan memanggil `$app->useStoragePath($storagePath)` secara dinamis.
+
+### Opsi 2: Split Architecture (Alternatif Produksi Terpisah)
+- **Frontend:** Dideploy di Vercel Edge Network dengan `API_BASE_URL` mengarah ke host backend.
+- **Backend:** Dideploy di Railway / Render / Fly.io / VPS Ubuntu dengan Nginx + PHP 8.2+ untuk beban kerja kontinu (background worker & Suricata live daemon).
+- **Database:** Supabase PostgreSQL (`aws-0-ap-southeast-1.pooler.supabase.com:5432`).
 
 ---
 
@@ -415,6 +388,16 @@ Jika ingin menyatukan frontend Blade PHP dan backend Laravel ke dalam satu deplo
   - Tabel `public.reports` dilengkapi kolom relasional `assigned_to` (UUID user pengelola) dan `admin_name` (nama tampilan admin penangan).
   - Saat staf admin memilih nama penangan dari dropdown modal laporan dan menekan tombol *Simpan Pembaruan*, backend memvalidasi keberadaan akun di tabel `users` dan memperbarui status tiket.
   - Setiap perubahan penugasan otomatis memicu pencatatan audit trail pada tabel `public.activities`.
+
+---
+
+## 🏷️ 19. Standar Komentar Kode Ringkas (Header-Only Standard)
+
+Sesuai arahan teknis sistem, seluruh berkas kode (PHP, JS, Apache Config, JSON) menerapkan prinsip **komentar ringkas berbasis judul fungsi**:
+- **Tidak Memuat Narasi Panjang:** Menghilangkan penjelasan paragraf atau blok teks naratif yang berlebihan di dalam kode sumber.
+- **Format Judul Terstandarisasi:** Menggunakan penanda ringkas 2–4 kata per blok logika fungsional (contoh: `// 1. Assets`, `// 2. Static Files`, `// Storage Setup`, `// API Router`).
+- **Dokumentasi Lengkap Dialihkan ke Markdown:** Seluruh rincian filosofi, arsitektur, dan penjelasan naratif dipusatkan di berkas dokumentasi proyek (`CATATAN_*.md`, `PENJELASAN_WEB.md`, `README.md`) agar kode produksi tetap bersih, ringan, dan mudah dipelihara (*clean & readable*).
+
 
 
 
