@@ -315,13 +315,16 @@ Pada komponen `#result-layman-box` di kartu hasil Tabayyun:
 
 ## 🌲 18. Penyelarasan Tema Light Mode Footer (Gradien Hijau Emerald Deep)
 
-- **Harmonisasi Visual Light Mode Footer:**
-  - Warna latar belakang footer halaman publik sebelumnya tampak gelap kebiruan/navy, kurang selaras dengan identitas hijau institusional Aswaja CyberShield.
-  - Footer dirombak menjadi gradien hijau zamrud gelap (*Deep Emerald Gradient*) yang kaya:
+- **Harmonisasi Visual Footer (Emerald di Light Mode & Hitam Pekat di Dark Mode):**
+  - Pada **Light Mode**, latar belakang footer menggunakan gradien hijau zamrud mendalam (*Deep Emerald Gradient*):
+    `from-[#064e3b] via-[#022c22] to-[#011a14]`
+  - Pada **Dark Mode**, gradien hijau di-reset menjadi **hitam pekat solid (`#000000`)**:
+    `dark:bg-none dark:bg-black dark:from-black dark:via-black dark:to-black`
+  - Tag footer terstandarisasi:
     ```html
-    <footer class="bg-gradient-to-b from-[#064e3b] via-[#022c22] to-[#011a14] dark:bg-slate-950 text-emerald-100/90 dark:text-slate-300 border-t border-emerald-900/40 dark:border-slate-800 transition-colors duration-300">
+    <footer class="bg-gradient-to-b from-[#064e3b] via-[#022c22] to-[#011a14] dark:bg-none dark:bg-black dark:from-black dark:via-black dark:to-black text-emerald-100/90 dark:text-slate-300 border-t border-emerald-900/40 dark:border-slate-800 mt-0">
     ```
-  - Warna teks tautan, ikon, dan garis pemisah footer disesuaikan menggunakan aksen `emerald-200/80` dengan hover `text-emerald-400` sehingga memiliki kontras tinggi dan kenyamanan visual prima.
+  - Warna teks tautan, ikon, dan garis pemisah footer disesuaikan menggunakan aksen `emerald-200/80` di light mode dan `dark:text-slate-300 dark:hover:text-emerald-400` di dark mode sehingga memiliki kontras tinggi dan kenyamanan visual prima.
 - **Konsistensi Seragam di Seluruh Halaman:**
   - Diterapkan seragam di:
     - [`frontend/index.blade.php`](file:///d:/cybershield/frontend/index.blade.php) (Beranda)
