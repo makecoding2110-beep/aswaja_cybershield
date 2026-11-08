@@ -1,13 +1,12 @@
 <?php
 /**
- * Aswaja CyberShield - Smart Front Controller & Clean URL Router
- * Mendukung akses URL bersih tanpa ekstensi .blade.php / .php di lokal (php -S / Apache / Laragon) maupun Vercel.
+ * Front Controller & Router
  */
 
 $rawUri = $_SERVER['REQUEST_URI'] ?? '/';
 $requestUri = parse_url($rawUri, PHP_URL_PATH) ?: '/';
 
-// 1. Sajikan aset logo dan favicon di path apa pun (misal /tabayyun/logo-shield.png, /logo-shield.png, dll.)
+// 1. Assets
 if (preg_match('#/(logo-shield\.png|favicon\.svg)$#', $requestUri, $matches)) {
     $assetFile = __DIR__ . '/' . $matches[1];
     if (is_file($assetFile)) {
@@ -17,19 +16,19 @@ if (preg_match('#/(logo-shield\.png|favicon\.svg)$#', $requestUri, $matches)) {
     }
 }
 
-// 2. Jika request mengarah ke file aset statis fisik (css, js, png, svg, ico, json, font, dll.), sajikan langsung
+// 2. Static Files
 $physicalPath = __DIR__ . '/' . ltrim($requestUri, '/');
 if ($requestUri !== '/' && is_file($physicalPath) && !preg_match('/\.(php|blade\.php)$/i', $physicalPath)) {
     return false;
 }
 
-// 2b. Teruskan Permintaan REST API langsung ke Backend Laravel
+// 3. API Router
 if (preg_match('#^/api(/|$)#', $requestUri)) {
     require __DIR__ . '/backend/public/index.php';
     exit;
 }
 
-// 3. Normalisasi prefix subfolder (misal /aswajaCyber/)
+// 4. Subfolder Normalization
 $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
 $subDir = ($scriptDir !== '/' && $scriptDir !== '.') ? $scriptDir : '';
 $uriPath = $requestUri;
@@ -37,7 +36,7 @@ if ($subDir !== '' && strpos($uriPath, $subDir) === 0) {
     $uriPath = substr($uriPath, strlen($subDir)) ?: '/';
 }
 
-// 4. Normalisasi rute (bersihkan semua duplikasi /frontend dan ekstensi .blade.php / .php)
+// 5. Route Normalization
 $route = '/' . trim($uriPath, '/');
 $route = preg_replace('#^(/frontend)+(/|$)#', '/', $route);
 $route = preg_replace('/\.blade\.php$/i', '', $route);
@@ -86,7 +85,7 @@ if (preg_match('#^/auth/passwordReset(?:/(.+))?$#', $route, $matches)) {
     $route = '/reset-password';
 }
 
-// 4b. Redirect otomatis ke Clean URL jika URL di browser masih berakhiran .blade.php atau .php
+// 6. Clean URL Redirect
 if (
     ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET' &&
     preg_match('#\.(blade\.php|php)$#i', $requestUri)
@@ -96,7 +95,7 @@ if (
     exit;
 }
 
-// 5. Pemetaan Rute Clean URL ke Berkas Blade
+// 7. Route Map
 $routesMap = [
     '/'                   => __DIR__ . '/frontend/index.blade.php',
     '/tabayyun'           => __DIR__ . '/frontend/tabayyun.blade.php',
@@ -119,7 +118,7 @@ if (isset($routesMap[$route]) && is_file($routesMap[$route])) {
     exit;
 }
 
-// 6. Rute Dinamis Artikel Detail: /artikel/{slug}
+// 8. Dynamic Route: /artikel/{slug}
 if (preg_match('#^/artikel/([a-zA-Z0-9_-]+)$#', $route, $matches)) {
     $articleFile = __DIR__ . '/frontend/artikel/' . $matches[1] . '.blade.php';
     if (is_file($articleFile)) {
@@ -133,7 +132,7 @@ if (preg_match('#^/artikel/([a-zA-Z0-9_-]+)$#', $route, $matches)) {
     }
 }
 
-// 7. Rute Dinamis Panel Admin: /admin/{page}
+// 9. Dynamic Route: /admin/{page}
 if (preg_match('#^/admin/([a-zA-Z0-9_-]+)$#', $route, $matches)) {
     $adminFile = __DIR__ . '/frontend/admin/' . $matches[1] . '.blade.php';
     if (is_file($adminFile)) {
@@ -142,6 +141,6 @@ if (preg_match('#^/admin/([a-zA-Z0-9_-]+)$#', $route, $matches)) {
     }
 }
 
-// 8. Fallback ke Beranda Utama
+// 10. Fallback
 require __DIR__ . '/frontend/index.blade.php';
 exit;

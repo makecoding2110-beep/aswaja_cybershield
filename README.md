@@ -22,7 +22,7 @@ Aswaja CyberShield dibangun dengan pendekatan **Recognize, Learn, & Act** yang m
      * *🟡 Tingkat Risiko Sedang (26%–50%)*: Kuning (`amber`), status `Sedang / Perlu Waspada`, terindikasi domain bebas/murah atau klaim promosi namun bersih dari judi langsung.
      * *🟠 Tingkat Risiko Tinggi (51%–84%)*: Oranye (`orange`), status `Tinggi / Perlu Pemeriksaan`, terdeteksi kata kunci fitur taruhan judi (maxwin, jackpot, scatter) atau anomali teknis.
      * *🔴 Tingkat Risiko Berat (85%–100%)*: Merah (`red`), status `Sangat Berbahaya (Berat)`, terindikasi kuat sarana judi online aktif, defacement, atau phishing pencurian data.
-   * **Rangkuman Inti untuk Warga Awam (*Layman Summary*)**: Penjelasan risiko yang padat, lugas, dan bebas dari istilah teknis IT (tanpa istilah TLD, URI, DNS, sensor IDS) agar mudah dipahami masyarakat awam.
+   * **Rangkuman**: Penjelasan risiko yang padat, lugas, dan bebas dari istilah teknis IT (tanpa istilah TLD, URI, DNS, sensor IDS) agar mudah dipahami masyarakat awam.
    * **Komponen "Teknik yang Terdeteksi"**: Menampilkan badge teknik beserta penjelasan awam dan bukti URL dalam format monospace non-aktif yang aman.
    * **Audit Sanad Domain**: Evaluasi kredibilitas domain dan legalitas institusi regulator resmi (OJK & Bappebti).
    * **Salin Ringkasan Verifikasi & Laporkan**: Tombol salin ringkasan hasil audit untuk dibagikan ke grup percakapan atau diteruskan ke portal aduan (`/lapor?url=...`).

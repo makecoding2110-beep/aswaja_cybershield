@@ -1,33 +1,32 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # 1. Redirect otomatis jika ada permintaan URL yang masih membawa .blade.php atau .php
+    # 1. Clean URL Redirect
     RewriteCond %{THE_REQUEST} \s/+(.+?)\.blade\.php[\s?] [NC,OR]
     RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
     RewriteRule ^ /%1 [R=301,L]
 
-    # 2. Jangan rewrite aset statis fisik (css, js, gambar, svg, dll.)
+    # 2. Static Files
     RewriteCond %{REQUEST_FILENAME} -f [OR]
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
 
-    # 3. Router REST API Backend Laravel
+    # 3. API Router
     RewriteRule ^api(/.*)?$ backend/public/index.php [L,QSA]
 
-    # 4. Rute Autentikasi & Akun
+    # 4. Auth Routes
     RewriteRule ^login/?$ frontend/admin/login.blade.php [L,QSA]
     RewriteRule ^lupa-password/?$ frontend/admin/lupa-password.blade.php [L,QSA]
     RewriteRule ^reset-password/?$ frontend/admin/lupa-password.blade.php [L,QSA]
 
-    # 5. Rute Panel Admin
+    # 5. Admin Routes
     RewriteRule ^admin/?$ frontend/admin/index.blade.php [L,QSA]
     RewriteRule ^admin/([a-zA-Z0-9_-]+)/?$ frontend/admin/$1.blade.php [L,QSA]
 
-    # 6. Rute Artikel Detail
+    # 6. Artikel Route
     RewriteRule ^artikel/([a-zA-Z0-9_-]+)/?$ frontend/artikel/$1.blade.php [L,QSA]
 
-    # 7. Rute Halaman Publik Utama
+    # 7. Public Routes
     RewriteRule ^(tabayyun|etika|cyber-guard|lapor)/?$ frontend/$1.blade.php [L,QSA]
     RewriteRule ^$ frontend/index.blade.php [L,QSA]
 </IfModule>
-

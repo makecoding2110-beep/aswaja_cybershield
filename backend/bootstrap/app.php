@@ -24,7 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         );
     })->create();
 
-// Support for Vercel Serverless read-only filesystem
+// Storage Override
 if ($storagePath = env('APP_STORAGE')) {
     $app->useStoragePath($storagePath);
 }
