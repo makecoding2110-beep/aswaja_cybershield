@@ -20,7 +20,7 @@ flowchart TD
         Orch --> Step1["1. UrlValidationService\n(SSRF Guard & 3-Tier Keyword Matching)"]
         Orch --> Step2["2. UrlThreatAnalyzer\n(Deteksi 3 Teknik: Defacement, Open Redirect, Typosquatting)"]
         Orch --> Step3["3. SuricataIntegrationService\n(Log eve.json & Aturan aswaja-local.rules SID 1000000-1000103)"]
-        Orch --> Step4["4. Google Gemini AI (gemini-1.5-flash)\n(Prompt Injection Guard, Semantik, Fiqih 4T)"]
+        Orch --> Step4["4. Google Gemini AI (gemini-3.5-flash-lite)\n(Prompt Injection Guard, Semantik, Fiqih 4T)"]
         Step1 --> Step5["5. RiskAssessmentService & Sintesis Terbobot\n(35% Threat + 30% Suricata + 30% Gemini + 5% URL)"]
         Step2 --> Step5
         Step3 --> Step5
@@ -70,7 +70,7 @@ Saat pengguna memasukkan URL di [`frontend/tabayyun.blade.php`](file:///d:/cyber
 2. Mencocokkan signature resmi di [`suricata.rules`](file:///d:/cybershield/suricata.rules) dan [`infra/suricata/rules/aswaja-local.rules`](file:///d:/cybershield/infra/suricata/rules/aswaja-local.rules) (SID 1000000 - 1000103).
 
 #### Langkah 2.4 — Analisis Kognitif Google Gemini AI (`GeminiService.php`)
-1. Google Gemini AI (`gemini-1.5-flash`) menerima URL sebagai data teks pasif dengan proteksi *prompt injection*.
+1. Google Gemini AI (`gemini-3.5-flash-lite`) menerima URL sebagai data teks pasif dengan proteksi *prompt injection*.
 2. Memverifikasi bukti awal dari `UrlThreatAnalyzer` dan `Suricata NIDS`, menganalisis penyamaran leetspeak, dan memetakan kepatuhan etika Fiqih Siber 4T.
 3. Mengembalikan format JSON valid berisi teknik yang teridentifikasi, indikator keparahan, penalaran, dan tingkat keyakinan (*confidence*).
 
@@ -139,5 +139,5 @@ Saat pengguna memasukkan URL di [`frontend/tabayyun.blade.php`](file:///d:/cyber
    - Rute `/api/*` dieksekusi langsung oleh kernel REST API Laravel.
    - Rute halaman publik dan admin dieksekusi oleh front controller [`index.php`](file:///d:/cybershield/index.php) dengan proteksi pengalihan otomatis 302 jika admin mengakses tautan tanpa prefix.
 4. **Koneksi Terpadu Supabase & Gemini AI:**
-   - Terhubung secara persisten ke database Supabase PostgreSQL (`aws-0-ap-southeast-1.pooler.supabase.com:5432`) dan model Google Gemini AI (`gemini-1.5-flash`).
+   - Terhubung secara persisten ke database Supabase PostgreSQL (`aws-0-ap-southeast-1.pooler.supabase.com:5432`) dan model Google Gemini AI (`gemini-3.5-flash-lite`).
 

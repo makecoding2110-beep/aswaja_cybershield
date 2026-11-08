@@ -378,14 +378,17 @@ PROMPT;
                 ];
             }
 
+            $statusCode = $response ? $response->status() : 'No Response';
+            $errorBody = $response ? $response->body() : ($lastError ?? 'Tidak ada respons dari server Google Gemini.');
+
             return [
                 'provider' => 'Google Gemini AI',
                 'model' => $this->model,
-                'status' => 'Respons Gagal (Status ' . $response->status() . ')',
+                'status' => 'Respons Gagal (Status ' . $statusCode . ')',
                 'connected' => false,
                 'masked_key' => $this->getMaskedKey(),
                 'latency_ms' => $latency,
-                'error' => $response->body()
+                'error' => $errorBody
             ];
         } catch (\Throwable $e) {
             return [

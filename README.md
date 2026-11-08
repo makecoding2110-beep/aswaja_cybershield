@@ -16,7 +16,7 @@ Aswaja CyberShield dibangun dengan pendekatan **Recognize, Learn, & Act** yang m
      * *Open Redirect (Cloaking)*: Mendeteksi manipulasi parameter pengalihan (`url`, `redirect`, `to`, `dest`, `link`, dll.), URL bertingkat, dan pengalihan ke TLD murahan.
      * *Typosquatting & Homoglif*: Mencocokkan kemiripan dengan lembaga resmi (OJK, Bappebti, BI, Kominfo, bank BUMN) menggunakan substitusi homoglif (`0` $\to$ `o`, `1` $\to$ `l/i`, `rn` $\to$ `m`, `vv` $\to$ `w`) dan embel-embel tipuan (`-resmi`, `-login`, `-bansos`).
    * **Sensor Jaringan Suricata NIDS (`SuricataIntegrationService.php` & `eve.json`)**: Inspeksi paket deterministik pada level DNS, TLS SNI, dan HTTP URI berbasis signature rule standar industri Suricata (SID: 1000000 - 1000103) yang terdaftar di [`infra/suricata/rules/aswaja-local.rules`](file:///d:/cybershield/infra/suricata/rules/aswaja-local.rules).
-   * **Google Gemini AI (`GeminiService.php`)**: Mesin kognitif semantik (`gemini-1.5-flash`) yang dilengkapi *prompt injection guard*, evaluasi leetspeak, dan pemetaan kaidah Fiqih 4T.
+   * **Google Gemini AI (`GeminiService.php`)**: Mesin kognitif semantik (`gemini-3.5-flash-lite`) yang dilengkapi *prompt injection guard*, evaluasi leetspeak, dan pemetaan kaidah Fiqih 4T.
    * **Standarisasi 4 Tingkat Risiko Resmi (Unified Metric 0%–100%)**:
      * *🟢 Tingkat Risiko Rendah (0%–25%)*: Hijau (`emerald`), status `Aman (Risiko Rendah)`, tautan terverifikasi resmi dan bersih.
      * *🟡 Tingkat Risiko Sedang (26%–50%)*: Kuning (`amber`), status `Sedang / Perlu Waspada`, terindikasi domain bebas/murah atau klaim promosi namun bersih dari judi langsung.
@@ -57,8 +57,8 @@ Aswaja CyberShield dibangun dengan pendekatan **Recognize, Learn, & Act** yang m
 
 ```mermaid
 flowchart TD
-    User(["👤 Pengguna / Warga Siber"]) -->|"Input URL Mencurigakan"| UI["🌐 Frontend AI Tabayyun (tabayyun.blade.php)"]
-    UI -->|"POST /api/tabayyun/analyze (Teks URL Saja)"| Controller["🛡️ AiOrchestratorService"]
+    User(["Pengguna / Warga Siber"]) -->|"Input URL Mencurigakan"| UI["Frontend AI Tabayyun (tabayyun.blade.php)"]
+    UI -->|"POST /api/tabayyun/analyze (Teks URL Saja)"| Controller["AiOrchestratorService"]
 
     subgraph Layer1["Tahap 1: Validasi Struktur URL & SSRF Guard (UrlValidationService)"]
         Controller --> SSRF["Validasi Skema, Normalisasi & SSRF Guard"]
@@ -78,10 +78,10 @@ flowchart TD
     end
 
     subgraph Layer4["Tahap 4: Analisis Kognitif Google Gemini AI (GeminiService)"]
-        Controller --> Gemini["🤖 Google Gemini AI (gemini-1.5-flash)\n• Prompt Injection Protection\n• Analisis Semantik & Leetspeak\n• Evaluasi Kaidah Fiqih 4T"]
+        Controller --> Gemini["Google Gemini AI (gemini-3.5-flash-lite)\n• Prompt Injection Protection\n• Analisis Semantik & Leetspeak\n• Evaluasi Kaidah Fiqih 4T"]
     end
 
-    TierMatch --> RiskEngine["⚖️ Tahap 5: Sintesis Risiko Terbobot & Keputusan 2-State\n(35% Threat + 30% Suricata + 30% Gemini + 5% URL)"]
+    TierMatch --> RiskEngine["Tahap 5: Sintesis Risiko Terbobot & Keputusan 2-State\n(35% Threat + 30% Suricata + 30% Gemini + 5% URL)"]
     ThreatEngine --> RiskEngine
     SigRules --> RiskEngine
     Gemini --> RiskEngine
@@ -89,10 +89,10 @@ flowchart TD
     RiskEngine --> VerdictRed["🔴 Berbahaya (Tingkat Bahaya 0%–100%)\n(Badge Merah, Teknik Terdeteksi, 'Sangat Berbahaya' jika ≥85%)"]
     RiskEngine --> VerdictGreen["🟢 Aman (Tingkat Keamanan 0%–100%)\n(Badge Emerald, Rekomendasi Tabayyun)"]
 
-    VerdictRed --> History["🗄️ Tahap 6: Simpan Riwayat ke Database (link_scans)"]
+    VerdictRed --> History["Tahap 6: Simpan Riwayat ke Database (link_scans)"]
     VerdictGreen --> History
 
-    History --> ResponseUI["📊 Render Hasil ke Layar Pengguna & Tombol Salin/Lapor"]
+    History --> ResponseUI["Render Hasil ke Layar Pengguna & Tombol Salin/Lapor"]
 ```
 
 ---
@@ -138,7 +138,7 @@ DB_SSLMODE=require
 
 # AI Engine Utama (Google Gemini)
 GEMINI_API_KEY=your_gemini_api_key_here
-GEMINI_MODEL=gemini-1.5-flash
+GEMINI_MODEL=gemini-3.5-flash-lite
 GEMINI_TIMEOUT=30
 
 # Threat Intelligence & RDAP (Zero-Fetch)

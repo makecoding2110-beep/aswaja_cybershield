@@ -304,7 +304,7 @@
           <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1.5">
             <div class="flex items-center justify-between">
               <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">Google Gemini (Tabayyun Cepat)</span>
-              <span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 font-semibold font-mono">gemini-1.5-flash</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 font-semibold font-mono">gemini-3.5-flash-lite</span>
             </div>
             <div class="flex items-center justify-between gap-2">
               <span id="config-webhook-url" class="font-mono text-xs font-semibold text-slate-800 truncate">AIzaSy... (Gemini API)</span>
@@ -361,7 +361,7 @@
           </p>
           <div class="p-3.5 rounded-xl bg-slate-900 text-slate-200 font-mono text-xs overflow-x-auto space-y-1">
             <p><span class="text-emerald-400">GEMINI_API_KEY</span>=AIzaSy_your_gemini_key_here</p>
-            <p><span class="text-slate-400">GEMINI_MODEL</span>=gemini-1.5-flash</p>
+            <p><span class="text-slate-400">GEMINI_MODEL</span>=gemini-3.5-flash-lite</p>
           </div>
           <p class="text-[11px] text-slate-400 italic">
             *Catatan: Menggunakan Google Gemini AI sebagai mesin utama yang diintegrasikan dengan sensor Suricata IDS lokal.

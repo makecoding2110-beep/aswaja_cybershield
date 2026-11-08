@@ -27,7 +27,7 @@ flowchart TD
         EveLog --> LocalRules["Aturan Signature Khusus (infra/suricata/rules/aswaja-local.rules):\n• SID 1000101: Kata kunci judol pada URI\n• SID 1000102: Parameter open redirect ke URL eksternal\n• SID 1000103: Query DNS domain kata kunci judol"]
     end
 
-    ThreatBox --> Gemini["5. Kognitif AI: Google Gemini AI (gemini-1.5-flash) (Bobot 30%)\n• Menerima Bukti Awal dari Threat Analyzer & Suricata\n• Analisis Semantik & Penyamaran Leetspeak (sl0t, g4c0r)\n• Evaluasi Kaidah Fiqih Siber 4T\n• Keluaran JSON Terstruktur (techniques, indicators, confidence)"]
+    ThreatBox --> Gemini["5. Kognitif AI: Google Gemini AI (gemini-3.5-flash-lite) (Bobot 30%)\n• Menerima Bukti Awal dari Threat Analyzer & Suricata\n• Analisis Semantik & Penyamaran Leetspeak (sl0t, g4c0r)\n• Evaluasi Kaidah Fiqih Siber 4T\n• Keluaran JSON Terstruktur (techniques, indicators, confidence)"]
     SuricataBox --> Gemini
 
     Gemini --> RiskEngine["6. RiskAssessmentService & Synthesis\nKalkulasi Terbobot: 35% Threat + 30% Suricata + 30% Gemini + 5% URL"]
@@ -100,7 +100,7 @@ Menanggapi evolusi kejahatan siber di mana sindikat judol tidak lagi membuat dom
 ## 🤖 4. Integrasi Google Gemini AI (`GeminiService.php`)
 
 Google Gemini AI bertindak sebagai mesin kognitif semantik utama:
-- **Model:** `gemini-1.5-flash` (latensi ultra-rendah di bawah 1 detik).
+- **Model:** `gemini-3.5-flash-lite` (latensi ultra-rendah di bawah 1 detik).
 - **Prompt Injection Defense:** URL diperlakukan sebagai **data teks pasif murni**, bukan instruksi komputasi.
 - **Analisis Bukti Awal:** Menerima data temuan dari `UrlThreatAnalyzer` dan `Suricata NIDS` untuk diverifikasi secara semantik.
 - **Keluaran Terstruktur (JSON):**

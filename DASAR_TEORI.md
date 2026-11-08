@@ -107,7 +107,7 @@ flowchart LR
 
 ## 5. Teori Kognitif AI Semantik & Zero-Fetch URL Threat Analysis
 
-1. **Google Gemini AI (`gemini-1.5-flash`):**
+1. **Google Gemini AI (`gemini-3.5-flash-lite`):**
    - Unggul dalam **Analisis Semantik & Pragmatik Bahasa Indonesia**, memahami nuansa kalimat promosi persuasif, klaim keuntungan hiperbolis, penyamaran kata kunci (*leetspeak*: `sl0t`, `g4c0r`), serta pemetaan nilai etika Fiqih Siber 4T.
    - Menggunakan **Proteksi Prompt Injection**: Seluruh masukan teks URL diperlakukan murni sebagai string data pasif, bukan perintah komputasi yang dapat dieksekusi.
 2. **Prinsip Zero-Fetch:**

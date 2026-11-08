@@ -93,7 +93,7 @@ runTest("ScanHistoryService mencatat pemeriksaan lengkap dengan hasil engine ter
 
     $gemini = new AiAnalysisResultDTO(
         provider: 'gemini',
-        model: 'gemini-1.5-flash',
+        model: 'gemini-3.5-flash-lite',
         status: 'connected',
         category: 'judol',
         riskLevel: 'critical',
