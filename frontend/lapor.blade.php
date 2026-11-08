@@ -217,8 +217,8 @@
         <section id="form-lapor" data-scroll-focus="#lapor-target" aria-labelledby="form-lapor-title" class="ui-card shadow-md p-6 sm:p-8 space-y-6">
           <div class="flex items-center justify-between gap-3 pb-4 border-b ui-divider">
             <div>
-              <h2 id="form-lapor-title" class="font-display font-bold text-lg ui-heading">Formulir Aduan Insiden</h2>
-              <p class="text-xs ui-muted">Identitas pelapor dijamin aman dan terlindungi secara kriptografis.</p>
+              <h2 id="form-lapor-title" class="font-display font-bold text-lg ui-heading">Formulir Aduan</h2>
+              <p class="text-xs ui-muted">Identitas pelapor dijamin aman dan terlindungi</p>
             </div>
             <span class="ui-badge-soft shrink-0">
               <span class="material-symbols-outlined text-sm" aria-hidden="true">lock</span>
@@ -237,9 +237,6 @@
                   <div class="font-semibold text-xs sm:text-sm flex items-center gap-2">
                     <span>Kuota Pelaporan: <strong>Maksimal 2x / 2 Jam</strong></span>
                   </div>
-                  <p id="quota-desc-text" class="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
-                    Demi menjaga kualitas investigasi dan stabilitas server dari spam otomatis.
-                  </p>
                 </div>
               </div>
               <div class="flex items-center gap-2 self-start sm:self-auto shrink-0">
@@ -263,13 +260,13 @@
           <!-- novalidate: validasi ditangani JS agar error tampil lewat pop up/toast bertema -->
           <form id="form-lapor-siber" class="space-y-5" novalidate>
             <div>
-              <label for="lapor-nama" class="ui-label">Nama Pelapor (Opsional / Boleh Samaran):</label>
-              <input type="text" id="lapor-nama" name="nama" maxlength="100" autocomplete="off" placeholder="Hamba Allah / Muhammad / Anonim" class="ui-input">
+              <label for="lapor-nama" class="ui-label">Nama Pelapor (Opsional/Boleh Samaran):</label>
+              <input type="text" id="lapor-nama" name="nama" maxlength="100" autocomplete="off" placeholder="Hamba Allah / Anonim" class="ui-input">
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 stagger-children">
               <div>
-                <label for="lapor-kategori" class="ui-label">Kategori Insiden: <span class="ui-required" aria-hidden="true">*</span></label>
+                <label for="lapor-kategori" class="ui-label">Kategori Laporan: <span class="ui-required" aria-hidden="true">*</span></label>
                 <select id="lapor-kategori" name="kategori" required aria-required="true" class="ui-input">
                   <option value="">-- Pilih Kategori Laporan --</option>
                   <?php foreach ($kategoriList as $kat): ?>
