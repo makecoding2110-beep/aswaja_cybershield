@@ -3,6 +3,27 @@
  * Front Controller & Router
  */
 
+// 0. Storage Setup
+$appStorage = getenv('APP_STORAGE') ?: ($_ENV['APP_STORAGE'] ?? null);
+if ($appStorage) {
+    $requiredDirs = [
+        $appStorage,
+        $appStorage . '/app',
+        $appStorage . '/framework',
+        $appStorage . '/framework/cache',
+        $appStorage . '/framework/cache/data',
+        $appStorage . '/framework/sessions',
+        $appStorage . '/framework/views',
+        $appStorage . '/logs',
+        $appStorage . '/views',
+    ];
+    foreach ($requiredDirs as $dir) {
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0777, true);
+        }
+    }
+}
+
 $rawUri = $_SERVER['REQUEST_URI'] ?? '/';
 $requestUri = parse_url($rawUri, PHP_URL_PATH) ?: '/';
 

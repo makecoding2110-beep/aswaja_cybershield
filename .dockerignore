@@ -1,0 +1,12 @@
+# Docker Ignore
+.git
+.gitignore
+.system_generated
+*.log
+document
+aswajacyber.sql
+backend/.env
+backend/vendor
+backend/node_modules
+node_modules
+

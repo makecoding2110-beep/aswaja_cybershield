@@ -1,25 +1,3 @@
 {
-  "version": 2,
-  "framework": null,
-  "outputDirectory": ".",
-  "functions": {
-    "api/index.php": {
-      "runtime": "vercel-php@0.7.3",
-      "includeFiles": "backend/**,frontend/**,index.php,css/**,js/**,images/**,logo-shield.png,favicon.svg"
-    }
-  },
-  "routes": [
-    {
-      "src": "^/(css|js|images)/(.+)$",
-      "dest": "/$1/$2"
-    },
-    {
-      "src": "^/(logo-shield\\.png|favicon\\.svg)$",
-      "dest": "/$1"
-    },
-    {
-      "src": "^/(.*)$",
-      "dest": "/api/index.php"
-    }
-  ]
+  "framework": "container"
 }

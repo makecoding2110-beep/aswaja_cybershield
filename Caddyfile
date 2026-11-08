@@ -1,0 +1,26 @@
+# FrankenPHP Caddy Configuration
+{
+    frankenphp
+    auto_https off
+    admin off
+}
+
+:{$PORT:80} {
+    root * /app
+    encode zstd gzip
+
+    @static {
+        file
+        path /css/* /js/* /images/* /logo-shield.png /favicon.svg
+    }
+
+    handle @static {
+        file_server
+    }
+
+    handle {
+        rewrite * /index.php
+        php_server
+    }
+}
+
