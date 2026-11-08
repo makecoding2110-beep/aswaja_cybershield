@@ -364,75 +364,77 @@
   
 
   <!-- Modal Penjelasan 4 Alasan Batasan Kuota Pelaporan (Maksimal 2x / 2 Jam) -->
-  <div id="modal-quota-reasons" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-labelledby="modal-quota-title">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl space-y-5 animate-scale-up">
-      <div class="flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-2xl">policy</span>
+  <div id="modal-quota-reasons" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="modal-quota-title">
+    <div class="min-h-full flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl space-y-5 animate-scale-up">
+        <div class="flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-2xl">policy</span>
+            </div>
+            <div>
+              <h3 id="modal-quota-title" class="font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white">
+                Mengapa Pelaporan Dibatasi 2x / 2 Jam?
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Kebijakan ketahanan digital & integritas investigasi aduan.</p>
+            </div>
           </div>
-          <div>
-            <h3 id="modal-quota-title" class="font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white">
-              Mengapa Pelaporan Dibatasi 2x / 2 Jam?
-            </h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Kebijakan ketahanan digital & integritas investigasi aduan.</p>
-          </div>
-        </div>
-        <button type="button" id="btn-close-quota-modal" class="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer" aria-label="Tutup modal">
-          <span class="material-symbols-outlined text-xl">close</span>
-        </button>
-      </div>
-
-      <div class="space-y-3 text-xs sm:text-[13px] text-slate-600 dark:text-slate-300">
-        <!-- Poin 1 -->
-        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-start gap-3">
-          <span class="material-symbols-outlined text-lg text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">security</span>
-          <div>
-            <strong class="font-bold text-slate-900 dark:text-white block mb-0.5">1. Mencegah Serangan Spam dan DDoS</strong>
-            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Membatasi frekuensi kiriman (request) mencegah pihak tidak bertanggung jawab atau bot otomatis membanjiri server dengan ribuan laporan palsu dalam waktu singkat yang bisa membuat website menjadi lambat atau tumbang (down).
-            </p>
-          </div>
+          <button type="button" id="btn-close-quota-modal" class="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer" aria-label="Tutup modal">
+            <span class="material-symbols-outlined text-xl">close</span>
+          </button>
         </div>
 
-        <!-- Poin 2 -->
-        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-start gap-3">
-          <span class="material-symbols-outlined text-lg text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">checklist</span>
-          <div>
-            <strong class="font-bold text-slate-900 dark:text-white block mb-0.5">2. Efisiensi Validasi Tim Penyelidik</strong>
-            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Menghindari penumpukan laporan duplikat atau berulang-ulang untuk masalah yang sama. Hal ini membantu tim admin atau investigator fokus memproses laporan yang benar-benar valid dan unik.
-            </p>
+        <div class="space-y-3 text-xs sm:text-[13px] text-slate-600 dark:text-slate-300">
+          <!-- Poin 1 -->
+          <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-start gap-3">
+            <span class="material-symbols-outlined text-lg text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">security</span>
+            <div>
+              <strong class="font-bold text-slate-900 dark:text-white block mb-0.5">1. Mencegah Serangan Spam dan DDoS</strong>
+              <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                Membatasi frekuensi kiriman (request) mencegah pihak tidak bertanggung jawab atau bot otomatis membanjiri server dengan ribuan laporan palsu dalam waktu singkat yang bisa membuat website menjadi lambat atau tumbang (down).
+              </p>
+            </div>
+          </div>
+
+          <!-- Poin 2 -->
+          <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-start gap-3">
+            <span class="material-symbols-outlined text-lg text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">checklist</span>
+            <div>
+              <strong class="font-bold text-slate-900 dark:text-white block mb-0.5">2. Efisiensi Validasi Tim Penyelidik</strong>
+              <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                Menghindari penumpukan laporan duplikat atau berulang-ulang untuk masalah yang sama. Hal ini membantu tim admin atau investigator fokus memproses laporan yang benar-benar valid dan unik.
+              </p>
+            </div>
+          </div>
+
+          <!-- Poin 3 -->
+          <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-start gap-3">
+            <span class="material-symbols-outlined text-lg text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">cloud_done</span>
+            <div>
+              <strong class="font-bold text-slate-900 dark:text-white block mb-0.5">3. Optimalisasi Bandwidth dan Penyimpanan</strong>
+              <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                Menghemat ruang penyimpanan basis data (database) server dari data sampah atau spam yang tidak perlu.
+              </p>
+            </div>
+          </div>
+
+          <!-- Poin 4 -->
+          <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-start gap-3">
+            <span class="material-symbols-outlined text-lg text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">rate_review</span>
+            <div>
+              <strong class="font-bold text-slate-900 dark:text-white block mb-0.5">4. Mendorong Kualitas Laporan</strong>
+              <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                Memastikan pengguna lebih berhati-hati, detail, dan serius saat menyusun isi laporan mereka karena adanya keterbatasan kuota pengiriman.
+              </p>
+            </div>
           </div>
         </div>
 
-        <!-- Poin 3 -->
-        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-start gap-3">
-          <span class="material-symbols-outlined text-lg text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">cloud_done</span>
-          <div>
-            <strong class="font-bold text-slate-900 dark:text-white block mb-0.5">3. Optimalisasi Bandwidth dan Penyimpanan</strong>
-            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Menghemat ruang penyimpanan basis data (database) server dari data sampah atau spam yang tidak perlu.
-            </p>
-          </div>
+        <div class="pt-2 flex justify-end">
+          <button type="button" id="btn-dismiss-quota-modal" class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-emerald-600 hover:bg-emerald-700 text-white transition-colors shadow-sm cursor-pointer">
+            Saya Mengerti
+          </button>
         </div>
-
-        <!-- Poin 4 -->
-        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-start gap-3">
-          <span class="material-symbols-outlined text-lg text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">rate_review</span>
-          <div>
-            <strong class="font-bold text-slate-900 dark:text-white block mb-0.5">4. Mendorong Kualitas Laporan</strong>
-            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Memastikan pengguna lebih berhati-hati, detail, dan serius saat menyusun isi laporan mereka karena adanya keterbatasan kuota pengiriman.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="pt-2 flex justify-end">
-        <button type="button" id="btn-dismiss-quota-modal" class="px-5 py-2.5 rounded-xl font-semibold text-xs bg-emerald-600 hover:bg-emerald-700 text-white transition-colors shadow-sm cursor-pointer">
-          Saya Mengerti
-        </button>
       </div>
     </div>
   </div>
@@ -463,8 +465,8 @@
         <ul class="space-y-2 text-sm">
           <li><a href="index.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Beranda Utama</a></li>
           <li><a href="tabayyun.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Analisis Tautan Tabayyun</a></li>
-          <li><a href="etika.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Modul Etika &amp; Fiqih Siber</a></li>
-          <li><a href="cyber-guard.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Cyber Guard Test (Kuis)</a></li>
+          <li><a href="etika.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Etika Siber</a></li>
+          <li><a href="cyber-guard.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Cyber Guard</a></li>
         </ul>
       </div>
 
@@ -472,7 +474,7 @@
       <div class="md:col-span-3 space-y-3">
         <h4 class="font-display font-semibold text-sm text-white uppercase tracking-wider">Layanan</h4>
         <ul class="space-y-2 text-sm">
-          <li><a href="lapor.blade.php" class="text-rose-300 hover:text-white dark:text-rose-400 dark:hover:text-rose-300 transition-colors">Lapor</a></li>
+          <li><a href="lapor.blade.php" class="text-emerald-200/90 hover:text-white dark:text-slate-300 dark:hover:text-emerald-400 transition-colors">Lapor</a></li>
         </ul>
       </div>
 
