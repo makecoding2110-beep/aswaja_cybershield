@@ -102,9 +102,8 @@ class AuthController extends Controller
         // Login berhasil: reset counter lockout untuk akun ini
         $this->repository->clearLoginThrottle($throttleKey);
 
-        // Generate Sanctum-compatible bearer token
-        $token = 'aswaja_' . bin2hex(random_bytes(24));
-        $this->repository->storeToken($token, (int) $user['id']);
+        // Generate Stateless Signed Bearer Token (lintas instance serverless)
+        $token = $this->repository->createSignedToken((int) $user['id']);
 
         unset($user['password_hash']);
 
@@ -144,7 +143,7 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        $token = $request->bearerToken();
+        $token = $request->bearerToken() ?: (string) $request->header('X-Admin-Token', '');
         if ($token) {
             $this->repository->revokeToken($token);
         }

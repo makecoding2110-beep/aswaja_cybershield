@@ -82,7 +82,18 @@
   window.adminSessionTimeout = handleSessionTimeout;
 
   // 1. Verifikasi token aktif pada sesi saat halaman mulai dimuat
-  var activeToken = sessionStorage.getItem(AUTH_TOKEN_KEY);
+  var activeToken = null;
+  try {
+    activeToken = sessionStorage.getItem(AUTH_TOKEN_KEY) || localStorage.getItem(AUTH_TOKEN_KEY);
+    if (activeToken && !sessionStorage.getItem(AUTH_TOKEN_KEY)) {
+      sessionStorage.setItem(AUTH_TOKEN_KEY, activeToken);
+    }
+    var storedUser = localStorage.getItem(AUTH_USER_KEY);
+    if (storedUser && !sessionStorage.getItem(AUTH_USER_KEY)) {
+      sessionStorage.setItem(AUTH_USER_KEY, storedUser);
+    }
+  } catch (e) {}
+
   if (!activeToken) {
     redirectToLogin();
     return;
@@ -124,7 +135,10 @@
 
   // 5. Proteksi BFCache (Back/Forward Cache peramban):
   window.addEventListener('pageshow', function () {
-    var checkToken = sessionStorage.getItem(AUTH_TOKEN_KEY);
+    var checkToken = null;
+    try {
+      checkToken = sessionStorage.getItem(AUTH_TOKEN_KEY) || localStorage.getItem(AUTH_TOKEN_KEY);
+    } catch (e) {}
     if (!checkToken) {
       redirectToLogin();
       return;

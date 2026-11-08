@@ -348,7 +348,7 @@
           btnText.classList.remove('hidden');
           btnText.textContent = `TERKUNCI (${formatRemaining(remaining)})`;
 
-          showAlert(`Akun dikunci sementara untuk mencegah serangan Brute Force. Cooldown tersisa: ${formatRemaining(remaining)}`, 'danger');
+          showAlert(`Akun dikunci sementara. Cooldown tersisa: ${formatRemaining(remaining)}`, 'danger');
         }
 
         tick();
@@ -396,7 +396,6 @@
 
       // Helper redirect ke dashboard admin
       function redirectToDashboard() {
-        const isVercel = window.location.hostname.indexOf('vercel.app') !== -1;
         const loader = document.getElementById('page-loader');
         if (loader) {
           const bar = loader.querySelector('.loader-bar-fill');
@@ -405,7 +404,7 @@
           if (bar) bar.style.width = '75%';
           loader.classList.remove('loader-hide');
         }
-        window.location.replace((basePrefix || '') + (isVercel ? '/admin' : '/frontend/admin/index.blade.php'));
+        window.location.replace((basePrefix || '') + '/admin');
       }
 
       window.addEventListener('load', function() {
@@ -432,7 +431,9 @@
       }
 
       purgeSessionHistory();
-      window.addEventListener('pageshow', purgeSessionHistory);
+      window.addEventListener('pageshow', (e) => {
+        if (e.persisted) purgeSessionHistory();
+      });
 
       // Cek apakah halaman login dibuka karena Session Timeout (Inactivity Timeout 5 menit)
       const urlParams = new URLSearchParams(window.location.search);
@@ -498,9 +499,13 @@
           if (response.ok && data.success) {
             // Otentikasi Sukses: Bersihkan jejak lockout & catat waktu awal sesi
             clearThrottle();
-            sessionStorage.setItem('aswaja_admin_token', data.token || 'aswaja_session_' + Date.now());
-            sessionStorage.setItem('aswaja_admin_user', JSON.stringify(data.user || { name: 'Admin Utama', role: 'Super Admin' }));
+            const tokenVal = data.token || 'aswaja_session_' + Date.now();
+            const userVal = JSON.stringify(data.user || { name: 'Admin Utama', role: 'Super Admin' });
+            sessionStorage.setItem('aswaja_admin_token', tokenVal);
+            sessionStorage.setItem('aswaja_admin_user', userVal);
             sessionStorage.setItem('aswaja_admin_navigating', '1');
+            localStorage.setItem('aswaja_admin_token', tokenVal);
+            localStorage.setItem('aswaja_admin_user', userVal);
             localStorage.setItem('aswaja_admin_last_activity', String(Date.now()));
 
             btnSpinner.classList.add('hidden');
@@ -560,9 +565,13 @@
 
           if (isOfflineAdmin || isOfflineAnalis) {
             clearThrottle();
-            sessionStorage.setItem('aswaja_admin_token', 'offline_admin_token_' + Date.now());
-            sessionStorage.setItem('aswaja_admin_user', JSON.stringify(isOfflineAdmin ? { name: 'Admin Utama', username: 'admin', role: 'Super Admin' } : { name: 'Ahmad Fauzi (Analis)', username: 'analis', role: 'Admin Basic' }));
+            const offToken = 'offline_admin_token_' + Date.now();
+            const offUser = JSON.stringify(isOfflineAdmin ? { name: 'Admin Utama', username: 'admin', role: 'Super Admin' } : { name: 'Ahmad Fauzi (Analis)', username: 'analis', role: 'Admin Basic' });
+            sessionStorage.setItem('aswaja_admin_token', offToken);
+            sessionStorage.setItem('aswaja_admin_user', offUser);
             sessionStorage.setItem('aswaja_admin_navigating', '1');
+            localStorage.setItem('aswaja_admin_token', offToken);
+            localStorage.setItem('aswaja_admin_user', offUser);
             localStorage.setItem('aswaja_admin_last_activity', String(Date.now()));
             redirectToDashboard();
             return;

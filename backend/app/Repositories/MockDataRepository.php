@@ -147,6 +147,16 @@ class MockDataRepository
         return null;
     }
 
+    public function createSignedToken(int $userId): string
+    {
+        $issuedAt = time();
+        $secret = (string) (config('app.key') ?: env('APP_KEY', 'aswaja_cybershield_default_secret'));
+        $sig = hash_hmac('sha256', "{$userId}|{$issuedAt}", $secret);
+        $token = "aswaja_{$userId}_{$issuedAt}_{$sig}";
+        $this->storeToken($token, $userId);
+        return $token;
+    }
+
     public function storeToken(string $token, int $userId): void
     {
         $data = $this->getData();
@@ -160,6 +170,10 @@ class MockDataRepository
     public function getUserByToken(string $token): ?array
     {
         $data = $this->getData();
+        if (!empty($data['revoked_tokens'][$token])) {
+            return null;
+        }
+
         if (isset($data['tokens'][$token])) {
             $entry = $data['tokens'][$token];
             $userId = is_array($entry) ? (int) ($entry['user_id'] ?? 0) : (int) $entry;
@@ -180,6 +194,20 @@ class MockDataRepository
 
             return $this->findUserById($userId);
         }
+
+        // Verifikasi Stateless Signed Token (kompatibel lintas container Vercel)
+        if (preg_match('/^aswaja_(\d+)_(\d+)_([a-f0-9]{64})$/', $token, $matches)) {
+            $userId = (int) $matches[1];
+            $issuedAt = (int) $matches[2];
+            $sig = $matches[3];
+            $secret = (string) (config('app.key') ?: env('APP_KEY', 'aswaja_cybershield_default_secret'));
+            $expectedSig = hash_hmac('sha256', "{$userId}|{$issuedAt}", $secret);
+
+            if (hash_equals($expectedSig, $sig) && (time() - $issuedAt <= 86400)) {
+                return $this->findUserById($userId);
+            }
+        }
+
         return null;
     }
 
@@ -187,6 +215,7 @@ class MockDataRepository
     {
         $data = $this->getData();
         unset($data['tokens'][$token]);
+        $data['revoked_tokens'][$token] = time();
         $this->saveData($data);
     }
 

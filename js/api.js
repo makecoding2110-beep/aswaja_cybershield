@@ -18,34 +18,41 @@ const AUTH_USER_KEY = 'aswaja_admin_user';
  */
 const AuthService = {
   getToken() {
-    return sessionStorage.getItem(AUTH_TOKEN_KEY);
+    try {
+      return sessionStorage.getItem(AUTH_TOKEN_KEY) || localStorage.getItem(AUTH_TOKEN_KEY);
+    } catch {
+      return null;
+    }
   },
   setToken(token) {
-    if (token) {
-      sessionStorage.setItem(AUTH_TOKEN_KEY, token);
-    } else {
-      sessionStorage.removeItem(AUTH_TOKEN_KEY);
-    }
     try {
-      localStorage.removeItem(AUTH_TOKEN_KEY);
+      if (token) {
+        sessionStorage.setItem(AUTH_TOKEN_KEY, token);
+        localStorage.setItem(AUTH_TOKEN_KEY, token);
+      } else {
+        sessionStorage.removeItem(AUTH_TOKEN_KEY);
+        localStorage.removeItem(AUTH_TOKEN_KEY);
+      }
     } catch (e) {}
   },
   getUser() {
     try {
-      const u = sessionStorage.getItem(AUTH_USER_KEY);
+      const u = sessionStorage.getItem(AUTH_USER_KEY) || localStorage.getItem(AUTH_USER_KEY);
       return u ? JSON.parse(u) : null;
     } catch {
       return null;
     }
   },
   setUser(user) {
-    if (user) {
-      sessionStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
-    } else {
-      sessionStorage.removeItem(AUTH_USER_KEY);
-    }
     try {
-      localStorage.removeItem(AUTH_USER_KEY);
+      if (user) {
+        const serialized = JSON.stringify(user);
+        sessionStorage.setItem(AUTH_USER_KEY, serialized);
+        localStorage.setItem(AUTH_USER_KEY, serialized);
+      } else {
+        sessionStorage.removeItem(AUTH_USER_KEY);
+        localStorage.removeItem(AUTH_USER_KEY);
+      }
     } catch (e) {}
   },
   isAuthenticated() {
@@ -62,17 +69,10 @@ const AuthService = {
       sessionStorage.removeItem('aswaja_admin_navigating');
       localStorage.removeItem(AUTH_TOKEN_KEY);
       localStorage.removeItem(AUTH_USER_KEY);
+      localStorage.removeItem('aswaja_admin_last_activity');
     } catch (e) {}
 
-    // Deteksi base prefix URL agar kompatibel di lokal maupun domain
-    let loginUrl = 'login.blade.php';
-    try {
-      const p = window.location.pathname || '';
-      if (p.includes('/admin/')) {
-        loginUrl = p.includes('/frontend/admin/') ? '../admin/login.blade.php' : '/login';
-      }
-    } catch (e) {}
-    window.location.replace(loginUrl);
+    window.location.replace('/login');
   },
   confirmLogout() {
     if (window.AswajaUI && typeof window.AswajaUI.confirm === 'function') {
@@ -177,6 +177,7 @@ async function apiFetch(endpoint, options = {}) {
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
+    headers['X-Admin-Token'] = token;
   }
 
   try {
