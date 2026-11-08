@@ -9,7 +9,7 @@ Dokumen ini merupakan **satu-satunya rujukan terpadu untuk Database** pada platf
 
 - **Nama Database Bawaan Supabase Cloud:** **`postgres`**
 - **Nama Project di Dashboard Supabase:** **`aswaja_cyber_shield`** (Project ID: `tffadqzdhltroeuuckjw`, Region: `ap-southeast-1`)
-- **Host Koneksi Pooler IPv4 (Rekomendasi Indonesia):** **`aws-0-ap-southeast-1.pooler.supabase.com`** (Port: `5432`)
+- **Host Koneksi Pooler IPv4:**`aws-0-ap-southeast-1.pooler.supabase.com`** (Port: `587`)
 - **Skrip Master SQL Supabase / PostgreSQL:** [`aswajacyber.sql`](file:///d:/cybershield/aswajacyber.sql)
 - **Lokasi Migrasi Laravel:** [`backend/database/migrations/`](file:///d:/cybershield/backend/database/migrations/)
 - **Model-Model Eloquent:**
@@ -24,12 +24,12 @@ Dokumen ini merupakan **satu-satunya rujukan terpadu untuk Database** pada platf
 - **Repository Database-First:** [`backend/app/Repositories/MockDataRepository.php`](file:///d:/cybershield/backend/app/Repositories/MockDataRepository.php)
 - **Versi Runtime:** PHP 8.5.12 (ZTS Visual C++ 2022 x64 dengan ekstensi `pdo_pgsql`, `pgsql`, `pdo_sqlite`, `openssl`, `mbstring`, `curl`).
 
-> 💡 **Arsitektur Database-First & Live Data Sync:**  
+> **Arsitektur Database-First & Live Data Sync:**  
 > Sistem beroperasi dengan prioritas **Database-First** langsung ke Supabase PostgreSQL. Semua pembaruan data pengguna admin, laporan aduan masyarakat, studi kasus kuis, dan materi edukasi langsung tersinkronisasi mulus secara live antara antarmuka publik dan panel admin. Jika koneksi jaringan database sedang terputus, sistem secara cerdas beralih ke cache fallback tanpa pernah menimbulkan *fatal crash*.
 
 ---
 
-## 🏗️ 2. Diagram Relasi & Struktur Tabel (ERD)
+## 2. Diagram Relasi & Struktur Tabel (ERD)
 
 ```mermaid
 erDiagram
@@ -131,12 +131,12 @@ erDiagram
     }
 ```
 
-> 💡 **Efisiensi Skema:**  
+> **Efisiensi Skema:**  
 > Seluruh tabel pada Supabase PostgreSQL, berkas master SQL [`aswajacyber.sql`](file:///d:/cybershield/aswajacyber.sql), migration Laravel, model [`LinkScan.php`](file:///d:/cybershield/backend/app/Models/LinkScan.php), dan service [`ScanHistoryService.php`](file:///d:/cybershield/backend/app/Services/ScanHistoryService.php) telah bersih dan teroptimasi secara efisien.
 
 ---
 
-## 📋 3. Spesifikasi 8 Tabel Utama & DDL SQL
+## 3. Spesifikasi 8 Tabel Utama & DDL SQL
 
 ### A. Tabel `users` (Pengguna & Administrator)
 ```sql
@@ -282,7 +282,7 @@ CREATE TABLE public.personal_access_tokens (
 
 ---
 
-## ⚙️ 4. Konfigurasi Koneksi `.env` Supabase (IPv4 Pooler)
+## 4. Konfigurasi Koneksi `.env` Supabase (IPv4 Pooler)
 
 Karena host direct Supabase (`db.<ref>.supabase.co`) hanya meresolusi alamat IPv6, pada jaringan internet di Indonesia yang belum mendukung rute IPv6 penuh, koneksi diarahkan menggunakan **Supabase Session Pooler IPv4**:
 
@@ -303,14 +303,14 @@ php backend/test_db_connection.php
 
 Output terverifikasi:
 ```text
-✅ KONEKSI BERHASIL TERSAMBUNG KE SUPABASE!
+KONEKSI BERHASIL TERSAMBUNG KE SUPABASE!
 Informasi Server: PostgreSQL 17.11 on aarch64-unknown-linux-gnu
 Jumlah Tabel di Skema Public: 9 tabel (migrations, users, link_scans, reports, articles, case_studies, prinsip_4t, activities, personal_access_tokens).
 ```
 
 ---
 
-## 🔄 5. Sinkronisasi Data Live: Publik vs Panel Admin
+## 5. Sinkronisasi Data Live: Publik vs Panel Admin
 
 Platform menerapkan asas transparansi dan integritas data penuh:
 1. **Laporan Publik (`frontend/lapor.blade.php`):** Mengambil data rekapitulasi pelaporan publik dari endpoint `GET /api/reports` yang terhubung langsung ke tabel `reports` Supabase.
@@ -322,7 +322,7 @@ Platform menerapkan asas transparansi dan integritas data penuh:
 
 ---
 
-## 🛡️ 6. Fungsi Strategis Penyimpanan Data Tautan (`link_scans` & `reports`)
+## 6. Fungsi Strategis Penyimpanan Data Tautan (`link_scans` & `reports`)
 
 Penyimpanan riwayat pemeriksaan tautan ke dalam basis data PostgreSQL Supabase (tabel `link_scans` dan `reports`) memiliki **5 fungsi utama**:
 
