@@ -44,9 +44,9 @@ Aswaja CyberShield dibangun dengan pendekatan **Recognize, Learn, & Act** yang m
 
 ### B. Fitur Panel Admin (`/login` & `/admin`)
 1. **Gerbang Login Admin (`/login`)**: Bebas riwayat input (`autocomplete="off"`), dilengkapi proteksi *Inactivity Timeout* (5 menit) dan kebijakan penundaan login bertingkat (*Account Lockout Throttling*).
-2. **Dashboard KPI & Monitoring Interaktif (`/admin`)**: Metrik utama (Jumlah Artikel, Laporan Masuk, Akun Pengelola, Studi Kasus) yang terhubung langsung ke modul terkait, progress breakdown clickable, dan tabel aduan terkini dengan modal pratinjau cepat per baris.
-3. **Manajemen Konten & Editor Kaidah 4T (`/admin/artikel`)**: CRUD artikel berbasis 3 rumpun kategori judol (Umum, IT, dan Agama), didukung *Zero-Latency Instant Fallback Rendering* serta tombol aksi ganda (*Edit Kaidah* & *Edit Artikel*) pada kartu pilar 4T (*Tawaqquf, Tastabbus, Tatsabbut, Ta'aqqul*).
-4. **Riwayat, Triase, & Penugasan Laporan (`/admin/laporan`)**: Triase aduan masyarakat, pengubahan status laporan, pencatatan rekomendasi blokir, dan dropdown penugasan staf penangan (*Admin Penangani*) yang sinkron dengan basis data Supabase.
+2. **Dashboard (`/admin`)**: Metrik utama (Jumlah Artikel, Laporan Masuk, Akun Pengelola, Studi Kasus) yang terhubung langsung ke modul terkait, progress breakdown clickable, dan tabel aduan terkini dengan modal pratinjau cepat per baris.
+3. **Manajemen Konten (`/admin/artikel`)**: CRUD artikel berbasis 3 rumpun kategori judol (Umum, IT, dan Agama), didukung *Zero-Latency Instant Fallback Rendering* serta tombol aksi ganda (*Edit Kaidah* & *Edit Artikel*) pada kartu pilar 4T (*Tawaqquf, Tastabbus, Tatsabbut, Ta'aqqul*).
+4. **Riwayat & Penugasan Laporan (`/admin/laporan`)**: aduan masyarakat, pengubahan status laporan, pencatatan rekomendasi blokir, dan dropdown penugasan staf penangan (*Admin Penangani*) yang sinkron dengan basis data Supabase.
 5. **Manajemen Studi Kasus Cyber Guard (`/admin/studi-kasus`)**: CRUD skenario kuis, pilihan jawaban A–D, kunci jawaban, dan narasi pembahasan fiqih siber.
 6. **Manajemen Akun Berbasis Peran (`/admin/akun`)**: Pengelolaan akun staf (Super Admin vs Admin Basic), toggle visibilitas kata sandi, dan filter matriks peran instan. Berada di posisi paling bawah pada menu sidebar navigasi.
 7. **Arsitektur Sidebar Modern & Absolute Routing**: Navigasi sidebar bersih dengan urutan logis (Dashboard $\to$ Artikel $\to$ Laporan $\to$ Studi Kasus $\to$ Kelola Akun), rute absolut terproteksi redirect otomatis dari `index.php`, dan dialog konfirmasi logout yang aman.
