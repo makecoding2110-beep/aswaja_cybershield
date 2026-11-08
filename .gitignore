@@ -4,7 +4,7 @@ Thumbs.db
 # Gemini & Agent Artifacts
 .system_generated/
 *.log
-dist/
+# dist/
 document/
 # Backend secrets
 backend/.env
