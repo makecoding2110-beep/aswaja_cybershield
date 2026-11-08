@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <script src="../../js/admin-guard.js"></script>
+  <script src="../../js/admin-guard.js?v=20261109v2"></script>
   <title>Dashboard Admin - Aswaja CyberShield</title>
   <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 
@@ -509,8 +509,8 @@
   </div>
 
   <!-- API Layer & Scripts -->
-  <script src="../../js/api.js"></script>
-  <script src="../../js/ui-kit.js"></script>
+  <script src="../../js/api.js?v=20261109v2"></script>
+  <script src="../../js/ui-kit.js?v=20261109v2"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // 1. Auth Guard

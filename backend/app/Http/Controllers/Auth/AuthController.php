@@ -143,7 +143,10 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        $token = $request->bearerToken() ?: (string) $request->header('X-Admin-Token', '');
+        $token = $request->bearerToken()
+            ?: (string) $request->header('X-Admin-Token', '')
+            ?: (string) $request->query('_token', '')
+            ?: (string) $request->input('_token', '');
         if ($token) {
             $this->repository->revokeToken($token);
         }

@@ -237,7 +237,7 @@
   </div>
 
   <!-- API Layer -->
-  <script src="../../js/api.js"></script>
+  <script src="../../js/api.js?v=20261109v2"></script>
 
   <!-- Login Logic Script -->
   <script>
@@ -395,7 +395,7 @@
       }
 
       // Helper redirect ke dashboard admin
-      function redirectToDashboard() {
+      function redirectToDashboard(tokenParam) {
         const loader = document.getElementById('page-loader');
         if (loader) {
           const bar = loader.querySelector('.loader-bar-fill');
@@ -404,7 +404,9 @@
           if (bar) bar.style.width = '75%';
           loader.classList.remove('loader-hide');
         }
-        window.location.replace((basePrefix || '') + '/admin');
+        const activeToken = tokenParam || localStorage.getItem('aswaja_admin_token') || sessionStorage.getItem('aswaja_admin_token') || '';
+        const querySuffix = activeToken ? `?_auth_token=${encodeURIComponent(activeToken)}` : '';
+        window.location.replace((basePrefix || '') + '/admin' + querySuffix);
       }
 
       window.addEventListener('load', function() {
@@ -501,12 +503,14 @@
             clearThrottle();
             const tokenVal = data.token || 'aswaja_session_' + Date.now();
             const userVal = JSON.stringify(data.user || { name: 'Admin Utama', role: 'Super Admin' });
-            sessionStorage.setItem('aswaja_admin_token', tokenVal);
-            sessionStorage.setItem('aswaja_admin_user', userVal);
-            sessionStorage.setItem('aswaja_admin_navigating', '1');
-            localStorage.setItem('aswaja_admin_token', tokenVal);
-            localStorage.setItem('aswaja_admin_user', userVal);
-            localStorage.setItem('aswaja_admin_last_activity', String(Date.now()));
+            try {
+              sessionStorage.setItem('aswaja_admin_token', tokenVal);
+              sessionStorage.setItem('aswaja_admin_user', userVal);
+              sessionStorage.setItem('aswaja_admin_navigating', '1');
+              localStorage.setItem('aswaja_admin_token', tokenVal);
+              localStorage.setItem('aswaja_admin_user', userVal);
+              localStorage.setItem('aswaja_admin_last_activity', String(Date.now()));
+            } catch (e) {}
 
             btnSpinner.classList.add('hidden');
             btnIcon.className = 'bi bi-check-circle-fill text-sm';
@@ -517,7 +521,7 @@
             btnSubmit.classList.add('bg-emerald-600');
 
             setTimeout(() => {
-              redirectToDashboard();
+              redirectToDashboard(tokenVal);
             }, 300);
             return;
           }
@@ -567,13 +571,15 @@
             clearThrottle();
             const offToken = 'offline_admin_token_' + Date.now();
             const offUser = JSON.stringify(isOfflineAdmin ? { name: 'Admin Utama', username: 'admin', role: 'Super Admin' } : { name: 'Ahmad Fauzi (Analis)', username: 'analis', role: 'Admin Basic' });
-            sessionStorage.setItem('aswaja_admin_token', offToken);
-            sessionStorage.setItem('aswaja_admin_user', offUser);
-            sessionStorage.setItem('aswaja_admin_navigating', '1');
-            localStorage.setItem('aswaja_admin_token', offToken);
-            localStorage.setItem('aswaja_admin_user', offUser);
-            localStorage.setItem('aswaja_admin_last_activity', String(Date.now()));
-            redirectToDashboard();
+            try {
+              sessionStorage.setItem('aswaja_admin_token', offToken);
+              sessionStorage.setItem('aswaja_admin_user', offUser);
+              sessionStorage.setItem('aswaja_admin_navigating', '1');
+              localStorage.setItem('aswaja_admin_token', offToken);
+              localStorage.setItem('aswaja_admin_user', offUser);
+              localStorage.setItem('aswaja_admin_last_activity', String(Date.now()));
+            } catch (e) {}
+            redirectToDashboard(offToken);
             return;
           }
 

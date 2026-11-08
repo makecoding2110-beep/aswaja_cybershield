@@ -19,7 +19,14 @@ const AUTH_USER_KEY = 'aswaja_admin_user';
 const AuthService = {
   getToken() {
     try {
-      return sessionStorage.getItem(AUTH_TOKEN_KEY) || localStorage.getItem(AUTH_TOKEN_KEY);
+      const stored = sessionStorage.getItem(AUTH_TOKEN_KEY) || localStorage.getItem(AUTH_TOKEN_KEY);
+      if (stored) return stored;
+      const urlToken = new URLSearchParams(window.location.search || '').get('_auth_token');
+      if (urlToken) {
+        this.setToken(urlToken);
+        return urlToken;
+      }
+      return null;
     } catch {
       return null;
     }
@@ -160,7 +167,7 @@ function buildHttpError(res, data, fallbackMessage) {
 }
 
 async function apiFetch(endpoint, options = {}) {
-  const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
+  let url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
   const token = AuthService.getToken();
 
   const headers = {
@@ -178,6 +185,8 @@ async function apiFetch(endpoint, options = {}) {
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
     headers['X-Admin-Token'] = token;
+    const sep = url.includes('?') ? '&' : '?';
+    url = `${url}${sep}_token=${encodeURIComponent(token)}`;
   }
 
   try {
@@ -186,14 +195,11 @@ async function apiFetch(endpoint, options = {}) {
       headers
     });
 
-    // Handle Unauthorized / Session Expired
+    // Handle Unauthorized (401) tanpa memaksa logout sesi aktif di browser
     if (res.status === 401) {
-      console.warn('[API] Sesi berakhir atau tidak diotorisasi (401).');
-      if (window.location.pathname.startsWith('/admin') && !window.location.pathname.includes('/login')) {
-        AuthService.logout();
-      }
+      console.warn('[API] Respons 401 diterima pada endpoint:', endpoint);
       const errorData = await res.json().catch(() => ({}));
-      throw buildHttpError(res, errorData, 'Sesi telah berakhir, silakan login kembali.');
+      throw buildHttpError(res, errorData, 'Tidak diotorisasi untuk mengakses sumber daya ini.');
     }
 
     // Handle Forbidden (403)

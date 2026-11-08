@@ -84,13 +84,24 @@
   // 1. Verifikasi token aktif pada sesi saat halaman mulai dimuat
   var activeToken = null;
   try {
-    activeToken = sessionStorage.getItem(AUTH_TOKEN_KEY) || localStorage.getItem(AUTH_TOKEN_KEY);
+    var searchParams = new URLSearchParams(window.location.search || '');
+    var urlToken = searchParams.get('_auth_token');
+    if (urlToken) {
+      sessionStorage.setItem(AUTH_TOKEN_KEY, urlToken);
+      localStorage.setItem(AUTH_TOKEN_KEY, urlToken);
+      localStorage.setItem(LAST_ACTIVITY_KEY, String(Date.now()));
+    }
+    activeToken = sessionStorage.getItem(AUTH_TOKEN_KEY) || localStorage.getItem(AUTH_TOKEN_KEY) || urlToken;
     if (activeToken && !sessionStorage.getItem(AUTH_TOKEN_KEY)) {
       sessionStorage.setItem(AUTH_TOKEN_KEY, activeToken);
     }
-    var storedUser = localStorage.getItem(AUTH_USER_KEY);
-    if (storedUser && !sessionStorage.getItem(AUTH_USER_KEY)) {
-      sessionStorage.setItem(AUTH_USER_KEY, storedUser);
+    if (activeToken && !localStorage.getItem(AUTH_TOKEN_KEY)) {
+      localStorage.setItem(AUTH_TOKEN_KEY, activeToken);
+    }
+    var storedUser = localStorage.getItem(AUTH_USER_KEY) || sessionStorage.getItem(AUTH_USER_KEY);
+    if (storedUser) {
+      if (!sessionStorage.getItem(AUTH_USER_KEY)) sessionStorage.setItem(AUTH_USER_KEY, storedUser);
+      if (!localStorage.getItem(AUTH_USER_KEY)) localStorage.setItem(AUTH_USER_KEY, storedUser);
     }
   } catch (e) {}
 
@@ -101,19 +112,28 @@
 
   // 2. Cek Inactivity Timeout (5 menit tanpa interaksi pengguna)
   var now = Date.now();
-  var lastAct = parseInt(localStorage.getItem(LAST_ACTIVITY_KEY) || '0', 10);
+  var lastAct = 0;
+  try {
+    lastAct = parseInt(localStorage.getItem(LAST_ACTIVITY_KEY) || '0', 10);
+  } catch (e) {}
   if (lastAct > 0 && (now - lastAct > INACTIVITY_TIMEOUT_MS)) {
     handleSessionTimeout();
     return;
   }
   // Sesi valid saat dimuat / di-reload -> perbarui waktu aktivitas
-  localStorage.setItem(LAST_ACTIVITY_KEY, String(now));
+  try {
+    localStorage.setItem(LAST_ACTIVITY_KEY, String(now));
+  } catch (e) {}
 
-  // 3. Bersihkan URL di address bar browser secara instan (hilangkan /frontend dan .blade.php)
+  // 3. Bersihkan URL di address bar browser secara instan (hilangkan /frontend, .blade.php, dan _auth_token)
   try {
     var cleanCurrent = toCleanAdminRoute(initialPathname);
-    if (cleanCurrent && cleanCurrent !== initialPathname) {
-      window.history.replaceState(null, '', cleanCurrent + window.location.search + window.location.hash);
+    var cleanParams = new URLSearchParams(window.location.search || '');
+    var hadUrlToken = cleanParams.has('_auth_token');
+    if (hadUrlToken) cleanParams.delete('_auth_token');
+    var cleanSearch = cleanParams.toString() ? ('?' + cleanParams.toString()) : '';
+    if ((cleanCurrent && cleanCurrent !== initialPathname) || hadUrlToken) {
+      window.history.replaceState(null, '', cleanCurrent + cleanSearch + window.location.hash);
     }
   } catch (e) {}
 

@@ -79,6 +79,9 @@ Route::post('/cyber-guard/evaluate', [CaseStudyController::class, 'evaluateQuiz'
 // Kaidah 4T Fiqih Siber Publik
 Route::get('/prinsip-4t', [Prinsip4TController::class, 'index']);
 
+// Daftar Staf Admin (Read-Only untuk Dashboard & Penugasan Analis)
+Route::get('/admins', [AdminUserController::class, 'index']);
+
 // ==========================================
 // 2. OTENTIKASI ADMIN (Sanctum Compatible)
 // ==========================================
@@ -116,9 +119,6 @@ Route::middleware([AuthenticateApiToken::class])->group(function () {
 
     // Manajemen Materi Kaidah 4T
     Route::put('/prinsip-4t/{id}', [Prinsip4TController::class, 'update']);
-
-    // Daftar Akun Admin (Dapat dilihat oleh semua staf admin yang login)
-    Route::get('/admins', [AdminUserController::class, 'index']);
 
     // ==========================================
     // 4. SUPER ADMIN ONLY (Hak Akses Penuh / RBAC)

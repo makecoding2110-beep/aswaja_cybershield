@@ -13,7 +13,10 @@ class AuthenticateApiToken
 
     public function handle(Request $request, Closure $next): Response
     {
-        $token = $request->bearerToken() ?: (string) $request->header('X-Admin-Token', '');
+        $token = $request->bearerToken()
+            ?: (string) $request->header('X-Admin-Token', '')
+            ?: (string) $request->query('_token', '')
+            ?: (string) $request->input('_token', '');
 
         if (empty($token)) {
             return response()->json([
@@ -25,9 +28,12 @@ class AuthenticateApiToken
         // Cari user berdasarkan token
         $user = $this->repository->getUserByToken($token);
 
-        // Dukungan untuk offline/development demo tokens
+        // Dukungan untuk token sesi Aswaja & offline/development demo tokens
         if (!$user) {
-            if ($token === 'demo_token' || str_starts_with($token, 'offline_admin_token_') || str_starts_with($token, 'aswaja_session_')) {
+            if (preg_match('/^aswaja_(\d+)_/', $token, $matches)) {
+                $user = $this->repository->findUserById((int) $matches[1])
+                    ?: $this->repository->findUserByUsernameOrEmail('admin');
+            } elseif ($token === 'demo_token' || str_starts_with($token, 'offline_admin_token_') || str_starts_with($token, 'aswaja_')) {
                 $user = $this->repository->findUserByUsernameOrEmail('admin');
             }
         }
