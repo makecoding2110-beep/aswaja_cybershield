@@ -101,28 +101,91 @@ Menanggapi evolusi kejahatan siber di mana sindikat judol tidak lagi membuat dom
 
 Google Gemini AI bertindak sebagai mesin kognitif semantik utama:
 - **Model:** `gemini-3.5-flash-lite` (latensi ultra-rendah di bawah 1 detik).
-- **Prompt Injection Defense:** URL diperlakukan sebagai **data teks pasif murni**, bukan instruksi komputasi.
-- **Analisis Bukti Awal:** Menerima data temuan dari `UrlThreatAnalyzer` dan `Suricata NIDS` untuk diverifikasi secara semantik.
-- **Dukungan Fiqih 4T Siber:** Memverifikasi kesesuaian prinsip Tawaqquf, Tastabbus, Tatsabbut, dan Ta'aqqul dalam muatan penawaran.
-- **Keluaran Terstruktur (JSON):**
-  ```json
-  {
-    "category": "judol",
-    "risk_level": "critical",
-    "risk_score": 92,
-    "techniques": ["web_defacement", "open_redirect"],
-    "indicators": [
-      {
-        "name": "defacement_path",
-        "evidence": "/wp-content/uploads/slot-gacor/",
-        "severity": "critical",
-        "explanation": "Penyusupan direktori upload CMS dengan konten judol."
-      }
-    ],
-    "reasoning": "Ditemukan indikasi kuat penyusupan halaman slot pada domain institusi pemerintah.",
-    "confidence": 0.95
-  }
-  ```
+- **Prompt Injection Defense:** URL diperlakukan sebagai **data teks pasif murni**, bukan instruksi komputasi yang dapat dieksekusi.
+- **Zero Remote Execution (Keamanan Tinggi):** Sistem tidak menyuruh Gemini untuk menjelajahi (*browse*) atau mengeksekusi tautan target di internet secara sembarangan, demi mencegah risiko infeksi malware, eksekusi kode berbahaya jarak jauh, maupun pelacakan IP server oleh sindikat.
+
+### 4.1. Dari Mana Gemini Mengambil Sumber Datanya? (*Data Sourcing Mechanism*)
+
+Gemini tidak mencari data mentah sendiri ke internet, melainkan mengkorelasikan **3 lapis sumber data terpadu** yang disuplai oleh arsitektur platform:
+
+```
+[ Pengguna Memasukkan URL ]
+            │
+            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 1. LAYER BUKTI FORENSIK TEKNIS (UrlThreatAnalyzer & Suricata)│
+│    - Struktur URL: Domain, TLD, Subpath, Parameter Query    │
+│    - Indikasi 4 Modus: Defacement, Hijacking, Redirect, dll.│
+│    - Sinyal TrustPositif Komdigi & Signature NIDS           │
+└─────────────────────────────┬───────────────────────────────┘
+                              │
+                              ▼  (Dikemas dalam JSON $technicalContext)
+┌─────────────────────────────────────────────────────────────┐
+│ 2. GOOGLE GEMINI AI ENGINE (GeminiService.php)              │
+│    Mengolah & menghubungkan 3 Lapis Sumber:                 │
+│    a. Data Forensik Nyata (Hasil Ekstraksi Layer 1)         │
+│    b. System Prompt Pakar (Kamus Kata Kunci & Aturan Fiqih) │
+│    c. Pre-trained Knowledge (Kamus Slang & Logika Muamalah) │
+└─────────────────────────────┬───────────────────────────────┘
+                              │
+                              ▼
+[ Output Terstruktur: Kategori, Skor Risiko, & Justifikasi Fiqih 4T ]
+```
+
+1. **Lapis 1: Bukti Forensik Lokal Nyata (`$technicalContext`):**
+   Sebelum request dikirim ke Google API, sistem lokal (`UrlThreatAnalyzer.php` dan `SuricataIntegrationService.php`) membedah URL secara terisolasi:
+   - Ekstraksi domain, ekstensi TLD (.go.id, .vip, .xyz), subpath direktori (seperti `/wp-content/uploads/slot/`), dan parameter query (`?url=`, `?dest=`, `?deposit=`).
+   - Deteksi 4 modus manipulasi tautan (Web Defacement, Subdomain Hijacking, Open Redirect, Typosquatting).
+   - Status pemblokiran pada database DNS TrustPositif Komdigi RI serta *signature alert* NIDS Suricata.
+   Seluruh temuan faktual ini diserahkan ke Gemini sebagai data bukti awal (*initial evidence*).
+
+2. **Lapis 2: Pedoman Pakar & Kamus Domain (`System Prompt` di `GeminiService.php`):**
+   Sistem menyuntikkan instruksi khusus sebagai "aturan berpikir" bagi Gemini:
+   - **Kamus Kata Kunci 3 Tingkat:**
+     - *Tingkat Kuat:* `slot gacor`, `maxwin`, `casino online`, `bandar togel`, `depo slot`.
+     - *Tingkat Menengah:* `jackpot`, `scatter`, `free spin`, `rtp live`.
+     - *Tingkat Kontekstual:* `zeus`, `olympus`, `mahjong` (harus dicek hati-hati agar tidak salah memvonis situs sejarah/game wajar).
+   - **Aturan Pengecualian Institusi:** Membedakan dengan tegas antara domain institusi resmi yang disusupi (*defacement*) dengan domain sindikat murni (*kamuflase investasi*).
+
+3. **Lapis 3: Pengetahuan Semantik Bawaan (*Pre-trained Knowledge Base* Gemini):**
+   Sebagai LLM mutakhir, Gemini memiliki pemahaman bahasa yang luas mengenai:
+   - **Bahasa Gaul & Slang Sindikat Indonesia:** Memahami istilah bujukan cuan di media sosial (*"titip dana cair 5 juta"*, *"arisan amanah"*, *"robot trading auto-cuan"*).
+   - **Logika Fiqih Muamalah Syariah:** Memahami batasan akad perniagaan yang sah (*al-bai'*) vs penipuan (*al-gharar*) dan perjudian (*al-maysir*).
+
+---
+
+### 4.2. Penjelasan Konkret: Apa Maksud "Memverifikasi Kesesuaian Prinsip 4T dalam Muatan Penawaran"?
+
+Maksudnya adalah: Gemini mengevaluasi bujukan atau teks penawaran yang ada pada tautan menggunakan **standar etika dan hukum Fiqih Siber (Kaidah 4T Aswaja)**:
+
+| Kaidah 4T | Konsep Fiqih | Yang Diverifikasi oleh Gemini pada Muatan Penawaran | Indikasi Pelanggaran yang Dideteksi |
+| :--- | :--- | :--- | :--- |
+| **1. Tawaqquf** <br>*(Menahan Diri)* | Mengambil jeda reflektif dan tidak tergesa-gesa mengikuti bujukan emosional. | **Apakah penawaran memakai manipulasi psikologis / urgensi palsu (*FOMO*)?** Penawaran wajar tidak memaksa calon pengguna bertindak impulsif. | Iming-iming: *"Daftar 5 menit lagi modal berlipat 10x"*, *"Pola room hari ini pasti maxwin"*, *"Slot khusus pagi ini jangan sampai kehabisan"*. |
+| **2. Tastabbus** <br>*(Meneliti Sanad/Fakta)* | Melacak silsilah sumber (*sanad*), legalitas hukum, dan rekam jejak fakta digital. | **Apakah sanad domain, izin regulator OJK/Bappebti, dan alur transaksinya jelas?** Memastikan transparansi identitas penyedia penawaran. | Mengaku *"investasi legal OJK"*, namun domain disamarkan di TLD murah, rekening deposit memakai akun perseorangan atau bot e-wallet yang tidak berizin. |
+| **3. Tatsabbut** <br>*(Konfirmasi Fiqih/Otoritas)* | Memastikan substansi akad bebas dari unsur judi (*maysir*) dan ketidakjelasan (*gharar*). | **Apakah model bisnis penawaran halal secara muamalah atau murni taruhan untung-untungan?** Memastikan tidak ada pengorbanan uang sesama pengguna. | Penawaran berkedok *"game simulasi profit"* atau *"trading kilat"*, padahal alur transaksinya mengarah ke deposit mesin slot judi online (*zero-sum game*). |
+| **4. Ta'aqqul** <br>*(Menimbang Maslahat)* | Menimbang dampak maslahat (manfaat) dan mudharat (kerusakan) sebelum menyebarkan informasi. | **Apa dampak akhir jika tautan ini disebarkan ke keluarga/masyarakat?** Menilai risiko sosial dan potensi kehancuran ekonomi korban. | Menggunakan skema berantai (*referral/member-get-member*) yang berujung pada kecanduan judi, jeratan pinjol ilegal, dan keretakan ekonomi keluarga. |
+
+### 4.3. Format Keluaran Terstruktur (JSON)
+
+Gemini memformulasikan seluruh hasil analisis teknis dan evaluasi 4T ke dalam format JSON standar industri:
+```json
+{
+  "category": "judol",
+  "risk_level": "critical",
+  "risk_score": 92,
+  "techniques": ["web_defacement", "open_redirect"],
+  "indicators": [
+    {
+      "name": "defacement_path",
+      "evidence": "/wp-content/uploads/slot-gacor/",
+      "severity": "critical",
+      "explanation": "Penyusupan direktori upload CMS dengan konten judol."
+    }
+  ],
+  "reasoning": "Ditemukan indikasi kuat penyusupan halaman slot pada domain institusi pemerintah. Melanggar prinsip Tastabbus (sanad tidak sah) dan Tatsabbut (mengandung maysir).",
+  "confidence": 0.95
+}
+```
 
 ---
 

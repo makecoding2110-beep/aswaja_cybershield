@@ -108,11 +108,20 @@ flowchart LR
 ## 5. Teori Kognitif AI Semantik & Zero-Fetch URL Threat Analysis
 
 1. **Google Gemini AI (`gemini-3.5-flash-lite`):**
-   - Unggul dalam **Analisis Semantik & Pragmatik Bahasa Indonesia**, memahami nuansa kalimat promosi persuasif, klaim keuntungan hiperbolis, penyamaran kata kunci (*leetspeak*: `sl0t`, `g4c0r`), serta pemetaan nilai etika Fiqih Siber 4T.
-   - Menggunakan **Proteksi Prompt Injection**: Seluruh masukan teks URL diperlakukan murni sebagai string data pasif, bukan perintah komputasi yang dapat dieksekusi.
+   - **Mekanisme Ingesti Data (3 Lapis Sumber):** Gemini tidak melakukan *web crawling* atau penjelajahan bebas ke situs target secara sembarangan (*Zero Remote Execution*), melainkan memproses:
+     1. *Data Bukti Forensik Nyata:* Hasil ekstraksi struktur URL, domain, TLD, subpath direktori, deteksi 4 modus manipulasi, dan alert NIDS Suricata dari Layer 1.
+     2. *System Prompt Berbasis Pakar:* Pedoman klasifikasi kata kunci 3 tingkat (Kuat, Menengah, Kontekstual) dan instruksi kepatuhan etika fiqih.
+     3. *Pre-trained Semantic Knowledge:* Pengetahuan mendalam LLM mengenai bahasa gaul/slang promosi judol di Indonesia (*gacor, scatter, maxwin, titip dana*) dan logika Fiqih Muamalah (*maysir, gharar, riba*).
+   - **Evaluasi Muatan Penawaran Berbasis Kaidah 4T:**
+     - *Tawaqquf:* Menguji ada/tidaknya manipulasi psikologis dan urgensi palsu (*FOMO*).
+     - *Tastabbus:* Memverifikasi kejelasan *sanad digital*, legalitas regulator, dan penyamaran kedok transaksi.
+     - *Tatsabbut:* Mengonfirmasi keabsahan akad agar bebas dari unsur judi (*maysir*) dan spekulasi penipuan (*gharar*).
+     - *Ta'aqqul:* Menimbang dampak maslahat dan mudharat sosial-ekonomi jangka panjang.
+   - **Proteksi Prompt Injection:** Seluruh masukan teks URL diperlakukan murni sebagai string data pasif, bukan perintah komputasi yang dapat dieksekusi.
 2. **Prinsip Zero-Fetch:**
    - Server tidak pernah melakukan HTTP GET/POST ke URL yang diperiksa guna mencegah paparan eksploitasi remote, pelacakan IP server oleh sindikat, maupun pengunduhan malware secara tidak sengaja.
-3. **Deteksi 3 Teknik Penyusupan Tautan (`UrlThreatAnalyzer`):**
+3. **Deteksi 4 Teknik Penyusupan Tautan (`UrlThreatAnalyzer`):**
+   - *Kamuflase Finansial / Investasi Berkedok Judol:* Menggunakan istilah trading/investasi namun alur transaksi mengarah ke deposit perjudian.
    - *Web Defacement & Subdomain Hijacking:* Mengevaluasi manipulasi CMS pada domain instansi bereputasi tinggi (`.go.id`, `.ac.id`, `.desa.id`).
    - *Open Redirect:* Mendeteksi parameter pengalihan URL yang disamarkan (*cloaking*).
    - *Typosquatting & Serangan Homoglif:* Mengukur jarak Levenshtein dan substitusi karakter visual (`0` $\to$ `o`, `1` $\to$ `l/i`, `rn` $\to$ `m`).
