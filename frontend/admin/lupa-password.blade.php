@@ -161,7 +161,7 @@
           <span>Langkah Selanjutnya:</span>
         </div>
         <p class="text-[11px] text-slate-500 leading-relaxed">
-          Buka kotak masuk atau folder spam email Anda, lalu klik tautan reset password yang dikirimkan oleh <strong>aswajashield@gmail.com</strong>. Tautan berlaku selama 60 menit.
+          Buka kotak masuk (inbox) email Anda, lalu klik tautan reset password yang dikirimkan oleh <strong>aswajashield@gmail.com</strong>. Tautan berlaku selama 60 menit.
         </p>
       </div>
 
@@ -383,7 +383,7 @@
             cardTitle.textContent = 'Periksa Email';
             cardDesc.textContent = 'Tautan reset kata sandi telah dikirimkan ke kotak masuk email Anda.';
 
-            showAlert('Pesan email berhasil dikirim ke ' + targetEmail + '! Periksa kotak masuk atau spam email Anda.', true);
+            showAlert('Pesan email berhasil dikirim ke ' + targetEmail + '! Silakan periksa kotak masuk (inbox) email Anda.', true);
           } else {
             showAlert(data.message || data.error || 'Akun dengan email/username tersebut tidak ditemukan.');
             btnForgot.disabled = false;
@@ -392,14 +392,11 @@
             textForgot.textContent = 'Kirim Link Reset Password';
           }
         } catch (err) {
-          const fallbackEmail = email.includes('@') ? email : 'aswajashield@gmail.com';
-          sentTargetEmail.textContent = fallbackEmail;
-
-          formForgot.classList.add('hidden');
-          sectionSentSuccess.classList.remove('hidden');
-          cardTitle.textContent = 'Periksa Email';
-          cardDesc.textContent = 'Tautan reset kata sandi telah dikirimkan ke email Anda.';
-          showAlert('Pesan email berhasil dikirim ke ' + fallbackEmail + '.', true);
+          showAlert('Gagal menghubungi server pengirim email. Silakan periksa koneksi internet Anda atau hubungi Super Admin.');
+          btnForgot.disabled = false;
+          spinnerForgot.classList.add('hidden');
+          iconForgot.classList.remove('hidden');
+          textForgot.textContent = 'Kirim Link Reset Password';
         }
       });
 

@@ -187,15 +187,14 @@ class AuthController extends Controller
         } catch (\Throwable $e) {}
 
         // Susun tautan reset password menuju halaman reset password
-        $origin = $request->header('Origin') ?: $request->header('Referer') ?: 'http://localhost:3000';
+        $origin = $request->header('Origin') ?: $request->header('Referer') ?: config('app.url', 'http://localhost:3000');
         $parsedUrl = parse_url($origin);
         $scheme = $parsedUrl['scheme'] ?? 'http';
         $host = $parsedUrl['host'] ?? 'localhost';
         $port = isset($parsedUrl['port']) ? ':' . $parsedUrl['port'] : '';
-        $rootUrl = $scheme . '://' . $host . $port;
+        $rootUrl = rtrim($scheme . '://' . $host . $port, '/');
 
         $resetUrl = $rootUrl . '/reset-password?token=' . urlencode($token) . '&email=' . urlencode($userEmail);
-        $displayUrl = 'https://aswajacybershield.com/auth/passwordReset/' . $token;
         $logoPath = public_path('logo-shield.png');
         if (!file_exists($logoPath)) {
             $logoPath = base_path('../logo-shield.png');
@@ -205,41 +204,59 @@ class AuthController extends Controller
             'userName' => $userName,
             'userEmail' => $userEmail,
             'resetUrl' => $resetUrl,
-            'displayUrl' => $displayUrl,
             'token' => $token,
+            'rootUrl' => $rootUrl,
             'logoPath' => $logoPath,
             'logoUrl' => $rootUrl . '/logo-shield.png',
             'expiresIn' => $expiresIn,
-            'requestedAt' => now()->format('d M Y, H:i') . ' WITA',
+            'requestedAt' => now()->timezone('Asia/Makassar')->format('d M Y, H:i') . ' WITA',
         ];
 
-        // Render template email Blade minimalis bergaya Airtable untuk preview/fallback
-        $htmlContent = '';
+        // Kirim email pesan reset kata sandi (HTML + Plain text multipart untuk reputasi inbox anti-spam)
+        $mailSent = false;
+        $mailError = null;
+
         try {
-            $htmlContent = view('emails.reset_password', $mailData)->render();
+            Mail::send(['html' => 'emails.reset_password', 'text' => 'emails.reset_password_plain'], $mailData, function ($message) use ($userEmail, $userName) {
+                $fromAddress = config('mail.from.address') ?: 'aswajashield@gmail.com';
+                $fromName = config('mail.from.name') ?: 'Aswaja CyberShield';
+
+                $message->from($fromAddress, $fromName)
+                        ->to($userEmail, $userName)
+                        ->replyTo($fromAddress, $fromName)
+                        ->subject('[Aswaja CyberShield] Tautan Reset Kata Sandi Akun Administrator');
+
+                // Header anti-spam standar industri
+                $headers = $message->getHeaders();
+                $headers->addTextHeader('X-Priority', '1 (Highest)');
+                $headers->addTextHeader('Importance', 'High');
+                $headers->addTextHeader('Auto-Submitted', 'auto-generated');
+                $headers->addTextHeader('X-Auto-Response-Suppress', 'OOF, AutoReply');
+                $headers->addTextHeader('X-Mailer', 'Aswaja CyberShield Security Platform');
+            });
+            $mailSent = true;
         } catch (\Throwable $e) {
-            Log::warning('Gagal merender blade email: ' . $e->getMessage());
+            $mailError = $e->getMessage();
+            Log::error("Gagal mengirimkan email reset password ke {$userEmail}: " . $mailError);
         }
 
-        // Kirim email pesan reset kata sandi murni HTML (tanpa lampiran berkas agar tidak memicu chip attachment di Gmail)
-        try {
-            Mail::html($htmlContent, function ($message) use ($userEmail) {
-                $message->from('aswajashield@gmail.com', 'AswajaCyberShield')
-                        ->to($userEmail)
-                        ->subject('AswajaCyberShield password reset');
-            });
-        } catch (\Throwable $e) {
-            Log::error('Gagal mengirimkan email reset password: ' . $e->getMessage());
+        if (!$mailSent) {
+            return response()->json([
+                'success' => false,
+                'message' => "Gagal mengirimkan email ke {$userEmail} melalui server SMTP ({$mailError}). Silakan coba sesaat lagi atau hubungi Super Admin.",
+                'email' => $userEmail,
+                'token' => $token,
+                'reset_url' => $resetUrl,
+            ], 500);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Tautan reset kata sandi telah dikirim ke ' . $userEmail . '. Silakan periksa kotak masuk atau spam email Anda.',
+            'message' => 'Tautan reset kata sandi telah berhasil dikirim ke ' . $userEmail . '. Silakan periksa kotak masuk email Anda.',
             'email' => $userEmail,
             'user_name' => $userName,
             'token' => $token,
             'reset_url' => $resetUrl,
-            'html_preview' => $htmlContent,
         ]);
     }
 

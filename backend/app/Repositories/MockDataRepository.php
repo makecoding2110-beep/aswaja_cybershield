@@ -88,9 +88,12 @@ class MockDataRepository
 
     public function findUserByUsernameOrEmail(string $identifier): ?array
     {
+        $identifier = trim($identifier);
+        $cleanId = strtolower($identifier);
+
         try {
-            $user = User::where('username', $identifier)
-                ->orWhere('email', $identifier)
+            $user = User::whereRaw('LOWER(username) = ?', [$cleanId])
+                ->orWhereRaw('LOWER(email) = ?', [$cleanId])
                 ->first();
 
             if ($user) {
@@ -111,7 +114,9 @@ class MockDataRepository
 
         $data = $this->getData();
         foreach ($data['users'] ?? [] as $user) {
-            if (($user['username'] ?? '') === $identifier || ($user['email'] ?? '') === $identifier) {
+            $userUname = strtolower(trim($user['username'] ?? ''));
+            $userMail = strtolower(trim($user['email'] ?? ''));
+            if ($userUname === $cleanId || $userMail === $cleanId) {
                 return $user;
             }
         }
@@ -383,8 +388,12 @@ class MockDataRepository
     public function resetUserPassword(string $email, string $newPassword): bool
     {
         $updated = false;
+        $cleanEmail = strtolower(trim($email));
+
         try {
-            $user = User::where('email', $email)->orWhere('username', $email)->first();
+            $user = User::whereRaw('LOWER(email) = ?', [$cleanEmail])
+                ->orWhereRaw('LOWER(username) = ?', [$cleanEmail])
+                ->first();
             if ($user) {
                 $user->password = Hash::make($newPassword);
                 $user->save();
@@ -397,7 +406,7 @@ class MockDataRepository
         $data = $this->getData();
         if (isset($data['users'])) {
             foreach ($data['users'] as &$u) {
-                if (strcasecmp($u['email'] ?? '', $email) === 0 || strcasecmp($u['username'] ?? '', $email) === 0) {
+                if (strcasecmp($u['email'] ?? '', $cleanEmail) === 0 || strcasecmp($u['username'] ?? '', $cleanEmail) === 0) {
                     $u['password_hash'] = password_hash($newPassword, PASSWORD_BCRYPT);
                     $this->saveData($data);
                     $updated = true;
