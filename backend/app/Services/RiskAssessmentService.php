@@ -337,7 +337,7 @@ class RiskAssessmentService
             }
         }
 
-        // 3.B Evaluasi Penguatan dari Threat Analyzer (Defacement, Open Redirect, Typosquatting)
+        // 3.B Evaluasi Penguatan dari Threat Analyzer (Defacement, Open Redirect, Typosquatting, URL Masking, Domain Rebouncer)
         $threatScore = (int)($threatResult['threat_score'] ?? 0);
         $detectedTechniques = array_values(array_unique(array_merge(
             $threatResult['techniques'] ?? [],
@@ -345,8 +345,26 @@ class RiskAssessmentService
             $secondaryAi ? ($secondaryAi->techniques ?? []) : []
         )));
 
+        $hasInvestInd = false;
+        foreach ($allIndicators as $ind) {
+            $indName = $ind['name'] ?? '';
+            if ($indName === 'binary_options_illegal_investment' || $indName === 'kamuflase_investasi_judol' || ($ind['technique'] ?? '') === 'kamuflase_investasi') {
+                $hasInvestInd = true;
+                break;
+            }
+        }
+
         if (!($suricataResult['isWhitelist'] ?? false) && $threatScore >= 60) {
-            if ($threatScore >= 75) {
+            if ($hasInvestInd || $geminiCat === 'investasi_menyesatkan') {
+                $finalCategory = 'terindikasi_investasi';
+                $categoryLabel = 'Terindikasi Investasi Menyesatkan';
+                $alertClass = 'orange';
+                $title = 'Waspada: Terindikasi Investasi Menyesatkan';
+                $reasoning = in_array('url_masking', $detectedTechniques, true)
+                    ? "Terdeteksi teknik URL Masking / Domain Rebouncer yang menyembunyikan situs trading binary options / investasi berisiko tinggi tanpa izin regulator."
+                    : "Terdeteksi pola penawaran investasi berisiko tinggi / spekulasi ilegal tanpa izin regulator.";
+                $decisionSource = 'threat_analyzer';
+            } elseif ($threatScore >= 75) {
                 $finalCategory = 'terindikasi_judol';
                 $categoryLabel = 'Terindikasi Judi Online';
                 $alertClass = 'red';

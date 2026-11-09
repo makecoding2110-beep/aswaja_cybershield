@@ -84,6 +84,20 @@ return [
         'url', 'redirect', 'redirect_uri', 'to', 'link', 'dest',
         'next', 'goto', 'return', 'target', 'r', 'u', 'forward',
         'out', 'view', 'continue', 'redir'
+    ],
+
+    // Layanan Masking URL, Domain Rebouncer & Ekosistem Berbagi (Google Share, Shortener, Proxy Link)
+    'masking_and_rebouncer_domains' => [
+        'share.google', 'app.goo.gl', 'goo.gl', 'bit.ly', 'tinyurl.com', 't.co',
+        'cutt.ly', 'is.gd', 'rb.gy', 's.id', 'shorturl.at', 'linktr.ee', 'dld.bz',
+        'wa.me', 'msft.it', 'aka.ms', 'fb.me', 'tribun.id'
+    ],
+
+    // Domain & Entitas Platform Trading Ilegal / Binary Options / Investasi Menyesatkan Tanpa Izin Bappebti & OJK
+    'illegal_investment_domains' => [
+        'olymptrade.com', 'olymptrade', 'binomo.com', 'binomo', 'quotex.io', 'quotex.com', 'quotex',
+        'iqoption.com', 'iqoption', 'pocketoption.com', 'pocketoption', 'octafx.com', 'octafx',
+        'fbs.com', 'dna-pro', 'net89', 'autotrade-gold', 'fin888', 'titip-dana', 'arisan-online'
     ]
 ];
 

@@ -46,13 +46,22 @@ return [
         'komdigi_trustpositif_block' => 95,
         'learned_from_reports_db' => 92,
         'learned_from_scan_history' => 90,
-        'learned_pattern_intelligence' => 82
+        'learned_pattern_intelligence' => 82,
+
+        // URL Masking & Domain Rebouncer (Penyembunyian Tautan & Proxy Link)
+        'url_masking_detected' => 85,
+        'domain_rebouncer_detected' => 80,
+        'binary_options_illegal_investment' => 85,
+        'unmasked_threat_inherited' => 85
     ],
 
     // Nilai Ambang Minimal jika terjadi Kombinasi Berbahaya
     'combination_thresholds' => [
         // Open redirect ke tujuan kata kunci judol atau TLD mencurigakan -> Minimal 80 (Berbahaya)
         'open_redirect_with_malicious_dest' => 80,
+
+        // URL Masking / Domain Rebouncer yang menyembunyikan situs judol atau investasi menyesatkan -> Minimal 80 (Berbahaya)
+        'url_masking_with_threat_dest' => 80,
 
         // Domain lembaga pemerintah / pendidikan (.go.id/.ac.id/.desa.id) + path judol -> Minimal 85 (Berbahaya)
         'defacement_gov_with_judol' => 85,

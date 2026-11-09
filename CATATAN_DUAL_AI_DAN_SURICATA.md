@@ -95,6 +95,15 @@ Menanggapi evolusi kejahatan siber di mana sindikat judol tidak lagi membuat dom
    - Mengganti huruf latin dengan angka atau karakter yang menyerupai (misal: `0` $\to$ `o`, `1` $\to$ `l/i`, `rn` $\to$ `m`, `vv` $\to$ `w`).
    - Mendaftarkan nama instansi di TLD komersial dengan embel-embel tipuan (`-resmi`, `-login`, `-bansos`, `-daftar`).
 
+4. **URL Masking / Link Masking (Penyembunyian Tautan):**
+   - Menyembunyikan alamat URL asli (tujuan akhir) di balik domain atau layanan yang terlihat tepercaya (seperti ekosistem resmi Google `https://share.google/...`, `app.goo.gl`, atau Google Files/Docs).
+   - Pengguna dikelabui oleh nama domain aman yang bersih saat dibagikan di media sosial/pesan instan, sebelum dialihkan ke situs tujuan aslinya.
+
+5. **Domain Rebouncer / Proxy Link (Jembatan Pengalihan):**
+   - Memanfaatkan fitur berbagi bawaan dari ekosistem tepercaya sebagai jembatan perantara (*redirector/proxy*).
+   - Mesin unmasking Aswaja CyberShield secara otomatis menelusuri rantai pengalihan HTTP (301/302) secara aman untuk mengekstrak alamat tujuan akhir (`https://olymptrade.com/`).
+   - Melakukan evaluasi mendalam (*deep unmasked threat analysis*) pada muatan situs tujuan akhir dan mewariskan tingkat risiko serta kategori yang sesuai (misal: *Waspada: Terindikasi Investasi Menyesatkan* untuk platform *Binary Options* ilegal).
+
 ---
 
 ## 🤖 4. Integrasi Google Gemini AI (`GeminiService.php`)

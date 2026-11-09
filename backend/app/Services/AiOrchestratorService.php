@@ -197,6 +197,8 @@ class AiOrchestratorService
                 'open_redirect' => 'Open Redirect Tautan:',
                 'typosquatting' => 'Typosquatting Instansi:',
                 'kamuflase_investasi' => 'Kamuflase Finansial:',
+                'url_masking' => 'URL Masking Tautan:',
+                'domain_rebouncer' => 'Domain Rebouncer / Proxy:',
                 default => 'Analisis Pola Tautan:'
             };
             $urlFindings[] = [
@@ -239,13 +241,18 @@ class AiOrchestratorService
         $technicalContext = [
             'threat_analysis' => $threatResult,
             'detected_techniques' => $threatResult['techniques'] ?? [],
+            'unmasked_url' => $threatResult['unmasked_url'] ?? null,
+            'unmasked_host' => $threatResult['unmasked_host'] ?? null,
+            'is_masked' => $threatResult['is_masked'] ?? false,
             'suricata_matched' => $suricata['matched'],
             'suricata_alerts' => $suricata['alerts'] ?? [],
             'url_metrics' => $urlAnalysis->metrics,
             'url_indicators' => array_merge($urlAnalysis->indicators, $threatResult['indicators']),
         ];
 
-        $gemini = $this->geminiService->analyzeUrl($url, $technicalContext);
+        // Jika terdeteksi URL Masking & Domain Rebouncer, kirimkan juga target URL asli agar Gemini mengevaluasi target akhirnya
+        $analysisTargetUrl = !empty($threatResult['unmasked_url']) ? $threatResult['unmasked_url'] : $url;
+        $gemini = $this->geminiService->analyzeUrl($analysisTargetUrl, $technicalContext);
 
         // 4. Evaluasi & Validasi Analisis AI
         $aiComparison = $this->aiComparisonService->compare($gemini, null);

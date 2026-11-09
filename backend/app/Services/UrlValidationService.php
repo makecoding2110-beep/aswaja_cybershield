@@ -21,11 +21,11 @@ class UrlValidationService
     ];
 
     /**
-     * Layanan Pemendek Tautan (URL Shortener) Populer
+     * Layanan Pemendek Tautan (URL Shortener) & Masking/Rebouncer Populer
      */
     protected const URL_SHORTENERS = [
-        'bit.ly', 'tinyurl.com', 't.co', 's.id', 'cutt.ly', 'shorturl.at',
-        'is.gd', 'rb.gy', 'linktr.ee', 'tribun.id', 'wa.me', 't.me'
+        'share.google', 'app.goo.gl', 'goo.gl', 'bit.ly', 'tinyurl.com', 't.co', 's.id', 'cutt.ly', 'shorturl.at',
+        'is.gd', 'rb.gy', 'linktr.ee', 'tribun.id', 'wa.me', 't.me', 'dld.bz', 'msft.it', 'aka.ms'
     ];
 
     /**

@@ -678,6 +678,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .replace(/Sensor Suricata NIDS/gi, 'Pemeriksaan Pola Bahaya')
         .replace(/Deteksi Signature Jaringan/gi, 'Pemeriksaan Pola Bahaya')
         .replace(/Analisis Struktur URL/gi, 'Pemeriksaan Ciri Alamat')
+        .replace(/URL Masking Tautan/gi, 'URL Masking (Penyembunyian Tautan)')
+        .replace(/Domain Rebouncer \/ Proxy/gi, 'Domain Rebouncer / Proxy Link')
         .replace(/Inspeksi Konten & Penyusupan/gi, 'Pemeriksaan Modus Halaman')
         .replace(/Analisis Pola & Konten/gi, 'Pemeriksaan Modus Halaman')
         .replace(/Deteksi Google Gemini/gi, 'Analisis Muatan Digital')
@@ -717,6 +719,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (text.includes('open redirect') || text.includes('dua host')) {
           if (!list.includes('open_redirect')) list.push('open_redirect');
+        }
+        if (text.includes('masking') || text.includes('penyembunyian tautan')) {
+          if (!list.includes('url_masking')) list.push('url_masking');
+        }
+        if (text.includes('rebouncer') || text.includes('proxy link') || text.includes('jembatan pengalihan')) {
+          if (!list.includes('domain_rebouncer')) list.push('domain_rebouncer');
         }
         if (text.includes('typosquatting') || text.includes('meniru')) {
           if (!list.includes('typosquatting')) list.push('typosquatting');
@@ -790,6 +798,28 @@ document.addEventListener('DOMContentLoaded', () => {
           const matched = (findings || []).find(f => (f.label || '').includes('Typosquatting') || (f.detail || '').includes('Typosquatting') || (f.detail || '').includes('Meniru'));
           if (matched) return matched.detail || matched.desc;
           return 'Struktur domain meniru nama lembaga resmi dengan manipulasi karakter atau ekstensi non-resmi.';
+        }
+      },
+      url_masking: {
+        badgeTitle: 'URL Masking / Link Masking (Penyembunyian Tautan)',
+        badgeColor: 'bg-violet-100 text-violet-900 border-violet-300/80 dark:bg-violet-950/70 dark:text-violet-200 dark:border-violet-700/60',
+        icon: 'visibility_off',
+        explanation: 'Tautan menyembunyikan alamat URL asli (tujuan akhir) di balik domain atau layanan tepercaya (seperti ekosistem share.google atau shortener). Pengguna dikelabui oleh domain aman sebelum dialihkan ke situs tujuan aslinya.',
+        findEvidence: () => {
+          const matched = (findings || []).find(f => (f.label || '').includes('Masking') || (f.detail || '').includes('Masking') || (f.detail || '').includes('Penyembunyian'));
+          if (matched) return matched.detail || matched.desc;
+          return 'Tautan menggunakan domain tepercaya sebagai kedok pembungkus untuk menyembunyikan alamat situs tujuan sebenarnya.';
+        }
+      },
+      domain_rebouncer: {
+        badgeTitle: 'Domain Rebouncer / Proxy Link',
+        badgeColor: 'bg-indigo-100 text-indigo-900 border-indigo-300/80 dark:bg-indigo-950/70 dark:text-indigo-200 dark:border-indigo-700/60',
+        icon: 'alt_route',
+        explanation: 'Memanfaatkan fitur berbagi bawaan ekosistem (seperti Google Files, Google Docs, atau fitur share aplikasi) sebagai jembatan perantara (redirector/proxy) untuk melompati filter keamanan dan mengarahkan korban ke situs luar.',
+        findEvidence: () => {
+          const matched = (findings || []).find(f => (f.label || '').includes('Rebouncer') || (f.detail || '').includes('Rebouncer') || (f.detail || '').includes('Jembatan'));
+          if (matched) return matched.detail || matched.desc;
+          return 'Memanfaatkan fitur share/proxy layanan pihak ketiga sebagai jembatan pelompat URL otomatis.';
         }
       }
     };

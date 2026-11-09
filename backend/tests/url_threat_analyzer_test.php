@@ -153,6 +153,24 @@ runTest(
     "Techniques: " . json_encode($resKamuflase['techniques']) . ", Score: {$resKamuflase['threat_score']}"
 );
 
+// -----------------------------------------------------------------------------
+// Test Case 8: Deteksi URL Masking & Domain Rebouncer (share.google -> olymp trade)
+// -----------------------------------------------------------------------------
+$urlMasked = 'https://share.google/dZPBsDvJTBpwcuDLo';
+$resMasked = $analyzer->analyze($urlMasked);
+
+$hasMaskingTech = in_array('url_masking', $resMasked['techniques'], true);
+$hasRebouncerTech = in_array('domain_rebouncer', $resMasked['techniques'], true);
+$hasOpenRedirectTech = in_array('open_redirect', $resMasked['techniques'], true);
+$hasInvestTech = in_array('kamuflase_investasi', $resMasked['techniques'], true);
+$isUnmaskedTargetExposed = !empty($resMasked['unmasked_url']) && str_contains($resMasked['unmasked_url'], 'olymptrade.com');
+
+runTest(
+    "8. URL Masking (share.google) & Domain Rebouncer ke situs trading ilegal terdeteksi dengan skor tinggi",
+    $hasMaskingTech && $hasRebouncerTech && $hasOpenRedirectTech && $hasInvestTech && $isUnmaskedTargetExposed && $resMasked['threat_score'] >= 80,
+    "Techniques: " . json_encode($resMasked['techniques']) . ", Target: {$resMasked['unmasked_url']}, Score: {$resMasked['threat_score']}"
+);
+
 echo "\n" . str_repeat("=", 60) . "\n";
 echo "HASIL PENGUJIAN THREAT ANALYZER: {$testsPassed} DARI {$totalTests} PENGUJIAN LULUS (" . round(($testsPassed / $totalTests) * 100) . "%)\n";
 echo str_repeat("=", 60) . "\n";
