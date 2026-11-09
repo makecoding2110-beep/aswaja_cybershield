@@ -756,11 +756,6 @@
         const stat = document.getElementById('filter-status').value;
 
         return articlesList.filter(a => {
-          const slug = String(a.slug || '').toLowerCase();
-          const title = String(a.title || '').toLowerCase();
-          if (slug.includes('prinsip-t') || slug.includes('tawaqquf') || slug.includes('tastabbus') || slug.includes('tatsabbut') || slug.includes('taaqqul') || title.startsWith('prinsip t') || title.startsWith('tastabbus') || title.startsWith('tatsabbut') || title.startsWith("ta'aqqul")) {
-            return false;
-          }
           const matchQ = (a.title || '').toLowerCase().includes(q) ||
                          (a.author || '').toLowerCase().includes(q) ||
                          (a.summary || '').toLowerCase().includes(q);

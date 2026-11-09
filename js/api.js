@@ -952,10 +952,18 @@ const ApiService = {
 
   async createArticle(data) {
     try {
-      return await apiFetch('/articles', {
+      const res = await apiFetch('/articles', {
         method: 'POST',
         body: JSON.stringify(data)
       });
+      try {
+        const stored = getStoredMock('aswaja_mock_articles');
+        if (Array.isArray(stored) && res?.data) {
+          stored.unshift(res.data);
+          setStoredMock('aswaja_mock_articles', stored);
+        }
+      } catch {}
+      return res;
     } catch (err) {
       if (!err.isNetworkError) throw err;
       const articles = getStoredMock('aswaja_mock_articles');

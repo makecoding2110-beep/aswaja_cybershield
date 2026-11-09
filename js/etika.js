@@ -183,24 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       const listToRender = published.length > 0 ? published : allArticles;
-
-      // Filter materi 4T agar tidak bercampur ke daftar artikel tematik di bawahnya
-      const thematicArticles = listToRender.filter(item => {
-        const slug = String(item.slug || '').toLowerCase();
-        const cat = String(item.category || '').toLowerCase();
-        const title = String(item.title || '').toLowerCase();
-        return !slug.includes('prinsip-t') && 
-               !slug.includes('tawaqquf') && 
-               !slug.includes('tastabbus') && 
-               !slug.includes('tatsabbut') && 
-               !slug.includes('taaqqul') && 
-               !title.includes('prinsip 4t') && 
-               !title.startsWith('prinsip t') && 
-               !title.startsWith('tastabbus') && 
-               !title.startsWith('tatsabbut') && 
-               !title.startsWith('ta\'aqqul') && 
-               !cat.includes('kaidah 4t');
-      });
+      const thematicArticles = listToRender;
 
       const countBadge = document.getElementById('etika-module-count-label');
       if (countBadge) {

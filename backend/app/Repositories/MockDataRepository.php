@@ -664,6 +664,12 @@ class MockDataRepository
                 'icon' => 'file-earmark-text'
             ]);
 
+            // Selaraskan juga ke mock_database.json agar fallback offline selalu mutakhir
+            $data = $this->getData();
+            $data['articles'] = array_values(array_filter($data['articles'] ?? [], fn($x) => (int)($x['id'] ?? 0) !== $newArticle['id']));
+            array_unshift($data['articles'], $newArticle);
+            $this->saveData($data);
+
             return $newArticle;
         } catch (\Throwable $e) {
             Log::warning('[DB CreateArticle] Fallback to JSON: ' . $e->getMessage());
@@ -757,7 +763,6 @@ class MockDataRepository
             $article = Article::find($id);
             if ($article) {
                 $article->delete();
-                return true;
             }
         } catch (\Throwable $e) {
             Log::warning('[DB DeleteArticle] Fallback to JSON: ' . $e->getMessage());
@@ -768,9 +773,8 @@ class MockDataRepository
         $data['articles'] = array_values(array_filter($data['articles'] ?? [], fn($a) => (int) ($a['id'] ?? 0) !== $id));
         if (count($data['articles']) < $initialCount) {
             $this->saveData($data);
-            return true;
         }
-        return false;
+        return true;
     }
 
     // =========================================================================
