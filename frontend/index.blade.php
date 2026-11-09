@@ -64,7 +64,7 @@
       }
     }
   </script>
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/style.css?v=20261109v4">
   <link rel="stylesheet" href="../css/ui-kit.css">
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
@@ -193,7 +193,7 @@
         <!-- Main Headline -->
         <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl text-slate-900 tracking-tight leading-[1.15] mb-6 reveal-up" style="transition-delay:80ms">
           Waspadai Jebakan <br>
-          <span class="hero-brand-shimmer text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-800">Investasi Palsu &amp; Judol.</span>
+          <span class="hero-brand-shimmer">Investasi Palsu &amp; Judol.</span>
         </h1>
 
         <!-- Subheadline -->

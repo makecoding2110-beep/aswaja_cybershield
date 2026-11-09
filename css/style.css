@@ -5165,15 +5165,28 @@ html.dark .cyber-mesh-grid {
 
 /* 9. Hero Brand Highlight Gradient Shimmer */
 .hero-brand-shimmer {
-  background: linear-gradient(120deg, #059669 0%, #10b981 30%, #34d399 50%, #10b981 70%, #059669 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: brandShimmerAnim 6s linear infinite;
+  background: linear-gradient(120deg, #059669 0%, #10b981 30%, #34d399 50%, #10b981 70%, #059669 100%) !important;
+  background-size: 200% auto !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  display: inline-block;
+  animation: brandShimmerAnim 5.5s linear infinite !important;
 }
+
+.dark .hero-brand-shimmer,
+[data-theme="dark"] .hero-brand-shimmer {
+  background: linear-gradient(120deg, #10b981 0%, #34d399 30%, #6ee7b7 50%, #34d399 70%, #10b981 100%) !important;
+  background-size: 200% auto !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
 @keyframes brandShimmerAnim {
-  0% { background-position: 0% center; }
-  100% { background-position: 200% center; }
+  0% { background-position: 200% center; }
+  100% { background-position: 0% center; }
 }
 
 /* 10. Tabayyun Loading Progress Bar (Active Motion & Glowing Gradient) */
