@@ -240,72 +240,64 @@
         <div id="accordion-4t-body" class="p-6 md:p-8 pt-0 border-t border-slate-100 dark:border-slate-700 space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 stagger-children" id="prinsip-4t-public-grid">
             <!-- T1 -->
-            <a href="artikel/prinsip-tawaqquf.blade.php" class="card-hover-effect group p-4 rounded-xl bg-slate-50 dark:bg-slate-750 hover:bg-emerald-50/60 dark:hover:bg-emerald-950/40 border border-slate-200/70 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-600 space-y-2 transition-all block shadow-xs hover:shadow-sm">
+            <div class="card-hover-effect p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-750 border border-slate-200/80 dark:border-slate-700 space-y-2.5 shadow-2xs">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors">T1</span>
-                <span class="material-symbols-outlined text-emerald-600 text-lg group-hover:scale-110 transition-transform">pause_circle</span>
+                <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-white dark:bg-slate-800 px-2.5 py-0.5 rounded-md border border-emerald-200/80 dark:border-emerald-800 shadow-2xs">T1</span>
+                <span class="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-xl">pause_circle</span>
               </div>
-              <h3 class="font-display font-bold text-base text-slate-900 dark:text-white group-hover:text-emerald-700 transition-colors">Tawaqquf</h3>
-              <span class="font-serif text-sm font-semibold text-emerald-700 dark:text-emerald-400 block" dir="rtl">تَوَقُّفْ</span>
+              <div class="flex items-baseline justify-between gap-2">
+                <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">Tawaqquf</h3>
+                <span class="font-serif text-base font-semibold text-emerald-700 dark:text-emerald-400" dir="rtl">تَوَقُّفْ</span>
+              </div>
               <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                 Menahan jempol saat menerima tautan sensasional berbau cuan instan. Menghentikan penyebaran sebelum fakta teruji.
               </p>
-              <div class="pt-2 flex items-center gap-1 text-[11px] font-bold text-emerald-600 group-hover:text-emerald-700">
-                <span>Kaji Selengkapnya</span>
-                <span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
-              </div>
-            </a>
+            </div>
 
             <!-- T2 -->
-            <a href="artikel/prinsip-tastabbus.blade.php" class="card-hover-effect group p-4 rounded-xl bg-slate-50 dark:bg-slate-750 hover:bg-emerald-50/60 dark:hover:bg-emerald-950/40 border border-slate-200/70 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-600 space-y-2 transition-all block shadow-xs hover:shadow-sm">
+            <div class="card-hover-effect p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-750 border border-slate-200/80 dark:border-slate-700 space-y-2.5 shadow-2xs">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors">T2</span>
-                <span class="material-symbols-outlined text-emerald-600 text-lg group-hover:scale-110 transition-transform">search</span>
+                <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-white dark:bg-slate-800 px-2.5 py-0.5 rounded-md border border-emerald-200/80 dark:border-emerald-800 shadow-2xs">T2</span>
+                <span class="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-xl">search</span>
               </div>
-              <h3 class="font-display font-bold text-base text-slate-900 dark:text-white group-hover:text-emerald-700 transition-colors">Tastabbus</h3>
-              <span class="font-serif text-sm font-semibold text-emerald-700 dark:text-emerald-400 block" dir="rtl">تَثَبُّتْ</span>
+              <div class="flex items-baseline justify-between gap-2">
+                <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">Tastabbus</h3>
+                <span class="font-serif text-base font-semibold text-emerald-700 dark:text-emerald-400" dir="rtl">تَثَبُّتْ</span>
+              </div>
               <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                 Melacak jejak digital domain, memverifikasi perizinan regulator OJK/Bappebti, dan membongkar kedok samaran tautan.
               </p>
-              <div class="pt-2 flex items-center gap-1 text-[11px] font-bold text-emerald-600 group-hover:text-emerald-700">
-                <span>Kaji Selengkapnya</span>
-                <span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
-              </div>
-            </a>
+            </div>
 
             <!-- T3 -->
-            <a href="artikel/prinsip-tatsabbut.blade.php" class="card-hover-effect group p-4 rounded-xl bg-slate-50 dark:bg-slate-750 hover:bg-emerald-50/60 dark:hover:bg-emerald-950/40 border border-slate-200/70 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-600 space-y-2 transition-all block shadow-xs hover:shadow-sm">
+            <div class="card-hover-effect p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-750 border border-slate-200/80 dark:border-slate-700 space-y-2.5 shadow-2xs">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors">T3</span>
-                <span class="material-symbols-outlined text-emerald-600 text-lg group-hover:scale-110 transition-transform">verified_user</span>
+                <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-white dark:bg-slate-800 px-2.5 py-0.5 rounded-md border border-emerald-200/80 dark:border-emerald-800 shadow-2xs">T3</span>
+                <span class="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-xl">verified_user</span>
               </div>
-              <h3 class="font-display font-bold text-base text-slate-900 dark:text-white group-hover:text-emerald-700 transition-colors">Tatsabbut</h3>
-              <span class="font-serif text-sm font-semibold text-emerald-700 dark:text-emerald-400 block" dir="rtl">تَبَيَّنْ</span>
+              <div class="flex items-baseline justify-between gap-2">
+                <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">Tatsabbut</h3>
+                <span class="font-serif text-base font-semibold text-emerald-700 dark:text-emerald-400" dir="rtl">تَبَيَّنْ</span>
+              </div>
               <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                 Menguji kesesuaian muamalah dengan fatwa alim ulama dan hukum fiqih untuk memastikan tiadanya unsur judi (maysir).
               </p>
-              <div class="pt-2 flex items-center gap-1 text-[11px] font-bold text-emerald-600 group-hover:text-emerald-700">
-                <span>Kaji Selengkapnya</span>
-                <span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
-              </div>
-            </a>
+            </div>
 
             <!-- T4 -->
-            <a href="artikel/prinsip-taaqqul.blade.php" class="card-hover-effect group p-4 rounded-xl bg-slate-50 dark:bg-slate-750 hover:bg-emerald-50/60 dark:hover:bg-emerald-950/40 border border-slate-200/70 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-600 space-y-2 transition-all block shadow-xs hover:shadow-sm">
+            <div class="card-hover-effect p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-750 border border-slate-200/80 dark:border-slate-700 space-y-2.5 shadow-2xs">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors">T4</span>
-                <span class="material-symbols-outlined text-emerald-600 text-lg group-hover:scale-110 transition-transform">psychology</span>
+                <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-white dark:bg-slate-800 px-2.5 py-0.5 rounded-md border border-emerald-200/80 dark:border-emerald-800 shadow-2xs">T4</span>
+                <span class="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-xl">psychology</span>
               </div>
-              <h3 class="font-display font-bold text-base text-slate-900 dark:text-white group-hover:text-emerald-700 transition-colors">Ta'aqqul</h3>
-              <span class="font-serif text-sm font-semibold text-emerald-700 dark:text-emerald-400 block" dir="rtl">تَعَقُّلْ</span>
+              <div class="flex items-baseline justify-between gap-2">
+                <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">Ta'aqqul</h3>
+                <span class="font-serif text-base font-semibold text-emerald-700 dark:text-emerald-400" dir="rtl">تَعَقُّلْ</span>
+              </div>
               <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                 Menimbang apakah konten valid tersebut jika disebarkan membawa kemaslahatan atau malah memicu kegaduhan.
               </p>
-              <div class="pt-2 flex items-center gap-1 text-[11px] font-bold text-emerald-600 group-hover:text-emerald-700">
-                <span>Kaji Selengkapnya</span>
-                <span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
-              </div>
-            </a>
+            </div>
           </div>
         </div>
       </div>

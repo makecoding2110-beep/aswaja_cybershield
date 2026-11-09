@@ -141,28 +141,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
       grid.innerHTML = list.map(item => {
         const code = item.code || item.id || 'T1';
-        const href = item.link || defaultLinks[code] || '#';
         const icon = item.icon || defaultIcons[code] || 'shield';
         const title = item.name || item.title || 'Kaidah 4T';
         const subtitle = item.arabic || item.subtitle || item.tagline || '';
         const desc = item.description || '';
 
         return `
-          <a href="${escapeHtml(href)}" class="card-hover-effect group p-4 rounded-xl bg-slate-50 dark:bg-slate-750 hover:bg-emerald-50/60 dark:hover:bg-emerald-950/40 border border-slate-200/70 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-600 space-y-2 transition-all block shadow-xs hover:shadow-sm">
+          <div class="card-hover-effect p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-750 border border-slate-200/80 dark:border-slate-700 space-y-2.5 shadow-2xs">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors">${escapeHtml(code)}</span>
-              <span class="material-symbols-outlined text-emerald-600 text-lg group-hover:scale-110 transition-transform">${escapeHtml(icon)}</span>
+              <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-white dark:bg-slate-800 px-2.5 py-0.5 rounded-md border border-emerald-200/80 dark:border-emerald-800 shadow-2xs">${escapeHtml(code)}</span>
+              <span class="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-xl">${escapeHtml(icon)}</span>
             </div>
-            <h3 class="font-display font-bold text-base text-slate-900 dark:text-white group-hover:text-emerald-700 transition-colors">${escapeHtml(title)}</h3>
-            <span class="font-serif text-sm font-semibold text-emerald-700 dark:text-emerald-400 block" dir="rtl">${escapeHtml(subtitle)}</span>
+            <div class="flex items-baseline justify-between gap-2">
+              <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">${escapeHtml(title)}</h3>
+              <span class="font-serif text-base font-semibold text-emerald-700 dark:text-emerald-400" dir="rtl">${escapeHtml(subtitle)}</span>
+            </div>
             <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               ${escapeHtml(desc)}
             </p>
-            <div class="pt-2 flex items-center gap-1 text-[11px] font-bold text-emerald-600 group-hover:text-emerald-700">
-              <span>Kaji Selengkapnya</span>
-              <span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
-            </div>
-          </a>
+          </div>
         `;
       }).join('');
     } catch (e) {
@@ -187,12 +184,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const listToRender = published.length > 0 ? published : allArticles;
 
+      // Filter materi 4T agar tidak bercampur ke daftar artikel tematik di bawahnya
+      const thematicArticles = listToRender.filter(item => {
+        const slug = String(item.slug || '').toLowerCase();
+        const cat = String(item.category || '').toLowerCase();
+        const title = String(item.title || '').toLowerCase();
+        return !slug.includes('prinsip-t') && 
+               !slug.includes('tawaqquf') && 
+               !slug.includes('tastabbus') && 
+               !slug.includes('tatsabbut') && 
+               !slug.includes('taaqqul') && 
+               !title.includes('prinsip 4t') && 
+               !title.startsWith('prinsip t') && 
+               !title.startsWith('tastabbus') && 
+               !title.startsWith('tatsabbut') && 
+               !title.startsWith('ta\'aqqul') && 
+               !cat.includes('kaidah 4t');
+      });
+
       const countBadge = document.getElementById('etika-module-count-label');
       if (countBadge) {
-        countBadge.textContent = `${listToRender.length} Modul Literasi Praktis`;
+        countBadge.textContent = `${thematicArticles.length} Modul Literasi Praktis`;
       }
 
-      grid.innerHTML = listToRender.map((item, idx) => {
+      grid.innerHTML = thematicArticles.map((item, idx) => {
         const title = item.title || 'Modul Literasi Siber';
         const category = item.category || 'Literasi Siber';
         const dateStr = item.date || 'Terbaru';

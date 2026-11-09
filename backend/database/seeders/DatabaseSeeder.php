@@ -156,6 +156,39 @@ class DatabaseSeeder extends Seeder
                 'status' => 'Published',
                 'cover_image' => '../images/artikel-3.jpg',
             ],
+            [
+                'title' => 'Waspada Deepfake dan AI Voice Cloning dalam Modus Penipuan Finansial',
+                'slug' => 'waspada-deepfake-ai-voice-cloning',
+                'category' => 'Forensik Digital & Investigasi Judol',
+                'excerpt' => 'Mengenali manipulasi rekayasa kecerdasan buatan peniruan wajah dan suara tokoh agama atau keluarga untuk meminta transfer uang.',
+                'content' => 'Perkembangan teknologi generative AI membawa ancaman baru berupa kloning suara (voice cloning) dan manipulasi video wajah (deepfake). Pelaku kejahatan siber memanfaatkan potongan suara korban dari media sosial untuk meniru suara orang terdekat, lalu menelepon keluarga korban dengan skenario darurat meminta tebusan atau transfer kilat. Prinsip Tabayyun mewajibkan kita melakukan verifikasi multi-kanal sebelum mentransfer dana.',
+                'author' => 'Dr. H. Muhammad Zaki, M.Kom',
+                'read_time' => '6 Menit Baca',
+                'status' => 'Published',
+                'cover_image' => null,
+            ],
+            [
+                'title' => "Proteksi Data Pribadi (Satrul 'Aurat Digital) dari Jeratan Pinjol Ilegal",
+                'slug' => 'proteksi-data-pribadi-satrul-aurat',
+                'category' => 'Fiqih Muamalah & Larangan Maysir',
+                'excerpt' => "Kewajiban menjaga kerahasiaan identitas dan data perbankan sebagai bagian dari maqashid syariah hifzhun nafs dan hifzhul mal.",
+                'content' => 'Dalam kaidah syariat, data pribadi seperti nomor identitas (NIK), nomor rekening, dan kata sandi dianalogikan sebagai bagian dari aurat informasi (satrul aurat) yang wajib dijaga kerahasiaannya. Aplikasi pinjaman online ilegal dan sindikat judol kerap menyalahgunakan izin kontak ponsel dan galeri foto pengguna untuk melakukan intimidasi dan pemerasan.',
+                'author' => 'Dewan Pakar Fiqih Informasi',
+                'read_time' => '5 Menit Baca',
+                'status' => 'Published',
+                'cover_image' => null,
+            ],
+            [
+                'title' => 'Membongkar Modus Web Defacement Subdomain Pemerintah untuk Promosi Judi',
+                'slug' => 'modus-web-defacement-subdomain-pemerintah',
+                'category' => 'Manipulasi Algoritma & Script Judol',
+                'excerpt' => 'Mengapa situs berakhiran .go.id dan .ac.id sering disusupi halaman judi slot dan bagaimana masyarakat dapat mengenalinya.',
+                'content' => 'Sindikat judi online menargetkan situs web institusi pemerintah (.go.id) dan perguruan tinggi (.ac.id) yang memiliki kerentanan pada CMS. Tujuannya adalah memanfaatkan domain authority tinggi agar promosi judi mereka menempati peringkat teratas mesin pencari Google. Masyarakat perlu jeli memeriksa URL.',
+                'author' => 'Tim Tanggap Insiden CSIRT Aswaja',
+                'read_time' => '7 Menit Baca',
+                'status' => 'Published',
+                'cover_image' => null,
+            ],
         ];
 
         foreach ($articles as $article) {
@@ -186,7 +219,7 @@ class DatabaseSeeder extends Seeder
             CaseStudy::updateOrCreate(['title' => $cs['title']], $cs);
         }
 
-        // 5. Seed Prinsip 4T
+        // 5. Seed Prinsip 4T (Materi Utama Teks Edukasi Murni)
         $prinsip4T = [
             [
                 'code' => 'T1',
@@ -194,7 +227,7 @@ class DatabaseSeeder extends Seeder
                 'arabic' => 'تَوَقُّف',
                 'tagline' => 'Tahan Diri & Jeda Reflektif',
                 'description' => 'Menahan jempol saat menerima tautan sensasional berbau cuan instan. Menghentikan penyebaran sebelum fakta teruji.',
-                'link' => 'artikel/prinsip-tawaqquf.blade.php',
+                'link' => null,
                 'icon' => 'pause_circle',
             ],
             [
@@ -203,8 +236,8 @@ class DatabaseSeeder extends Seeder
                 'arabic' => 'تَثَبُّت',
                 'tagline' => 'Telusuri Sanad & Fakta Digital',
                 'description' => 'Melacak jejak digital domain, memverifikasi perizinan regulator OJK/Bappebti, dan membongkar kedok samaran tautan.',
-                'link' => 'artikel/prinsip-tastabbus.blade.php',
-                'icon' => 'search_check',
+                'link' => null,
+                'icon' => 'search',
             ],
             [
                 'code' => 'T3',
@@ -212,7 +245,7 @@ class DatabaseSeeder extends Seeder
                 'arabic' => 'تَبَيُّن',
                 'tagline' => 'Konfirmasi Otoritas & Fatwa',
                 'description' => 'Menguji kesesuaian muamalah dengan fatwa alim ulama dan hukum fiqih untuk memastikan tiadanya unsur judi (maysir).',
-                'link' => 'artikel/prinsip-tatsabbut.blade.php',
+                'link' => null,
                 'icon' => 'verified_user',
             ],
             [
@@ -221,7 +254,7 @@ class DatabaseSeeder extends Seeder
                 'arabic' => 'تَعَقُّل',
                 'tagline' => 'Pertimbangan Maslahat & Mudharat',
                 'description' => 'Menimbang apakah konten valid tersebut jika disebarkan membawa kemaslahatan atau malah memicu kegaduhan.',
-                'link' => 'artikel/prinsip-taaqqul.blade.php',
+                'link' => null,
                 'icon' => 'psychology',
             ],
         ];

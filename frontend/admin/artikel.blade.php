@@ -528,15 +528,9 @@
           </div>
         </div>
 
-        <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
-          <button type="button" id="btn-p4t-edit-article" onclick="openPillarArticleEditor()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold text-xs rounded-xl border border-emerald-200 transition-colors">
-            <i class="bi bi-pencil-square"></i>
-            <span>Edit Artikel Edukasi</span>
-          </button>
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="close4TModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl">Batal</button>
-            <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl">Simpan Perubahan</button>
-          </div>
+        <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-end gap-2">
+          <button type="button" onclick="close4TModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl">Batal</button>
+          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow-sm">Simpan Perubahan Kaidah</button>
         </div>
       </form>
     </div>
@@ -730,14 +724,10 @@
               <p class="text-[11px] text-slate-300 line-clamp-2 mt-1.5 leading-snug">${escapeHtml(item.description || '')}</p>
             </div>
             
-            <div class="pt-3 mt-3 border-t border-emerald-900/60 flex items-center justify-between gap-1.5" onclick="event.stopPropagation()">
-              <button type="button" onclick="event.stopPropagation(); openEdit4TModal('${item.id || item.code}')" class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 transition-all inline-flex items-center gap-1 cursor-pointer">
-                <i class="bi bi-pencil text-[10px]"></i>
-                <span>Edit Kaidah</span>
-              </button>
-              <button type="button" onclick="event.stopPropagation(); openEditArticleForPillar('${item.code || item.id}')" class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs transition-all inline-flex items-center gap-1 cursor-pointer">
+            <div class="pt-3 mt-3 border-t border-emerald-900/60 flex items-center justify-end" onclick="event.stopPropagation()">
+              <button type="button" onclick="event.stopPropagation(); openEdit4TModal('${item.id || item.code}')" class="px-3 py-1.5 text-[11px] font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs transition-all inline-flex items-center gap-1.5 cursor-pointer">
                 <i class="bi bi-pencil-square text-[10px]"></i>
-                <span>Edit Artikel</span>
+                <span>Edit Kaidah 4T</span>
               </button>
             </div>
           </div>
@@ -766,6 +756,11 @@
         const stat = document.getElementById('filter-status').value;
 
         return articlesList.filter(a => {
+          const slug = String(a.slug || '').toLowerCase();
+          const title = String(a.title || '').toLowerCase();
+          if (slug.includes('prinsip-t') || slug.includes('tawaqquf') || slug.includes('tastabbus') || slug.includes('tatsabbut') || slug.includes('taaqqul') || title.startsWith('prinsip t') || title.startsWith('tastabbus') || title.startsWith('tatsabbut') || title.startsWith("ta'aqqul")) {
+            return false;
+          }
           const matchQ = (a.title || '').toLowerCase().includes(q) ||
                          (a.author || '').toLowerCase().includes(q) ||
                          (a.summary || '').toLowerCase().includes(q);
