@@ -204,16 +204,16 @@
       <div class="max-w-4xl mx-auto space-y-6">
 
           <!-- Main Quiz Card -->
-          <div id="quiz-container" class="bg-white rounded-2xl shadow-md border border-slate-200/90 p-6 sm:p-8 space-y-8">
+          <div id="quiz-container" class="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-200/90 dark:border-slate-700 p-6 sm:p-8 space-y-8">
 
             <!-- Progress Bar Header -->
             <div class="space-y-2">
-              <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
-                <span id="quiz-progress-text" class="text-emerald-700">Pertanyaan 1 dari 5</span>
-                <span id="quiz-percentage-text">20% Selesai</span>
+              <div class="flex items-center justify-between text-xs font-semibold text-slate-600 dark:text-slate-300">
+                <span id="quiz-progress-text" class="text-emerald-700 dark:text-emerald-400">Pertanyaan 1 dari 4</span>
+                <span id="quiz-percentage-text">25% Selesai</span>
               </div>
-              <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
-                <div id="quiz-progress-bar" class="h-full bg-emerald-600 rounded-full transition-all duration-300 w-1/5"></div>
+              <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                <div id="quiz-progress-bar" class="h-full bg-emerald-600 rounded-full transition-all duration-300 w-1/4"></div>
               </div>
             </div>
 
@@ -223,31 +223,31 @@
               <!-- Question Scenario Title -->
               <div class="space-y-2">
                 <div class="flex items-center gap-2">
-                  <span id="quiz-scenario-badge" class="px-2.5 py-0.5 rounded text-xs font-bold bg-slate-100 text-slate-700">Studi Kasus 01: Phishing WhatsApp</span>
-                  <span class="text-xs text-emerald-700 font-medium">&bull; Tingkat: Realistis</span>
+                  <span id="quiz-scenario-badge" class="px-2.5 py-0.5 rounded text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200">Studi Kasus 01: Penipuan Robot Trading Berkedok Syariah</span>
+                  <span class="text-xs text-emerald-700 dark:text-emerald-400 font-medium">&bull; Tingkat: Kritis</span>
                 </div>
-                <h2 id="quiz-question-heading" class="font-display font-bold text-lg sm:text-xl text-slate-900 leading-snug">
-                  <!-- Question dynamic -->
+                <h2 id="quiz-question-heading" class="font-display font-bold text-lg sm:text-xl text-slate-900 dark:text-white leading-snug">
+                  Tautan mengarahkan ke situs yang mewajibkan deposit awal ke rekening pribadi dan ada pilihan game roda putar berhadiah. Sikap Anda?
                 </h2>
               </div>
 
               <!-- Inset Chat Mockup -->
-              <div id="quiz-mockup-box" class="p-4 sm:p-5 rounded-xl bg-slate-100/80 border border-slate-200 flex items-start gap-3">
-                <div class="w-10 h-10 rounded-full bg-slate-300 flex items-center justify-center text-slate-600 shrink-0">
-                  <span class="material-symbols-outlined text-xl" id="mockup-icon">local_shipping</span>
+              <div id="quiz-mockup-box" class="p-4 sm:p-5 rounded-xl bg-slate-100/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-300 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 shrink-0">
+                  <span class="material-symbols-outlined text-xl" id="mockup-icon">smart_toy</span>
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center justify-between mb-1">
-                    <span class="font-bold text-xs text-slate-800 dark:text-slate-200" id="mockup-sender">+62 821-9981-XXXX (Ekspedisi Kilat)</span>
+                    <span class="font-bold text-xs text-slate-800 dark:text-slate-200" id="mockup-sender">+62 821-4455-XXXX (Admin Cuan Berkah Telegram)</span>
                     <span class="text-[11px] text-slate-400 dark:text-slate-400">10:14 WITA</span>
                   </div>
                   <div class="bg-white dark:bg-slate-800 p-3 rounded-xl rounded-tl-none shadow-sm border border-slate-200/80 dark:border-slate-700 max-w-sm space-y-2">
-                    <p class="text-xs text-slate-700 dark:text-slate-200" id="mockup-message">Paket tertahan di gudang pusat. Mohon segera unduh foto resi untuk konfirmasi penerima:</p>
-                    <div class="p-2 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-100 dark:border-red-900/60 flex items-center gap-2.5" id="mockup-attachment">
-                      <span class="material-symbols-outlined text-red-600 dark:text-red-400 text-2xl">android</span>
+                    <p class="text-xs text-slate-700 dark:text-slate-200" id="mockup-message">Halo Kak! Mau pasif income Rp 500rb/hari tanpa ribet? Cukup registrasi di link resmi platform trading syariah...</p>
+                    <div class="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/60 flex items-center gap-2.5" id="mockup-attachment">
+                      <span class="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-2xl">link</span>
                       <div class="truncate text-left">
-                        <span class="font-mono text-xs font-bold text-slate-900 dark:text-white block truncate" id="mockup-filename">Lihat_Foto_Resi_Paket.apk</span>
-                        <span class="text-[10px] text-slate-400 dark:text-slate-400">8.4 MB &bull; Paket Aplikasi Android</span>
+                        <span class="font-mono text-xs font-bold text-slate-900 dark:text-white block truncate" id="mockup-filename">https://cuan-syariah88.xyz/claim</span>
+                        <span class="text-[10px] text-slate-400 dark:text-slate-400">Tautan Robot Trading &bull; Terindikasi Slot Gacor</span>
                       </div>
                     </div>
                   </div>
@@ -256,7 +256,22 @@
 
               <!-- Interactive Radio Options -->
               <div class="space-y-3 stagger-children" id="quiz-options-group">
-                <!-- Options dynamically populated -->
+                <div class="quiz-option-card flex items-start gap-4 p-4 rounded-xl border-2 transition-all cursor-pointer border-slate-200 dark:border-slate-700 hover:border-emerald-500 hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                  <div class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-300 dark:border-slate-600">A</div>
+                  <div class="flex-1 text-sm leading-relaxed text-slate-800 dark:text-slate-200">Mengabaikan dan memblokir nomor pengirim karena terindikasi kuat judi slot terselubung dan penipuan investasi.</div>
+                </div>
+                <div class="quiz-option-card flex items-start gap-4 p-4 rounded-xl border-2 transition-all cursor-pointer border-slate-200 dark:border-slate-700 hover:border-emerald-500 hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                  <div class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-300 dark:border-slate-600">B</div>
+                  <div class="flex-1 text-sm leading-relaxed text-slate-800 dark:text-slate-200">Mencoba deposit nominal terkecil untuk membuktikan kebenaran sistem.</div>
+                </div>
+                <div class="quiz-option-card flex items-start gap-4 p-4 rounded-xl border-2 transition-all cursor-pointer border-slate-200 dark:border-slate-700 hover:border-emerald-500 hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                  <div class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-300 dark:border-slate-600">C</div>
+                  <div class="flex-1 text-sm leading-relaxed text-slate-800 dark:text-slate-200">Meneruskan pesan ke grup keluarga agar mendapat komisi referral.</div>
+                </div>
+                <div class="quiz-option-card flex items-start gap-4 p-4 rounded-xl border-2 transition-all cursor-pointer border-slate-200 dark:border-slate-700 hover:border-emerald-500 hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                  <div class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-300 dark:border-slate-600">D</div>
+                  <div class="flex-1 text-sm leading-relaxed text-slate-800 dark:text-slate-200">Meminta izin admin grup Telegram sebelum melakukan pendaftaran.</div>
+                </div>
               </div>
 
               <!-- Feedback Explanation Box -->

@@ -926,7 +926,46 @@ class UrlThreatAnalyzer
         // Cek resolusi DNS cepat agar domain fiktif pada unit test tidak memicu tunggu jaringan
         $resolvedIp = @gethostbyname($host);
         if ($resolvedIp === $host || !filter_var($resolvedIp, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-            return ['indicators' => [], 'techniques' => []];
+            // Coba resolusi via DoH jika gethostbyname gagal (misal domain terblokir di DNS lokal ISP)
+            $dohCandidate = $this->resolveRealIpViaDoh($host);
+            if ($dohCandidate && filter_var($dohCandidate, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                $resolvedIp = $dohCandidate;
+            } else {
+                // Periksa apakah HTTP port 80 merespons halaman blokir Komdigi (TrustPositif)
+                $probeHttp = 'http://' . preg_replace('#^https?://#i', '', $url);
+                $chBlocked = curl_init($probeHttp);
+                curl_setopt_array($chBlocked, [
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_MAXREDIRS => 2,
+                    CURLOPT_TIMEOUT => 3,
+                    CURLOPT_CONNECTTIMEOUT => 2,
+                    CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                ]);
+                $testHtml = (string) @curl_exec($chBlocked);
+                $testCode = (int) @curl_getinfo($chBlocked, CURLINFO_HTTP_CODE);
+                curl_close($chBlocked);
+
+                if ($testCode >= 200 && $testCode < 400 && $testHtml !== '') {
+                    $lowerTest = strtolower(substr($testHtml, 0, 50000));
+                    if (str_contains($lowerTest, 'trustpositif') || str_contains($lowerTest, 'situs diblokir') || str_contains($lowerTest, 'aduankonten') || str_contains($lowerTest, 'website blocked')) {
+                        return [
+                            'indicators' => [
+                                [
+                                    'name' => 'komdigi_trustpositif_block',
+                                    'technique' => null,
+                                    'evidence' => 'Pemblokiran Komdigi: TrustPositif (SITUS DIBLOKIR)',
+                                    'severity' => 'critical',
+                                    'explanation' => "Pemblokiran Resmi Pemerintah (TrustPositif Komdigi RI): Domain '{$host}' secara resmi telah diblokir oleh Kementerian Komunikasi dan Digital RI karena terbukti melanggar undang-undang dan memuat konten ilegal / perjudian online."
+                                ]
+                            ],
+                            'techniques' => []
+                        ];
+                    }
+                }
+
+                return ['indicators' => [], 'techniques' => []];
+            }
         }
 
         // Deteksi Pemblokiran DNS Komdigi TrustPositif RI (lamanlabuh.aduankonten.id / IP Sinkhole)
@@ -993,7 +1032,17 @@ class UrlThreatAnalyzer
             $html = (string) @curl_exec($ch);
             $httpCode = (int) @curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-            // Jika gagal terhubung dengan DNS lokal (misal diblokir ISP tanpa terdeteksi), coba sekali lagi via DoH
+            // Jika HTTPS gagal atau time out, coba fallback ke protokol HTTP (banyak sinkhole ISP & blokir Komdigi hanya aktif di HTTP port 80)
+            if (($httpCode < 200 || trim($html) === '') && str_starts_with($url, 'https://')) {
+                $httpFallbackUrl = 'http://' . substr($url, 8);
+                $chHttp = curl_init($httpFallbackUrl);
+                $httpOpts = $curlOpts;
+                curl_setopt_array($chHttp, $httpOpts);
+                $html = (string) @curl_exec($chHttp);
+                $httpCode = (int) @curl_getinfo($chHttp, CURLINFO_HTTP_CODE);
+            }
+
+            // Jika masih gagal terhubung dengan DNS lokal, coba sekali lagi via DoH
             if (($httpCode < 200 || trim($html) === '') && $dohIp === null) {
                 $fallbackDohIp = $this->resolveRealIpViaDoh($host, $sinkholeIps);
                 if ($fallbackDohIp !== null && $fallbackDohIp !== $resolvedIp) {
@@ -1014,6 +1063,25 @@ class UrlThreatAnalyzer
 
             // Batasi ukuran analisis teks maksimal 150 KB demi kecepatan
             $htmlSlice = substr($html, 0, 153600);
+            $lowerHtmlSlice = strtolower($htmlSlice);
+
+            // Deteksi Halaman Blokir Resmi TrustPositif Komdigi RI
+            $hasTrustPositifBlock = false;
+            foreach (['trustpositif', 'situs diblokir', 'website blocked', 'aduankonten', 'internetpositif', 'konten negatif'] as $sig) {
+                if (str_contains($lowerHtmlSlice, $sig)) {
+                    $hasTrustPositifBlock = true;
+                    break;
+                }
+            }
+            if ($hasTrustPositifBlock) {
+                $indicators[] = [
+                    'name' => 'komdigi_trustpositif_block',
+                    'technique' => null,
+                    'evidence' => 'Halaman Pemblokiran: TrustPositif Komdigi RI (SITUS DIBLOKIR)',
+                    'severity' => 'critical',
+                    'explanation' => "Pemblokiran Resmi Pemerintah (TrustPositif Komdigi RI): Domain '{$host}' secara resmi telah diblokir oleh Kementerian Komunikasi dan Digital RI karena terbukti melanggar undang-undang dan memuat konten ilegal / perjudian online."
+                ];
+            }
 
             $strongKeywords = array_values(array_unique(array_merge(
                 $this->keywords['strong_judol'] ?? [],
@@ -1126,6 +1194,57 @@ class UrlThreatAnalyzer
                 ];
                 if ($bodyTech !== null) {
                     $techniques[] = $bodyTech;
+                }
+            }
+
+            // D. Jika halaman beranda tampak wajar & belum terdeteksi judol/blokir, selidiki jalur defacement aktif
+            if (empty($matchedHeaderKeywords) && empty($matchedBodyPhrases) && empty($indicators)) {
+                $commonJudolPaths = ['/slot', '/slot88', '/gacor', '/togel', '/judi', '/amp', '/auto'];
+                foreach ($commonJudolPaths as $subPath) {
+                    $subUrl = (str_starts_with($url, 'http://') ? 'http://' : 'https://') . $host . $subPath;
+                    $chSub = curl_init($subUrl);
+                    $subOpts = [
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_MAXREDIRS => 2,
+                        CURLOPT_TIMEOUT => 3,
+                        CURLOPT_CONNECTTIMEOUT => 2,
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_USERAGENT => 'Mozilla/5.0 (Linux; Android 13; SM-S908B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Mobile Safari/537.36'
+                    ];
+                    if ($dohIp !== null) {
+                        $subOpts[CURLOPT_RESOLVE] = ["{$host}:443:{$dohIp}", "{$host}:80:{$dohIp}"];
+                    }
+                    curl_setopt_array($chSub, $subOpts);
+                    $subHtml = (string) @curl_exec($chSub);
+                    $subCode = (int) @curl_getinfo($chSub, CURLINFO_HTTP_CODE);
+
+                    if ($subCode === 200 && strlen($subHtml) > 400) {
+                        $subTitle = '';
+                        if (preg_match('/<title[^>]*>(.*?)<\/title>/is', substr($subHtml, 0, 40000), $mSub)) {
+                            $subTitle = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags($mSub[1]))));
+                        }
+                        $subLower = strtolower($subTitle . ' ' . substr($subHtml, 0, 15000));
+                        $foundSubKws = [];
+                        foreach (['slot', 'gacor', 'ibiza', 'ibiza168', 'maxwin', 'rtp', 'judi', 'togel', 'maysir', 'deposit', 'jackpot'] as $skw) {
+                            if (str_contains($subLower, $skw)) {
+                                $foundSubKws[] = $skw;
+                            }
+                        }
+                        if (count($foundSubKws) >= 2 || str_contains($subLower, 'slot') || str_contains($subLower, 'ibiza') || str_contains($subLower, 'gacor')) {
+                            $subKwList = implode(', ', array_unique($foundSubKws));
+                            $dispSubTitle = $subTitle !== '' ? substr($subTitle, 0, 95) : "Jalur {$subPath}";
+                            $indicators[] = [
+                                'name' => 'defaced_judol_subpath',
+                                'technique' => 'web_defacement',
+                                'evidence' => "Jalur Terinfeksi: {$host}{$subPath} (\"{$dispSubTitle}\")",
+                                'severity' => 'critical',
+                                'explanation' => "Penyusupan Tautan (Web Defacement): Meskipun beranda domain tampak umum, sistem mendeteksi jalur aktif yang disusupi sindikat judi online ('{$subPath}': \"{$dispSubTitle}\", indikator: {$subKwList})."
+                            ];
+                            $techniques[] = 'web_defacement';
+                            break;
+                        }
+                    }
                 }
             }
         } catch (\Throwable $e) {

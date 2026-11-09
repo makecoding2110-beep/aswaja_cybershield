@@ -7,71 +7,71 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ─── Data Soal Studi Kasus (Sinkron dengan public.case_studies di Database) ───
+  // ─── Data Soal Studi Kasus (Sinkron Penuh dengan public.case_studies di Database) ───
   const fallbackQuizData = [
     {
-      scenario: "Studi Kasus 01: Jebakan Grup VIP \"Titip Dana\" & Robot Slot Otomatis",
-      sender: "Admin VIP Arbitrase Syariah (+62 812-XXXX-9981)",
-      message: "Assalamualaikum kak, slot titip dana batch ke-14 tinggal 2 kuota lagi! Modal Rp 500rb cair Rp 2.500.000 sore ini via algoritma AI Auto-Spin. Daftar di: https://vip-arbitrase-berkah88.site/join",
-      attachment: "Konteks: Anda dimasukkan secara tiba-tiba ke dalam grup Telegram 'Komunitas Cuan Berkah AI'.",
-      attachmentType: "Tautan Terkait Judol",
-      icon: "trending_up",
-      question: "Berdasarkan kaidah Fiqih Informasi (Prinsip 4T) dan literasi keamanan siber, langkah manakah yang paling tepat?",
+      scenario: "Studi Kasus 01: Penipuan Robot Trading Berkedok Syariah",
+      sender: "+62 821-4455-XXXX (Admin Cuan Berkah Telegram)",
+      message: "Halo Kak! Mau pasif income Rp 500rb/hari tanpa ribet? Cukup registrasi di link resmi platform trading syariah...",
+      attachment: "https://cuan-syariah88.xyz/claim",
+      attachmentType: "Tautan Robot Trading • Terindikasi Slot Gacor",
+      icon: "smart_toy",
+      question: "Tautan mengarahkan ke situs yang mewajibkan deposit awal ke rekening pribadi dan ada pilihan game roda putar berhadiah. Sikap Anda?",
       options: [
-        { key: "A", text: "Mencoba transfer nominal terkecil terlebih dahulu untuk menguji kebenarannya.", correct: false },
-        { key: "B", text: "Menahan diri (Tawaqquf), tidak mengeklik tautan karena klaim profit pasti dan kata kunci spin/slot adalah ciri mutlak judi online & penipuan.", correct: true },
-        { key: "C", text: "Membagikan tautan tersebut ke grup keluarga agar ikut mendapat keuntungan.", correct: false },
-        { key: "D", text: "Membalas pesan admin dengan mengirimkan foto KTP untuk verifikasi anggota.", correct: false }
+        { key: "A", text: "Mengabaikan dan memblokir nomor pengirim karena terindikasi kuat judi slot terselubung dan penipuan investasi.", correct: true },
+        { key: "B", text: "Mencoba deposit nominal terkecil untuk membuktikan kebenaran sistem.", correct: false },
+        { key: "C", text: "Meneruskan pesan ke grup keluarga agar mendapat komisi referral.", correct: false },
+        { key: "D", text: "Meminta izin admin grup Telegram sebelum melakukan pendaftaran.", correct: false }
       ],
-      explanation: "Dalam Fiqih Muamalah, janji keuntungan tetap tanpa risiko pada skema spekulatif adalah haram (mengandung unsur Gharar & Maysir/perjudian). Dari sisi keamanan siber, domain .site dengan iming-iming pelipatgandaan uang instan adalah modus investasi bodong berkedok slot."
+      explanation: "Benar (Pilihan A)! Modus ini menggabungkan pencatutan istilah syariah dengan sistem deposit judi slot (maysir). Pelaku memanfaatkan ketertarikan masyarakat terhadap keuntungan instan."
     },
     {
-      scenario: "Studi Kasus 02: Situs Pinjol Kilat Tanpa Verifikasi KTP Berujung Judi",
-      sender: "DanaCepat-SyariahOfficial",
-      message: "Butuh dana darurat mendesak? Cair Rp 10 Juta dalam 3 menit tanpa BI Checking & tanpa bunga! Cukup daftar akun member dan klaim saldo awal di: https://danacepat-cair88.xyz/klaim-bonus",
-      attachment: "Konteks: Sebuah iklan di media sosial menawarkan pinjaman modal usaha tanpa syarat dokumen apa pun.",
-      attachmentType: "Tautan Terkait Judol",
-      icon: "account_balance_wallet",
-      question: "Mengapa tautan di atas sangat berbahaya dan bagaimana cara melakukan Tatsabbut (konfirmasi otoritas)?",
+      scenario: "Studi Kasus 02: Skema Mining Kripto Instan",
+      sender: "Broadcast Media Sosial / Iklan Bersponsor",
+      message: "Revolusi Finansial 2026! Cuma modal smartphone, mining USDT hasilkan Rp 10 Juta per minggu. Daftar akun gratis hari ini!",
+      attachment: "https://usdt-mining-cuan.top/spin",
+      attachmentType: "Platform Mining Fiktif",
+      icon: "currency_bitcoin",
+      question: "Di dalam platform tersebut, Anda diberi \"saldo virtual Rp 2.000.000\", tetapi saldo tersebut baru bisa dicairkan (withdraw) jika Anda memasang taruhan tebak warna/angka sebanyak 10 putaran. Apa analisis Anda?",
       options: [
-        { key: "A", text: "Aman dicoba selama tidak meminta PIN ATM.", correct: false },
-        { key: "B", text: "Berbahaya karena mengarahkan pengguna membuat akun deposit judi online berkedok pencairan pinjaman; wajib dicek di daftar resmi OJK.", correct: true },
-        { key: "C", text: "Langsung mendaftar menggunakan email utama dan nomor telepon aktif.", correct: false },
-        { key: "D", text: "Mengunduh aplikasi yang disarankan di dalam halaman web tersebut.", correct: false }
+        { key: "A", text: "Ini adalah modus penipuan berkedok judi online. Saldo virtual hanya umpan psikologis untuk memaksa pengguna mentransfer uang taruhan sungguhan.", correct: true },
+        { key: "B", text: "Ini adalah mekanisme promosi wajar dari perusahaan teknologi keuangan luar negeri.", correct: false },
+        { key: "C", text: "Sebaiknya bermain 10 putaran dengan taruhan paling kecil agar saldo virtual bisa ditarik.", correct: false },
+        { key: "D", text: "Meminjam uang ke kerabat untuk deposit taruhan agar cepat mencapai syarat batas penarikan.", correct: false }
       ],
-      explanation: "Banyak situs judi online menyamar sebagai layanan pinjaman kilat untuk menjebak warga yang sedang kesulitan ekonomi agar melakukan deposit awal ('biaya admin pencairan' yang ternyata top-up saldo taruhan). Selalu lakukan Tatsabbut melalui kanal resmi OJK (Kontak 157)."
+      explanation: "Benar (Pilihan A)! Ini adalah teknik rekayasa sosial manipulasi \"sunk cost fallacy\" dan \"withdrawal lock\". Saldo awal palsu digunakan untuk menjebak korban agar terus menyetor uang ke sistem judi online."
     },
     {
-      scenario: "Studi Kasus 03: Undangan Pernikahan Digital Berformat .APK di WhatsApp",
-      sender: "+62 857-XXXX-3310 (Tidak Dikenal)",
-      message: "Kami mengharap kehadiran Bapak/Ibu pada acara resepsi pernikahan putra-putri kami. Silakan buka file undangan terlampir untuk melihat lokasi dan jadwal acara. [File: Surat-Undangan-VIP.apk - 6.4 MB]",
-      attachment: "Konteks: Anda menerima pesan WhatsApp dari nomor tidak dikenal yang mengirimkan file bernama 'Surat-Undangan-VIP.apk'.",
-      attachmentType: "Malware Pencuri OTP (.APK)",
-      icon: "phishing",
-      question: "Tindakan mitigasi apa yang wajib dilakukan saat menerima file dengan ekstensi .apk melalui pesan singkat?",
+      scenario: "Studi Kasus 03: Video Manipulasi Tokoh Publik",
+      sender: "Akun TikTok / Reel Tidak Dikenal",
+      message: "Video memperlihatkan tokoh ulama kondang seolah-olah menyatakan bahwa platform investasi berbasis aplikasi tertentu adalah halal dan menjamin hasil 100%.",
+      attachment: "video_tokoh_investasi_ai.mp4",
+      attachmentType: "Video Rekayasa AI Deepfake",
+      icon: "face",
+      question: "Gerak bibir ulama dalam video tampak tidak sinkron dengan suara (indikasi AI deepfake). Di akhir video ada ajakan klik link deposit. Sikap Anda?",
       options: [
-        { key: "A", text: "Membuka dan menginstal file tersebut karena penasaran siapa yang menikah.", correct: false },
-        { key: "B", text: "Menolak mengunduh/menginstal file .apk, segera menghapus pesan, dan memblokir pengirim karena file .apk adalah aplikasi berbahaya pencuri SMS OTP.", correct: true },
-        { key: "C", text: "Meneruskan file .apk tersebut ke teman lain untuk menanyakan isinya.", correct: false },
-        { key: "D", text: "Mengizinkan akses baca SMS ketika aplikasi meminta izin instalasi.", correct: false }
+        { key: "A", text: "Langsung percaya karena mengagumi ulama tersebut dan segera menyetor modal awal.", correct: false },
+        { key: "B", text: "Menerapkan prinsip Tatsabbut: Melakukan konfirmasi ke akun resmi pesantren/tokoh, tidak menyebarkan video, dan melaporkan link tersebut sebagai phishing judol.", correct: true },
+        { key: "C", text: "Membagikan video ke grup WhatsApp santri dengan tulisan \"Benarkah kabar ini?\".", correct: false },
+        { key: "D", text: "Menghujat sang tokoh di kolom komentar tanpa meneliti keaslian video.", correct: false }
       ],
-      explanation: "Undangan digital resmi selalu berupa tautan web atau dokumen gambar/PDF, bukan file instalasi aplikasi (.apk). Menginstal .apk dari luar toko aplikasi resmi berisiko menyusupkan malware pencuri SMS OTP yang dapat menguras rekening mobile banking."
+      explanation: "Benar (Pilihan B)! Sindikat judi online dan investasi ilegal kerap mencatut nama ulama dan tokoh masyarakat menggunakan deepfake AI untuk meruntuhkan kewaspadaan calon korban."
     },
     {
-      scenario: "Studi Kasus 04: Giveaway Saldo DANA Kaget Palsu Mengarah ke Situs Phishing",
-      sender: "Berbagi Berkah Ramadhan Official",
-      message: "Alhamdulillah rezeki hari Jumat! Ambil saldo DANA Kaget Rp 750.000 gratis khusus 50 orang tercepat. Masukkan nomor HP dan PIN DANA Anda di: https://link-dana-kaget-berkah.cc/klaim",
-      attachment: "Konteks: Beredar siaran langsung di media sosial yang menampilkan tangkapan layar bagi-bagi saldo dompet digital.",
-      attachmentType: "Phishing Kredensial Dompet Digital",
-      icon: "redeem",
-      question: "Indikator utama apa yang membuktikan bahwa tautan tersebut adalah jebakan Phishing?",
+      scenario: "Studi Kasus 04: Bantuan Finansial Palsu",
+      sender: "+62 813-9090-XXXX (Program Bantuan Mandiri)",
+      message: "Selamat! Usaha mikro Anda terpilih menerima hibah modal Rp 15.000.000. Klik tautan verifikasi identitas dan aktifkan akun Anda dalam waktu 24 jam.",
+      attachment: "https://bantuan-hibah2026.vip/verifikasi",
+      attachmentType: "Phishing Bantuan & Aktivasi Judi",
+      icon: "volunteer_activism",
+      question: "Tautan meminta Anda mengisi data nomor rekening dan kode OTP bank, lalu menginstruksikan Anda memasang taruhan kecil di kasino daring untuk \"mengaktifkan token pencairan\". Apa tindakan Anda?",
       options: [
-        { key: "A", text: "Karena nominal hadiahnya kurang besar.", correct: false },
-        { key: "B", text: "Domain bukan milik resmi dana.id (link.dana.id) dan meminta input PIN serta kode OTP secara langsung di halaman web luar aplikasi.", correct: true },
-        { key: "C", text: "Karena dibagikan pada hari Jumat.", correct: false },
-        { key: "D", text: "Tautan menggunakan protokol HTTPS sehingga pasti aman 100%.", correct: false }
+        { key: "A", text: "Mengikuti instruksi karena sudah membutuhkan modal usaha.", correct: false },
+        { key: "B", text: "Menolak keras, tidak memberikan kode OTP apa pun, dan segera memblokir nomor tersebut karena ini adalah pencurian data dan jebakan judi online.", correct: true },
+        { key: "C", text: "Memberikan nomor rekening bank tetapi tidak memasang taruhan kasino.", correct: false },
+        { key: "D", text: "Meminta bukti surat keputusan resmi ke pengirim pesan via chat.", correct: false }
       ],
-      explanation: "Fitur DANA Kaget yang asli hanya dapat diklaim langsung di dalam aplikasi resmi DANA melalui domain link.dana.id dan tidak pernah meminta pengguna mengetikkan PIN atau kode OTP pada situs web eksternal. Protokol HTTPS tidak menjamin sebuah situs bebas dari penipuan phishing."
+      explanation: "Benar (Pilihan B)! Program hibah pemerintah atau lembaga resmi TIDAK PERNAH mensyaratkan aktivitas di platform taruhan atau meminta kode OTP nasabah."
     }
   ];
 
@@ -109,12 +109,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const cases = await window.ApiService.getCaseStudies();
         if (cases && cases.length > 0) {
           quizData = cases.map((c, i) => ({
-            scenario: `Studi Kasus ${String(i + 1).padStart(2, '0')}: ${c.title}`,
+            scenario: c.scenario || `Studi Kasus ${String(i + 1).padStart(2, '0')}: ${c.title}`,
             sender: c.sender || c.context || 'Platform Digital Mencurigakan',
             message: c.message || c.scenario || '',
-            attachment: c.attachment || (c.scenario ? `Konteks: ${c.scenario}` : 'Tautan / Berkas Analisis'),
+            attachment: c.attachment || (i === 0 ? 'https://cuan-syariah88.xyz/claim' : (i === 1 ? 'https://usdt-mining-cuan.top/spin' : (i === 2 ? 'video_tokoh_investasi_ai.mp4' : 'https://bantuan-hibah2026.vip/verifikasi'))),
             attachmentType: c.fiqihPrinciple ? `Kaidah: ${c.fiqihPrinciple}` : 'Tautan Terkait Judol',
-            icon: c.icon || 'quiz',
+            icon: c.icon || (i === 0 ? 'smart_toy' : (i === 1 ? 'currency_bitcoin' : (i === 2 ? 'face' : 'volunteer_activism'))),
             question: c.question || '',
             options: c.options || [],
             explanation: c.discussion || c.explanation || ''

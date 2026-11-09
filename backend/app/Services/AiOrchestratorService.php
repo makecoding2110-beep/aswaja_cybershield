@@ -90,7 +90,9 @@ class AiOrchestratorService
             } catch (\Throwable $m) {}
         }
 
-        if ($cachedRecord) {
+        // Hanya gunakan forensic cache instan jika tautan sebelumnya terbukti berbahaya (konfirmasi vonis ancaman permanen).
+        // Tautan dengan skor rendah/bersih tetap diuji ulang oleh sensor real-time untuk mengantisipasi domain yang baru dibajak/diblokir.
+        if ($cachedRecord && (int)$cachedRecord->risk_score >= 60) {
             $displaySafety = max(5, min(98, 100 - (int)$cachedRecord->risk_score));
             $storedIndicators = is_string($cachedRecord->indicators)
                 ? (json_decode($cachedRecord->indicators, true) ?? [])

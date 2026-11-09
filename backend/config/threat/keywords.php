@@ -18,7 +18,8 @@ return [
         'agen-slot', 'bandar-togel', 'slot88', 'slot777', 'gacor88', 'gacor777',
         'depo-pulsa', 'depo-10k', 'bonus-new-member', 'sabung-ayam', 'mauslot',
         'startogel', 'semuahoki', 'kpktoto', 'araitoto', 'dewacukong', 'cukong88',
-        'hokibet', 'hokibet88', 'hoki88', 'dewaslot88', 'bet88', 'anti-rungkad'
+        'hokibet', 'hokibet88', 'hoki88', 'dewaslot88', 'bet88', 'anti-rungkad',
+        'ibiza168', 'ibiza', 'slotmaxwin', 'rtp-winrate', 'link-resmi-gacor', 'mahjong-ways'
     ],
 
     // Frasa Konten Halaman Live (Mendeteksi situs judol yang bersembunyi di balik nama domain normal)
@@ -30,7 +31,9 @@ return [
         'sabung ayam', 'free chip', 'pecahan selayar', 'next depo', 'slot & casino',
         'provider games terlengkap', 'situs hoki pembawa rezeki', 'maxwin hari ini',
         'hokibet88', 'hoki88', 'hoki slot', 'dewaslot88', 'dewa slot gacor',
-        'anti rungkad', 'rtp & pola slot', 'pola slot', 'rtp game', 'demo slot', 'situs gacor'
+        'anti rungkad', 'rtp & pola slot', 'pola slot', 'rtp game', 'demo slot', 'situs gacor',
+        'ibiza168', 'slot88', 'slot88 maxwin', 'link resmi gacor', 'rtp winrate', 'min deposit 20k',
+        'mahjong ways', 'gampang maxwin'
     ],
 
     // Indikator DNS Sinkhole Pemblokiran Pemerintah (Komdigi TrustPositif RI)

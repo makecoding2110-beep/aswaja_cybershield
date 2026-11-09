@@ -194,7 +194,20 @@ class AuthController extends Controller
         $port = isset($parsedUrl['port']) ? ':' . $parsedUrl['port'] : '';
         $rootUrl = rtrim($scheme . '://' . $host . $port, '/');
 
-        $resetUrl = $rootUrl . '/reset-password?token=' . urlencode($token) . '&email=' . urlencode($userEmail);
+        // Untuk tautan di dalam email yang dikirim ke internet, gunakan domain publik resmi dengan protokol HTTPS
+        // agar filter spam Google Mail (Gmail) tidak menandai email sebagai phishing/spam akibat tautan IP lokal (localhost/127.0.0.1).
+        $publicAppUrl = rtrim(config('app.url', 'https://aswajacybershield.vercel.app'), '/');
+        if (!str_starts_with($publicAppUrl, 'https://')) {
+            $publicAppUrl = 'https://aswajacybershield.vercel.app';
+        }
+
+        $emailRootUrl = ($host !== 'localhost' && $host !== '127.0.0.1' && !empty($host) && $scheme === 'https')
+            ? $rootUrl
+            : $publicAppUrl;
+
+        $resetUrl = $emailRootUrl . '/reset-password?token=' . urlencode($token) . '&email=' . urlencode($userEmail);
+        $localResetUrl = $rootUrl . '/reset-password?token=' . urlencode($token) . '&email=' . urlencode($userEmail);
+
         $logoPath = public_path('logo-shield.png');
         if (!file_exists($logoPath)) {
             $logoPath = base_path('../logo-shield.png');
@@ -205,9 +218,9 @@ class AuthController extends Controller
             'userEmail' => $userEmail,
             'resetUrl' => $resetUrl,
             'token' => $token,
-            'rootUrl' => $rootUrl,
+            'rootUrl' => $emailRootUrl,
             'logoPath' => $logoPath,
-            'logoUrl' => $rootUrl . '/logo-shield.png',
+            'logoUrl' => $emailRootUrl . '/logo-shield.png',
             'expiresIn' => $expiresIn,
             'requestedAt' => now()->timezone('Asia/Makassar')->format('d M Y, H:i') . ' WITA',
         ];
@@ -224,15 +237,12 @@ class AuthController extends Controller
                 $message->from($fromAddress, $fromName)
                         ->to($userEmail, $userName)
                         ->replyTo($fromAddress, $fromName)
-                        ->subject('[Aswaja CyberShield] Tautan Reset Kata Sandi Akun Administrator');
+                        ->subject('Atur Ulang Kata Sandi Akun Aswaja CyberShield');
 
-                // Header anti-spam standar industri
+                // Header standar transactional email (tanpa header prioritas agresif yang memicu skor spam filter)
                 $headers = $message->getHeaders();
-                $headers->addTextHeader('X-Priority', '1 (Highest)');
-                $headers->addTextHeader('Importance', 'High');
                 $headers->addTextHeader('Auto-Submitted', 'auto-generated');
                 $headers->addTextHeader('X-Auto-Response-Suppress', 'OOF, AutoReply');
-                $headers->addTextHeader('X-Mailer', 'Aswaja CyberShield Security Platform');
             });
             $mailSent = true;
         } catch (\Throwable $e) {
@@ -247,6 +257,7 @@ class AuthController extends Controller
                 'email' => $userEmail,
                 'token' => $token,
                 'reset_url' => $resetUrl,
+                'local_reset_url' => $localResetUrl,
             ], 500);
         }
 
@@ -257,6 +268,7 @@ class AuthController extends Controller
             'user_name' => $userName,
             'token' => $token,
             'reset_url' => $resetUrl,
+            'local_reset_url' => $localResetUrl,
         ]);
     }
 
