@@ -406,21 +406,6 @@
               </ul>
             </div>
 
-            <!-- Islamic Guidance Quote -->
-            <div id="result-quote-box" class="result-inner-box p-4 rounded-xl bg-white/70 dark:bg-slate-800/80 border border-red-200/60 dark:border-red-800/50">
-              <div class="flex items-start gap-3">
-                <span class="material-symbols-outlined text-emerald-700 dark:text-emerald-400 text-xl shrink-0 mt-0.5">balance</span>
-                <div>
-                  <blockquote id="result-quote-text" class="text-sm font-serif italic text-slate-800 dark:text-slate-200 mb-1">
-                    “Wahai orang-orang yang beriman, janganlah kamu saling memakan harta sesamamu dengan jalan yang batil...”
-                  </blockquote>
-                  <cite id="result-quote-cite" class="text-xs text-slate-500 dark:text-slate-400 font-sans not-italic font-medium">
-                    (QS. An-Nisa: 29 &bull; Prinsip Kehalalan Transaksi Finansial dan Larangan Maysir)
-                  </cite>
-                </div>
-              </div>
-            </div>
-
             <!-- Action Buttons -->
             <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
               <div class="flex flex-wrap items-center gap-3">
