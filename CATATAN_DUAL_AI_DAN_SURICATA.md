@@ -1,7 +1,7 @@
 # 🛡️ Catatan Khusus: Integrasi Suricata NIDS, UrlThreatAnalyzer & Google Gemini AI
 ## Sistem Deteksi Tautan Judi Online (Judol) & Investasi Menyesatkan — Aswaja CyberShield
 
-Dokumen ini disusun khusus sebagai **panduan teknis bagi Penguji dan Dewan Juri** mengenai cara kerja kolaborasi **Sensor Jaringan Suricata NIDS (`eve.json` & `suricata.rules`)**, **UrlThreatAnalyzer (Deteksi 3 Teknik Penyusupan Tautan)**, dan **Google Gemini AI** dalam mendeteksi ancaman kejahatan siber berbasis **Judi Online (*Judol*)** dan **Investasi Menyesatkan (*Investasi Bodong*)**.
+Dokumen ini disusun khusus sebagai **panduan teknis bagi Penguji dan Dewan Juri** mengenai cara kerja kolaborasi **Sensor Jaringan Suricata NIDS (`eve.json` & `suricata.rules`)**, **UrlThreatAnalyzer (Deteksi 3 Teknik Penyusupan Tautan)**, dan **Google Gemini AI (`gemini-3.5-flash-lite`)** dalam mendeteksi ancaman kejahatan siber berbasis **Judi Online (*Judol*)** dan **Investasi Menyesatkan (*Investasi Bodong*)**.
 
 ---
 
@@ -9,7 +9,7 @@ Dokumen ini disusun khusus sebagai **panduan teknis bagi Penguji dan Dewan Juri*
 
 ```mermaid
 flowchart TD
-    URL(["🔗 Input URL Target (Teks Murni)"]) --> ZeroFetch["1. Zero-Fetch Security Guard\n(Tanpa Membuka / Mengunduh Konten Remote)"]
+    URL(["🔗 Input URL Target (Teks Murni)"]) --> ZeroFetch["1. Zero-Fetch Security Guard\n(Inspeksi Pasif Tanpa Membuka / Mengunduh Konten Remote)"]
 
     ZeroFetch --> Normalizer["2. Normalisasi & URL Validation\n• Dekode Percent-Encoding Bertingkat (Maks 3x)\n• Deteksi Punycode / IDN (xn--)\n• SSRF Guard (Blokir Private/Loopback IP)"]
 
@@ -46,7 +46,7 @@ flowchart TD
 **Suricata** adalah mesin pendeteksi intrusi jaringan (*Network Intrusion Detection System* — NIDS) berstandar industri. Suricata bertindak sebagai **sensor deterministik garis depan** yang memeriksa paket pada level protokol jaringan:
 1. **Kecepatan Mikrodetik:** Mencocokkan tanda ancaman secara instan berdasarkan nomor *Signature ID* (`SID`).
 2. **Inspeksi TLS SNI:** Tetap mampu membaca domain tujuan pada sambungan HTTPS (`tls.sni` saat *ClientHello*) sebelum aliran data dienkripsi.
-3. **Log EVE JSON (`eve.json`):** Berkas log standar yang diekstraksi oleh [`SuricataIntegrationService.php`](file:///d:/cybershield/backend/app/Services/SuricataIntegrationService.php).
+3. **Log EVE JSON (`eve.json`):** Berkas log telemetri standar yang diekstraksi dan diparsing oleh [`SuricataIntegrationService.php`](file:///d:/cybershield/backend/app/Services/SuricataIntegrationService.php).
 
 ### 2.2. Aturan Signature Suricata Resmi
 Aturan signature disimpan di [`suricata.rules`](file:///d:/cybershield/suricata.rules) dan [`infra/suricata/rules/aswaja-local.rules`](file:///d:/cybershield/infra/suricata/rules/aswaja-local.rules):
@@ -78,17 +78,17 @@ Aturan signature disimpan di [`suricata.rules`](file:///d:/cybershield/suricata.
 
 ## 🔎 3. Deteksi 3 Teknik Penyusupan Tautan (`UrlThreatAnalyzer.php`)
 
-Menanggapi evolusi kejahatan siber di mana sindikat judol tidak lagi membuat domain baru melainkan menunggangi situs bereputasi tinggi, sistem dilengkapi analis khusus:
+Menanggapi evolusi kejahatan siber di mana sindikat judol tidak lagi membuat domain baru melainkan menunggangi situs bereputasi tinggi, sistem dilengkapi analis khusus ([`UrlThreatAnalyzer.php`](file:///d:/cybershield/backend/app/Services/UrlThreatAnalyzer.php)):
 
 1. **Web Defacement & Subdomain Hijacking:**
    - Menyasar domain instansi bereputasi tinggi (`.go.id`, `.ac.id`, `.sch.id`, `.mil.id`, `.desa.id`).
-   - Menyusup lewat direktori upload CMS yang rentan (`/wp-content/uploads/`, `/uploads/`, `/journal/`).
-   - Membuat subdomain liar yang menyematkan angka hoki judol (`88`, `138`, `777`).
+   - Menyusup lewat direktori upload CMS yang rentan (`/wp-content/uploads/`, `/uploads/`, `/journal/`, `/modules/`).
+   - Membuat subdomain liar yang menyematkan angka hoki judol (`88`, `138`, `777`, `vip`, dll.).
 
 2. **Open Redirect (Pembelokan URL Otomatis):**
    - Memanfaatkan parameter redirect portal resmi untuk menyamarkan tautan judol.
    - Mendeteksi parameter manipulasi (`url`, `redirect`, `to`, `dest`, `link`, `next`, dll.).
-   - Mendeteksi multi-layer percent-encoding dan target pengalihan ke TLD murah.
+   - Mendeteksi multi-layer percent-encoding dan target pengalihan ke TLD murah sindikat.
 
 3. **Typosquatting & Serangan Homoglif:**
    - Meniru nama lembaga regulator/bank resmi (OJK, Bappebti, Kominfo, BI, BCA, BRI, Mandiri, dll.).
@@ -103,6 +103,7 @@ Google Gemini AI bertindak sebagai mesin kognitif semantik utama:
 - **Model:** `gemini-3.5-flash-lite` (latensi ultra-rendah di bawah 1 detik).
 - **Prompt Injection Defense:** URL diperlakukan sebagai **data teks pasif murni**, bukan instruksi komputasi.
 - **Analisis Bukti Awal:** Menerima data temuan dari `UrlThreatAnalyzer` dan `Suricata NIDS` untuk diverifikasi secara semantik.
+- **Dukungan Fiqih 4T Siber:** Memverifikasi kesesuaian prinsip Tawaqquf, Tastabbus, Tatsabbut, dan Ta'aqqul dalam muatan penawaran.
 - **Keluaran Terstruktur (JSON):**
   ```json
   {
@@ -118,31 +119,47 @@ Google Gemini AI bertindak sebagai mesin kognitif semantik utama:
         "explanation": "Penyusupan direktori upload CMS dengan konten judol."
       }
     ],
-    "reasoning": "Ditemukan indikasi kuat penyusupan halaman slot pada domain institusi.",
+    "reasoning": "Ditemukan indikasi kuat penyusupan halaman slot pada domain institusi pemerintah.",
     "confidence": 0.95
   }
   ```
 
 ---
 
-## ⚖️ 5. Sistem Skor 2-State (Aman vs Berbahaya)
+## ⚖️ 5. Standardisasi 4 Tingkat Risiko Resmi (Risk Level & Color Matrix)
 
-Mengacu pada standardisasi terbaru, sistem menghilangkan kategori perantara ("Waspada"):
-1. **Keadaan AMAN:**
-   - Menampilkan label **"Tingkat Keamanan"** dengan skor $0\% - 100\%$.
-   - Warna token: Emerald (`#059669`).
-   - Penjelasan verifikasi: Bebas dari rekam jejak pemblokiran, bebas skema taruhan/maysir, dan rekomendasi tabayyun.
-2. **Keadaan BERBAHAYA:**
-   - Menampilkan label **"Tingkat Bahaya"** dengan skor $0\% - 100\%$.
-   - Warna token: Danger Merah (`#DC2626`).
-   - Menampilkan bagian khusus **"Teknik yang Terdeteksi"** (*Web Defacement*, *Open Redirect*, *Typosquatting*) dengan bukti non-aktif (bukan link yang dapat diklik).
-   - Label penegas **"Sangat Berbahaya"** disematkan bila skor bahaya $\ge 85\%$.
+Berdasarkan implementasi produksi di [`RiskAssessmentService.php`](file:///d:/cybershield/backend/app/Services/RiskAssessmentService.php) dan antarmuka [`frontend/tabayyun.blade.php`](file:///d:/cybershield/frontend/tabayyun.blade.php):
+
+| Tingkat Risiko | Rentang Skor | Warna Token / UI | Ikon Perisai | Keterangan & Tindakan |
+| :--- | :---: | :---: | :---: | :--- |
+| **Rendah (Aman)** | **0% – 25%** | **Emerald Green** (`#059669`) | `verified_user` | Domain resmi/legal, bebas signature bahaya. Tautan aman diakses. |
+| **Sedang** | **26% – 50%** | **Amber Yellow** (`#D97706`) | `warning` | Menggunakan kedok investasi/trading atau TLD promosi. Perlu kewaspadaan. |
+| **Tinggi** | **51% – 84%** | **Orange Alert** (`#EA580C`) | `gpp_maybe` | Terdeteksi kata kunci fitur taruhan judi (maxwin, scatter) atau anomali URL. |
+| **Berat (Kritis)** | **85% – 100%** | **Crimson Red** (`#DC2626`) | `gpp_bad` | Terindikasi kuat jaringan judi online, defacement web instansi, atau phishing. |
+
+### Tampilan Kartu Hasil Analisis:
+1. **Untuk Hasil Aman (0% – 25%):**
+   - Menampilkan label skor **"Tingkat Keamanan"** (Skor Keamanan $75\% - 100\%$).
+   - Dilengkapi 3 poin verifikasi: Audit Sanad Domain, Analisis Muatan & Pola, serta Rekomendasi Tabayyun.
+2. **Untuk Hasil Berbahaya (26% – 100%):**
+   - Menampilkan label skor **"Tingkat Bahaya"** (Skor Bahaya $26\% - 100\%$).
+   - Menampilkan modul **"Rangkuman Sederhana"** dalam bahasa awam non-teknis.
+   - Menampilkan modul **"Teknik Penyusupan yang Terdeteksi"** (*Web Defacement*, *Open Redirect*, *Typosquatting*).
+   - Menampilkan rincian **"Temuan Analisis Tautan & Alasan Verifikasi"** dengan bukti teks aman (dinonaktifkan agar tidak dapat diklik).
 
 ---
 
-## 🗄️ 6. Catatan Skema Database Audit (`link_scans`)
+## 🗄️ 6. Skema Basis Data Forensik (`link_scans`)
 
-Pada implementasi database Supabase PostgreSQL:
-- Hasil audit disimpan secara terpisah pada kolom JSONB: `suricata_result` (Layer Sensor NIDS) dan `gemini_result` (Layer Kognitif AI).
-- Seluruh teknik yang terdeteksi disimpan pada kolom `techniques` (array JSONB) dan kompilasi bukti teknis disimpan pada kolom `indicators`.
-- Nilai vonis akhir disimpan pada `final_category`, `risk_level`, dan `risk_score`.
+Pada implementasi Supabase PostgreSQL:
+- **Konsistensi Riwayat Scan (*Forensic Cache*):** URL identik yang diperiksa berulang akan merujuk pada rekam jejak audit yang sudah ada untuk menjamin konsistensi vonis 100%.
+- **Kolom JSONB Hasil Analisis:**
+  - `suricata_result`: Menyimpan data mentah temuan sensor NIDS dan signature yang terpicu.
+  - `gemini_result`: Menyimpan respon kognitif AI, alasan klasifikasi, dan skor risiko dari Google Gemini.
+- **Katalog Bukti:**
+  - `techniques`: Array JSONB teknik penyusupan yang teridentifikasi (`web_defacement`, `open_redirect`, `typosquatting`).
+  - `indicators`: Array JSONB bukti terperinci (`name`, `evidence`, `severity`, `explanation`).
+- **Keputusan Akhir:**
+  - `final_category`: Kategori terstandardisasi (`terindikasi_judol`, `terindikasi_investasi`, `mencurigakan`, `normal`).
+  - `risk_level`: Tingkat keparahan (`rendah`, `sedang`, `tinggi`, `berat`).
+  - `risk_score`: Skor numerik $0 - 100$.
