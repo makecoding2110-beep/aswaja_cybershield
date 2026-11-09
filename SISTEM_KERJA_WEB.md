@@ -9,13 +9,13 @@ Dokumen ini menjelaskan **cara kerja sistem web Aswaja CyberShield secara runtut
 
 ```mermaid
 flowchart TD
-    Start(["🌐 1. Pengguna Membuka Website\n(http://localhost:3000)"]) --> Landing["🏠 Halaman Beranda (frontend/index.blade.php)\nSiklus: Recognize - Learn - Act\nTema: White Smoke #F5F5F5 + Animasi Elegan"]
+    Start(["1. Pengguna Membuka Website\n(http://127.0.0.1:3000)"]) --> Landing[" Halaman Beranda (frontend/index.blade.php)\nSiklus: Recognize - Learn - Act\nTema: White Smoke #F5F5F5 + Animasi Elegan"]
 
-    Landing -->|"Pilih Menu 1:\nRecognize (Kenali Bahaya)"| Tabayyun["🔍 Modul AI Tabayyun\n(frontend/tabayyun.blade.php)"]
-    Landing -->|"Pilih Menu 2:\nLearn (Belajar & Latihan)"| Learn["📖 Modul Etika 4T & Cyber Guard\n(etika.blade.php & cyber-guard.blade.php)"]
-    Landing -->|"Pilih Menu 3:\nAct (Bertindak / Lapor)"| Lapor["📢 Modul Portal Lapor Siber\n(frontend/lapor.blade.php)"]
+    Landing -->|"Pilih Menu 1:\nRecognize (Kenali Bahaya)"| Tabayyun["Modul AI Tabayyun\n(frontend/tabayyun.blade.php)"]
+    Landing -->|"Pilih Menu 2:\nLearn (Belajar & Latihan)"| Learn["Modul Etika 4T & Cyber Guard\n(etika.blade.php & cyber-guard.blade.php)"]
+    Landing -->|"Pilih Menu 3:\nAct (Bertindak / Lapor)"| Lapor["Modul Portal Lapor Siber\n(frontend/lapor.blade.php)"]
 
-    subgraph MesinDeteksi["⚙️ Proses Backend: Deteksi Tautan Judol (Zero-Fetch)"]
+    subgraph MesinDeteksi["Proses Backend: Deteksi Tautan Judol (Zero-Fetch)"]
         Tabayyun -->|"Kirim URL Teks via js/api.js"| Orch["AiOrchestratorService.php"]
         Orch --> Step1["1. UrlValidationService\n(SSRF Guard & 3-Tier Keyword Matching)"]
         Orch --> Step2["2. UrlThreatAnalyzer\n(Deteksi 3 Teknik: Defacement, Open Redirect, Typosquatting)"]
@@ -25,10 +25,10 @@ flowchart TD
         Step2 --> Step5
         Step3 --> Step5
         Step4 --> Step5
-        Step5 --> DBScan[("🗄️ Tabel Database:\nlink_scans")]
+        Step5 --> DBScan[("Tabel Database:\nlink_scans")]
     end
 
-    DBScan --> HasilUI["📊 Tampil Hasil 4 Tingkat Risiko Resmi (0%–100%):\n• 🟢 Rendah (0%–25%): Hijau (Aman)\n• 🟡 Sedang (26%–50%): Kuning (Waspada)\n• 🟠 Tinggi (51%–84%): Oranye (Periksa)\n• 🔴 Berat (85%–100%): Merah (Sangat Bahaya)\n• Rangkuman Awam Bebas Jargon IT\n• Bagian: Teknik yang Terdeteksi"]
+    DBScan --> HasilUI["Tampil Hasil 4 Tingkat Risiko Resmi (0%–100%):\n• 🟢 Rendah (0%–25%): Hijau (Aman)\n• 🟡 Sedang (26%–50%): Kuning (Waspada)\n• 🟠 Tinggi (51%–84%): Oranye (Periksa)\n• 🔴 Berat (85%–100%): Merah (Sangat Bahaya)\n• Rangkuman Awam Bebas Jargon IT\n• Bagian: Teknik yang Terdeteksi"]
     HasilUI -->|"Jika Berbahaya:\nKlik 'Laporkan Tautan'"| Lapor
 
     Lapor -->|"Submit Aduan + Bukti Screenshot"| DBReport[("🗄️ Tabel Database:\nreports (Tiket LPRxxx)")]
@@ -42,7 +42,7 @@ flowchart TD
 
 ---
 
-## 🚀 2. Tahap Demi Tahap Cara Kerja Sistem dari Awal
+## 2. Tahap Demi Tahap Cara Kerja Sistem dari Awal
 
 ### Tahap 1: Saat Pengguna Pertama Kali Membuka Website (`Entry Point` & *Clean URLs*)
 1. Ketika pengguna mengakses alamat utama web, konfigurasi [`vercel.json`](file:///d:/cybershield/vercel.json) dan [`.htaccess`](file:///d:/cybershield/.htaccess) langsung menyajikan halaman beranda utama [`frontend/index.blade.php`](file:///d:/cybershield/frontend/index.blade.php).
