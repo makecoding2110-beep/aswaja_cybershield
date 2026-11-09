@@ -21,7 +21,7 @@ Sistem backend **Aswaja CyberShield** dibangun menggunakan **PHP 8.5.12 & Framew
 
 - **Modularitas Layanan (Service Utama):**
   1. [`UrlValidationService.php`](file:///d:/cybershield/backend/app/Services/UrlValidationService.php): Validasi skema, normalisasi URL, proteksi SSRF, deteksi anomali struktur domain, dan **Pencocokan Kata Kunci 3 Tingkat (*3-Tier Keyword Matching*)**.
-  2. [`UrlThreatAnalyzer.php`](file:///d:/cybershield/backend/app/Services/UrlThreatAnalyzer.php): Analis ancaman URL tingkat lanjut yang mendeteksi **3 Teknik Penyusupan Tautan Judol**: *Web Defacement & Subdomain Hijacking*, *Open Redirect*, dan *Typosquatting/Homoglyph URL Spoofing*.
+  2. [`UrlThreatAnalyzer.php`](file:///d:/cybershield/backend/app/Services/UrlThreatAnalyzer.php): Analis ancaman URL tingkat lanjut yang mendeteksi **6 Teknik Manipulasi & Penyusupan Tautan**: *Web Defacement & Subdomain Hijacking*, *Open Redirect*, *Typosquatting/Homoglyph*, *Kamuflase Finansial/Trading Ilegal*, *URL Masking & Domain Rebouncer* (`share.google`/shortener), dan *SEO Cloaking* via mesin *Dual-Persona Fetching*.
   3. [`SuricataIntegrationService.php`](file:///d:/cybershield/backend/app/Services/SuricataIntegrationService.php): Ingestion dan parsing log telemetri jaringan [`eve.json`](file:///d:/cybershield/backend/storage/logs/suricata/eve.json) (DNS Query, TLS SNI, HTTP URI, dan Alert Signature) serta mapping SID ke nama teknik ancaman.
   4. [`SuricataService.php`](file:///d:/cybershield/backend/app/Services/SuricataService.php): Mesin inspeksi signature deterministik (`SID: 1000000` – `1000008` serta SID baru `1000101` – `1000103`) yang selaras dengan [`suricata.rules`](file:///d:/cybershield/suricata.rules) dan [`infra/suricata/rules/aswaja-local.rules`](file:///d:/cybershield/infra/suricata/rules/aswaja-local.rules).
   5. [`GeminiService.php`](file:///d:/cybershield/backend/app/Services/GeminiService.php): Integrasi resmi Google Gemini AI (`gemini-3.5-flash-lite`) dengan prompt injection guard, evaluasi semantik, deteksi leetspeak, penilaian 3 teknik penyusupan judol, dan pemetaan konteks Fiqih 4T.
@@ -59,9 +59,9 @@ Sistem backend **Aswaja CyberShield** dibangun menggunakan **PHP 8.5.12 & Framew
 
 ---
 
-## 🔍 3. Deteksi 3 Teknik Penyusupan Tautan Judol (`UrlThreatAnalyzer.php`)
+## 🔍 3. Deteksi 6 Teknik Penyusupan & Manipulasi Tautan (`UrlThreatAnalyzer.php`)
 
-Modul ini mengidentifikasi modus operandi sindikat modern tanpa membuka URL:
+Modul ini mengidentifikasi modus operandi sindikat modern tanpa mengeksekusi skrip berbahaya:
 1. **Web Defacement & Subdomain Hijacking:**
    - Menyasar domain berakhiran `.go.id`, `.ac.id`, `.sch.id`, `.mil.id`, `.desa.id`.
    - Mendeteksi path CMS rentan (`/wp-content/uploads/`, `/uploads/`, `/journal/`) yang dikombinasikan dengan kata kunci judol.
@@ -74,6 +74,14 @@ Modul ini mengidentifikasi modus operandi sindikat modern tanpa membuka URL:
    - Mencocokkan nama domain dengan daftar instansi resmi di [`config/threat/official_domains.php`](file:///d:/cybershield/backend/config/threat/official_domains.php) menggunakan jarak Levenshtein dan substitusi karakter homoglif (`0` $\to$ `o`, `1` $\to$ `l/i`, `rn` $\to$ `m`, `vv` $\to$ `w`).
    - Menandai nama instansi pemerintah yang didaftarkan di TLD komersial non-resmi (`.com`, `.net`, `.info`).
    - Menandai embel-embel tipuan (`-resmi`, `-login`, `-bansos`, `-bantuan`, `-daftar`).
+4. **URL Masking / Link Masking:**
+   - Menyembunyikan alamat situs sebenarnya di balik domain tepercaya Google (`share.google`, `app.goo.gl`) atau pemendek tautan (`bit.ly`, `s.id`, `tinyurl.com`, `t.co`, `linktr.ee`).
+   - Membongkar rantai redirect dan mengaudit penuh URL tujuan akhir.
+5. **Domain Rebouncer / Proxy Link:**
+   - Menelusuri jembatan pengalihan otomatis untuk mendeteksi situs investasi berisiko tinggi / platform *Binary Options* tanpa izin pengawas keuangan.
+6. **SEO Cloaking / Conditional Defacement (Mesin Dual-Persona):**
+   - Membandingkan respon halaman antara **Pengunjung Normal** vs **Googlebot Crawler**.
+   - Mengungkap manipulasi bersyarat di mana pengunjung melihat berita wajar, sementara crawler Googlebot disajikan backdoor judi online (`CUMI787 Slot Gacor Maxwin`). Memberikan skor bahaya 95% Kritis.
 
 ---
 
@@ -106,7 +114,11 @@ Semua pengujian pada PHP 8.5.12 telah lulus 100%:
    * ✅ 4. Typosquatting nama instansi resmi di domain komersial (`.com`) terdeteksi
    * ✅ 5. Portal resmi OJK (`ojk.go.id`) normal TIDAK DITANDAI (False Positive = 0)
    * ✅ 6. Portal resmi perguruan tinggi (`ugm.ac.id`) normal TIDAK DITANDAI (False Positive = 0)
-   * **Hasil:** `6 dari 6 Pengujian Lulus (100%)`
+   * ✅ 7. Modus Kamuflase Finansial / Trading Judol terdeteksi `kamuflase_investasi`
+   * ✅ 8. URL Masking & Rebouncer (`share.google` $\to$ `olymptrade.com`) terdeteksi skor tinggi
+   * ✅ 9. Portal edukasi resmi (`codepolitan.com`) normal TIDAK DITANDAI (False Positive = 0)
+   * ✅ 10. Deteksi Dual-Persona SEO Cloaking pada domain resmi pemerintah (`kemendagri.go.id`) terdeteksi skor 95%
+   * **Hasil:** `10 dari 10 Pengujian Lulus (100%)`
 
 2. **REST API & RBAC Test Suite (`backend/tests/api_verification_test.php`):**
    * ✅ PASS: Ping Endpoint

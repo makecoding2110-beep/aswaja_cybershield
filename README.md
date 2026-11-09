@@ -11,10 +11,13 @@ Aswaja CyberShield dibangun dengan pendekatan **Recognize, Learn, & Act** yang m
 ### A. Fitur Publik (Masyarakat & Warga Siber)
 1. **AI Tabayyun (`/tabayyun` — `frontend/tabayyun.blade.php`)**:
    * **Prinsip Keamanan Zero-Fetch**: Pemeriksaan tautan dilakukan murni berbasis pengujian teks URL tanpa pernah membuka, mengunduh, atau mengeksekusi konten dari tautan target di server.
-   * **Deteksi 3 Teknik Penyusupan Tautan Judol (`UrlThreatAnalyzer.php`)**:
+   * **Deteksi 6 Teknik Manipulasi & Penyusupan Tautan (`UrlThreatAnalyzer.php`)**:
      * *Web Defacement & Subdomain Hijacking*: Mendeteksi penyusupan pada domain bereputasi tinggi (`.go.id`, `.ac.id`, `.sch.id`, `.desa.id`), direktori upload CMS (`/wp-content/uploads/`, `/uploads/`), dan angka hoki judol (`88`, `138`, `777`).
      * *Open Redirect (Cloaking)*: Mendeteksi manipulasi parameter pengalihan (`url`, `redirect`, `to`, `dest`, `link`, dll.), URL bertingkat, dan pengalihan ke TLD murahan.
      * *Typosquatting & Homoglif*: Mencocokkan kemiripan dengan lembaga resmi (OJK, Bappebti, BI, Kominfo, bank BUMN) menggunakan substitusi homoglif (`0` $\to$ `o`, `1` $\to$ `l/i`, `rn` $\to$ `m`, `vv` $\to$ `w`) dan embel-embel tipuan (`-resmi`, `-login`, `-bansos`).
+     * *Kamuflase Finansial*: Menyingkap nama domain berkedok trading harian/investasi yang sistem depositnya mengarah langsung ke perjudian online.
+     * *URL Masking & Domain Rebouncer*: Membongkar tautan judol yang disamarkan menggunakan ekosistem resmi Google (`share.google`, `app.goo.gl`) atau shortener (`bit.ly`, `s.id`) dan mengaudit penuh URL tujuan akhirnya.
+     * *Dual-Persona SEO Cloaking*: Mengungkap manipulasi bersyarat pada server web instansi pemerintah/akademik yang menampilkan berita wajar bagi pengunjung biasa, namun menyajikan backdoor judol masif (`CUMI787 Slot Gacor`) ketika dirayapi crawler *Googlebot*. Memberikan vonis kritis 95%.
    * **Sensor Jaringan Suricata NIDS (`SuricataIntegrationService.php` & `eve.json`)**: Inspeksi paket deterministik pada level DNS, TLS SNI, dan HTTP URI berbasis signature rule standar industri Suricata (SID: 1000000 - 1000103) yang terdaftar di [`infra/suricata/rules/aswaja-local.rules`](file:///d:/cybershield/infra/suricata/rules/aswaja-local.rules).
    * **Google Gemini AI (`GeminiService.php`)**: Mesin kognitif semantik (`gemini-3.5-flash-lite`) yang dilengkapi *prompt injection guard*, evaluasi leetspeak, dan pemetaan kaidah Fiqih 4T.
    * **Standarisasi 4 Tingkat Risiko Resmi (Unified Metric 0%–100%)**:

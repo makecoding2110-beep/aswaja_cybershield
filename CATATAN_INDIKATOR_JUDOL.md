@@ -116,6 +116,23 @@ Sindikat modern menggunakan teknik rekayasa URL canggih agar tautan terlihat sep
   3. **Penyematan Embel-Embel Tipuan (*Deceptive Suffixes*):**
      - Menambahkan kata penenang psikologis: `-resmi`, `-info`, `-login`, `-daftar`, `-bansos`, `-bantuan`, `-dana`, `-klaim`.
 
+### 3.4. Teknik 4: URL Masking & Domain Rebouncer (Penyembunyian Tautan di Balik Ekosistem Tepercaya)
+* **Mekanisme:** Sindikat menyamarkan tautan situs judi atau platform *Binary Options* ilegal menggunakan domain resmi layanan raksasa teknologi (seperti `share.google`, `app.goo.gl`, Google Docs/Drive, atau shortener populer `bit.ly`, `s.id`, `linktr.ee`).
+* **Ciri & Bukti Teknis:**
+  1. **Domain Pembungkus Tepercaya:** Tautan yang disebar di media sosial/WhatsApp tampak sangat aman (`https://share.google/dZPBsDvJTBpwcuDLo`).
+  2. **Jembatan Pengalihan Otomatis (*Rebouncer/Proxy*):** Begitu dibuka, layanan perantara langsung mengalihkan korban ke situs tujuan sebenarnya (`https://olymptrade.com/`).
+* **Penanganan Aswaja CyberShield:** Mesin *Unmasking* menelusuri rantai pengalihan HTTP untuk mengekstrak URL tujuan akhir, lalu mengaudit situs target secara penuh dan menetapkan vonis berbahaya (70% - 100%).
+
+### 3.5. Teknik 5: SEO Cloaking / Conditional Defacement (Manipulasi Mesin Pencari Googlebot)
+* **Mekanisme:** Skrip backdoor disusupkan pada web server domain resmi pemerintah (`.go.id`) atau akademik (`.ac.id`). Skrip ini memeriksa *User-Agent* perayap:
+  - **Jika Pengunjung Manusia (Browser Biasa):** Disajikan halaman berita kedinasan normal agar pengelola situs dan masyarakat umum tidak curiga.
+  - **Jika Robot Mesin Pencari (*Googlebot*):** Disajikan halaman promosi judi online masif (`CUMI787 : Situs Slot Gacor Hari Ini Slot88 Pasti JP Maxwin`) agar hasil pencarian Google terisi tautan judi sindikat.
+* **Studi Kasus Forensik Riil:**
+  - URL yang Diuji: `https://bbpkapdn1.kemendagri.go.id/`
+  - Respon Manusia: HTTP 200, 30 KB, Judul `Berita & Peristiwa`.
+  - Respon Googlebot: HTTP 200, **523 KB**, Judul `CUMI787 : Asli Paten Situs Slot Gacor Hari Ini Dengan Permainan Slot88 Resmi Pasti Kasih JP Maxwin`!
+* **Penanganan Aswaja CyberShield:** Mesin **Dual-Persona Fetching** membandingkan kedua tampilan secara simultan. Jika ditemukan diskrepansi konten judol pada crawler, sistem langsung menetapkan skor **95% Kritis (Waspada: Terindikasi Penyusupan SEO Cloaking)**.
+
 ---
 
 ## 📊 4. Matriks Komparasi Lengkap (Kasat Mata vs 3 Teknik Siluman)

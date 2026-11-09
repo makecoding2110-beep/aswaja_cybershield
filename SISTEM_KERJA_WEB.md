@@ -59,11 +59,14 @@ Saat pengguna memasukkan URL di [`frontend/tabayyun.blade.php`](file:///d:/cyber
 - Browser memperlakukan URL murni sebagai **string data teks pasif**. Sistem tidak membuka atau mengunduh konten dari tautan target.
 - Frontend mengirimkan permintaan `POST /api/tabayyun/analyze` ke backend Laravel.
 
-#### Langkah 2.2 — Validasi Struktur URL & Deteksi 3 Teknik Penyusupan (`UrlThreatAnalyzer.php`)
+#### Langkah 2.2 — Validasi Struktur URL, Unmasking, & Deteksi 6 Teknik Penyusupan (`UrlThreatAnalyzer.php`)
 1. **Normalisasi & SSRF Guard:** Mendekode percent-encoding berlapis (hingga 3 putaran), mendeteksi punycode IDN (`xn--`), dan memblokir alamat IP privat/internal.
-2. **Web Defacement & Subdomain Hijacking:** Memeriksa domain instansi bereputasi (`.go.id`, `.ac.id`, `.sch.id`, `.mil.id`, `.desa.id`) yang disusupi kata kunci judol, direktori upload CMS (`/wp-content/uploads/`, `/uploads/`), atau subdomain dengan angka hoki judol (`88`, `138`, `777`).
-3. **Open Redirect (Pembelokan URL):** Memeriksa parameter pengalihan (`url`, `redirect`, `to`, `dest`, `link`, dll.), URL bertingkat, dan pengalihan ke domain TLD murahan (`.vip`, `.top`, `.xyz`).
-4. **Typosquatting & Homoglif:** Mencocokkan nama instansi resmi di [`config/threat/official_domains.php`](file:///d:/cybershield/backend/config/threat/official_domains.php) menggunakan jarak Levenshtein, substitusi karakter homoglif (`0` $\to$ `o`, `1` $\to$ `l/i`, `rn` $\to$ `m`, `vv` $\to$ `w`), dan embel-embel tipuan (`-resmi`, `-login`, `-bansos`).
+2. **Unmasking URL Masking & Rebouncer:** Menelusuri tautan pembungkus (`share.google`, `bit.ly`, `s.id`, dll.) untuk mengekstrak URL tujuan akhir yang sebenarnya secara aman.
+3. **Web Defacement & Subdomain Hijacking:** Memeriksa domain instansi bereputasi (`.go.id`, `.ac.id`, `.sch.id`, `.mil.id`, `.desa.id`) yang disusupi kata kunci judol, direktori upload CMS (`/wp-content/uploads/`, `/uploads/`), atau subdomain dengan angka hoki judol (`88`, `138`, `777`).
+4. **Open Redirect (Pembelokan URL):** Memeriksa parameter pengalihan (`url`, `redirect`, `to`, `dest`, `link`, dll.), URL bertingkat, dan pengalihan ke domain TLD murahan (`.vip`, `.top`, `.xyz`).
+5. **Typosquatting & Homoglif:** Mencocokkan nama instansi resmi di [`config/threat/official_domains.php`](file:///d:/cybershield/backend/config/threat/official_domains.php) menggunakan jarak Levenshtein, substitusi karakter homoglif (`0` $\to$ `o`, `1` $\to$ `l/i`, `rn` $\to$ `m`, `vv` $\to$ `w`), dan embel-embel tipuan (`-resmi`, `-login`, `-bansos`).
+6. **Dual-Persona SEO Cloaking Engine:** Melakukan komparasi respon antara peramban biasa vs crawler mesin pencari (Googlebot) untuk membongkar skrip tersembunyi yang menyajikan promosi slot gacor khusus pada mesin pencari.
+7. **Kamuflase Finansial:** Mengidentifikasi nama domain bertema trading atau investasi yang transaksi depositnya mengarah langsung ke jaringan judi online.
 
 #### Langkah 2.3 — Sensor Jaringan Suricata NIDS (`SuricataIntegrationService.php` & `eve.json`)
 1. Membaca telemetri jaringan [`backend/storage/logs/suricata/eve.json`](file:///d:/cybershield/backend/storage/logs/suricata/eve.json) untuk mencocokkan event DNS, TLS SNI, HTTP URI, dan Alert.

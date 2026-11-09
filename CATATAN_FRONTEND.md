@@ -69,11 +69,19 @@ Frontend **Aswaja CyberShield** dibangun dengan pendekatan **Modular Blade PHP +
   - **🔴 Berat / Kritis [85%–100%]:**
     - Label skor: **"Tingkat Bahaya"** ($85\% - 100\%$, crimson red `#DC2626`).
     - Status teks: **"Berat (Sangat Berbahaya)"**, ikon bahaya (`gpp_bad`), mengidentifikasi jaringan judol aktif, web defacement instansi, atau pencurian data.
+- **Komponen "Teknik yang Terdeteksi":**
+  - Menampilkan badge per teknik:
+    1. *Web Defacement / Subdomain Hijacking* (Amber)
+    2. *Open Redirect / Pengalihan Otomatis* (Blue)
+    3. *Typosquatting / URL Spoofing* (Purple)
+    4. *Kamuflase Finansial / Investasi Berkedok Judol* (Rose)
+    5. *URL Masking / Link Masking* (Violet)
+    6. *Domain Rebouncer / Proxy Link* (Indigo)
+    7. *SEO Cloaking / Defacement Tersembunyi* (Rose, `icon: travel_explore`)
+  - Dilengkapi penjelasan satu kalimat berbahasa awam dan bukti URL dalam format monospace non-aktif yang aman.
 - **Komponen "Rangkuman Sederhana" (*Layman Summary*):**
   - Menyajikan penjelasan ramah warga awam bebas jargon teknis asing (tanpa istilah *TLD, DNS, URI, NIDS, Regex*).
-- **Komponen "Teknik yang Terdeteksi":**
-  - Menampilkan badge per teknik (*Web Defacement*, *Open Redirect*, *Typosquatting*).
-  - Dilengkapi penjelasan satu kalimat berbahasa awam dan bukti URL dalam format monospace non-aktif yang aman.
+  - Dilengkapi modul khusus untuk korban penyusupan situs resmi instansi (*SEO Cloaking*): Menjelaskan bahwa domain asli milik instansi pemerintah/akademik, namun servernya disusupi skrip licik yang memanipulasi robot mesin pencari Googlebot.
 
 ### 3.2. Tata Letak Halaman Lapor Siber (`frontend/lapor.blade.php`)
 - **Daftar Kategori Laporan Baru (Terstandarisasi):**
@@ -243,3 +251,22 @@ Urutan navigasi sidebar admin ditata terstruktur memisahkan operasional harian d
 - Menggunakan base image container `dunglas/frankenphp:1-php8.4` di atas Vercel Container Runtime.
 - Melayani aset statis (`css/`, `js/`, `images/`, `logo-shield.png`, `favicon.svg`) secara instan melalui Caddy web server dengan kompresi `zstd`/`gzip`.
 - Menambahkan proteksi header `Cache-Control: no-cache, no-store, must-revalidate` pada file skrip JavaScript dan parameter versi `?v=...` sehingga perangkat mobile selalu mendapatkan kode terbaru.
+
+---
+
+## 🎨 16. Pembaruan Antarmuka & UX Terkini
+
+### 16.1. Penyederhanaan Panel Admin Artikel (Eksklusif Publik untuk Prinsip 4T)
+- Kartu banner admin "Kelola Prinsip 4T dalam Literasi Siber" telah **dihapus dari panel kelola artikel admin** ([`frontend/admin/artikel.blade.php`](file:///d:/cybershield/frontend/admin/artikel.blade.php)) agar tata letak daftar artikel lebih fokus, ringkas, dan bersih.
+- Seluruh 4 kartu pilar Kaidah 4T (*Tawaqquf, Tastabbus, Tatsabbut, Ta'aqqul*) **tetap ditampilkan utuh dan interaktif pada halaman publik** ([`frontend/etika.blade.php`](file:///d:/cybershield/frontend/etika.blade.php)) serta modul literasi masyarakat.
+
+### 16.2. Perbaikan Arah Animasi Gradient Kilau Teks Hero
+- Memperbaiki arah lintasan animasi kilau cahaya (*shimmer gradient sweep*) pada judul hero:
+  > *"Waspadai Jebakan **Investasi Palsu & Judol**"*
+- Lintasan kemilau cahaya kini bergerak alami **dari kiri ke kanan (mulai dari kata 'Investasi' s.d. 'Judol')**, menggantikan arah sebelumnya yang bergerak terbalik.
+
+### 16.3. Standarisasi Kompatibilitas CSS Modern
+- Mendefinisikan properti CSS standar W3C di samping properti vendor-prefixed:
+  - Menambahkan properti standar `line-clamp: 2` mendampingi `-webkit-line-clamp: 2` pada utility class pemotong teks.
+  - Menambahkan properti standar `mask` mendampingi `-webkit-mask` pada efek transparansi gradien scanner.
+- Memastikan kompatibilitas sempurna di seluruh browser modern (Chrome, Safari, Firefox, Edge, dan Android WebView).

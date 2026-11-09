@@ -10,10 +10,13 @@ Dokumen ini disusun sebagai panduan menyeluruh mengenai landasan konseptual, per
 ### A. Maraknya Tautan Judi Online (*Judol*) dan Investasi Menyesatkan
 Ruang digital Indonesia saat ini berada dalam kondisi darurat penipuan siber dan perjudian daring (*maysir modern*). Berdasarkan data Kementerian Komunikasi dan Digital (Komdigi) serta Otoritas Jasa Keuangan (OJK), ratusan ribu konten dan tautan perjudian daring serta entitas keuangan ilegal diblokir setiap tahunnya.
 
-Sindikat kejahatan siber modern telah berevolusi dengan menerapkan **3 Teknik Penyusupan Tautan**:
+Sindikat kejahatan siber modern telah berevolusi dengan menerapkan **6 Teknik Manipulasi & Penyusupan Tautan**:
 1. **Web Defacement & Subdomain Hijacking:** Menunggangi otoritas domain resmi (`.go.id`, `.ac.id`, `.desa.id`) dengan menyusupkan halaman judi pada direktori CMS rentan atau membuat subdomain liar berangka hoki judol (`88`, `138`, `777`).
 2. **Open Redirect (Cloaking):** Memanfaatkan parameter pengalihan resmi (`?url=`, `?redirect=`) untuk membelokkan pengunjung ke situs taruhan secara otomatis.
 3. **Typosquatting & Homoglif:** Meniru nama instansi resmi negara dan perbankan menggunakan karakter serupa (`0` $\to$ `o`, `1` $\to$ `l/i`, `rn` $\to$ `m`, `vv` $\to$ `w`) dan embel-embel tipuan (`-resmi`, `-login`, `-bansos`).
+4. **URL Masking / Link Masking:** Menyembunyikan tautan judi atau binary options di balik domain tepercaya (seperti Google Share `share.google`, `app.goo.gl`, atau shortener `bit.ly`, `s.id`).
+5. **Domain Rebouncer / Proxy Link:** Memanfaatkan fitur share ekosistem tepercaya sebagai jembatan pelompat otomatis ke situs ilegal tanpa izin regulator.
+6. **SEO Cloaking / Conditional Defacement:** Menyusupkan skrip bersyarat pada web server domain resmi pemerintah/kampus yang menyajikan berita normal bagi pengunjung manusia, tetapi menyajikan muatan judi online masif (`CUMI787 Slot Gacor`) khusus saat dirayapi oleh *Googlebot* mesin pencari.
 
 ### B. Beban Ganda Generasi Muda di Era Digital
 Generasi muda menghadapi dilema ganda:
