@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Badge
     if (elResultBadge) {
-      elResultBadge.className = `badge px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider ${scheme.badge.join(' ')}`;
+      elResultBadge.className = `badge inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider whitespace-nowrap leading-tight ${scheme.badge.join(' ')}`;
     }
 
     // Score text color

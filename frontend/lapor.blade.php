@@ -100,14 +100,14 @@
     <div class="flex items-center justify-between h-20">
 
       <!-- Logo & Brand Name -->
-      <div class="flex items-center gap-3 xl:gap-8 shrink-0">
-        <a href="index.blade.php" class="flex items-center gap-2.5 xl:gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg py-1 shrink-0">
-          <img src="../logo-shield.png" alt="Logo Resmi Aswaja CyberShield" class="w-10 h-10 object-contain group-hover:scale-105 transition-transform">
-          <div class="flex flex-col">
-            <span class="font-display font-bold text-lg text-slate-900 dark:text-white tracking-tight leading-tight group-hover:text-emerald-700 transition-colors">
+      <div class="flex items-center gap-2 sm:gap-3 xl:gap-8 shrink min-w-0">
+        <a href="index.blade.php" class="flex items-center gap-2 sm:gap-2.5 xl:gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg py-1 min-w-0">
+          <img src="../logo-shield.png" alt="Logo Resmi Aswaja CyberShield" class="w-8 h-8 sm:w-10 sm:h-10 object-contain group-hover:scale-105 transition-transform shrink-0">
+          <div class="flex flex-col min-w-0">
+            <span class="font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white tracking-tight leading-tight group-hover:text-emerald-700 transition-colors truncate">
               Aswaja <span class="text-emerald-600">CyberShield</span>
             </span>
-            <span class="text-[10px] font-medium text-slate-500 dark:text-slate-400 tracking-wider uppercase">Literasi & Keamanan Siber</span>
+            <span class="text-[9px] sm:text-[10px] font-medium text-slate-500 dark:text-slate-400 tracking-wider uppercase truncate">Literasi & Keamanan Siber</span>
           </div>
         </a>
 
@@ -128,10 +128,10 @@
       </div>
 
       <!-- Right Action Button & Mobile Hamburger -->
-      <div class="flex items-center gap-2 xl:gap-3 shrink-0">
+      <div class="flex items-center gap-1.5 sm:gap-2 xl:gap-3 shrink-0">
         <!-- Emergency Report CTA Button -->
-        <a href="lapor.blade.php" class="inline-flex items-center gap-1.5 xl:gap-2 px-3 xl:px-4 py-2 rounded-xl bg-red-50 text-red-700 whitespace-nowrap shrink-0 dark:bg-red-950/50 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/50 border border-red-200/70 dark:border-red-800 text-sm font-semibold transition-all duration-200 shadow-sm active:scale-95">
-          <span class="material-symbols-outlined text-[18px] text-red-600 dark:text-red-400">emergency</span>
+        <a href="lapor.blade.php" class="hidden xs:inline-flex inline-flex items-center gap-1.5 xl:gap-2 px-2.5 sm:px-3 xl:px-4 py-1.5 sm:py-2 rounded-xl bg-red-50 text-red-700 whitespace-nowrap shrink-0 dark:bg-red-950/50 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/50 border border-red-200/70 dark:border-red-800 text-xs sm:text-sm font-semibold transition-all duration-200 shadow-sm active:scale-95">
+          <span class="material-symbols-outlined text-[16px] sm:text-[18px] text-red-600 dark:text-red-400">emergency</span>
           <span class="hidden sm:inline whitespace-nowrap">Lapor Darurat</span>
         </a>
 
@@ -142,13 +142,13 @@
         </a>
 
         <!-- Dark Mode Toggle -->
-        <button type="button" id="darkmode-toggle" aria-label="Ganti Mode Tampilan" class="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500">
-          <span class="material-symbols-outlined text-xl" id="darkmode-icon">dark_mode</span>
+        <button type="button" id="darkmode-toggle" aria-label="Ganti Mode Tampilan" class="p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <span class="material-symbols-outlined text-lg sm:text-xl" id="darkmode-icon">dark_mode</span>
         </button>
 
         <!-- Mobile Hamburger Menu Button -->
-        <button type="button" id="mobile-menu-btn" aria-label="Buka Menu Navigasi" aria-expanded="false" class="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500">
-          <span class="material-symbols-outlined text-2xl" id="menu-icon">menu</span>
+        <button type="button" id="mobile-menu-btn" aria-label="Buka Menu Navigasi" aria-expanded="false" class="lg:hidden p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <span class="material-symbols-outlined text-xl sm:text-2xl" id="menu-icon">menu</span>
         </button>
       </div>
 

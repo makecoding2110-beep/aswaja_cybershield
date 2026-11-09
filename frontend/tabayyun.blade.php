@@ -84,14 +84,14 @@
     <div class="flex items-center justify-between h-20">
 
       <!-- Logo & Brand Name -->
-      <div class="flex items-center gap-3 xl:gap-8 shrink-0">
-        <a href="index.blade.php" class="flex items-center gap-2.5 xl:gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg py-1 shrink-0">
-          <img src="../logo-shield.png" alt="Logo Resmi Aswaja CyberShield" class="w-10 h-10 object-contain group-hover:scale-105 transition-transform">
-          <div class="flex flex-col">
-            <span class="font-display font-bold text-lg text-slate-900 dark:text-white tracking-tight leading-tight group-hover:text-emerald-700 transition-colors">
+      <div class="flex items-center gap-2 sm:gap-3 xl:gap-8 shrink min-w-0">
+        <a href="index.blade.php" class="flex items-center gap-2 sm:gap-2.5 xl:gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg py-1 min-w-0">
+          <img src="../logo-shield.png" alt="Logo Resmi Aswaja CyberShield" class="w-8 h-8 sm:w-10 sm:h-10 object-contain group-hover:scale-105 transition-transform shrink-0">
+          <div class="flex flex-col min-w-0">
+            <span class="font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white tracking-tight leading-tight group-hover:text-emerald-700 transition-colors truncate">
               Aswaja <span class="text-emerald-600">CyberShield</span>
             </span>
-            <span class="text-[10px] font-medium text-slate-500 dark:text-slate-400 tracking-wider uppercase">Literasi & Keamanan Siber</span>
+            <span class="text-[9px] sm:text-[10px] font-medium text-slate-500 dark:text-slate-400 tracking-wider uppercase truncate">Literasi & Keamanan Siber</span>
           </div>
         </a>
 
@@ -112,10 +112,10 @@
       </div>
 
       <!-- Right Action Button & Mobile Hamburger -->
-      <div class="flex items-center gap-2 xl:gap-3 shrink-0">
+      <div class="flex items-center gap-1.5 sm:gap-2 xl:gap-3 shrink-0">
         <!-- Emergency Report CTA Button -->
-        <a href="lapor.blade.php" class="inline-flex items-center gap-1.5 xl:gap-2 px-3 xl:px-4 py-2 rounded-xl bg-red-50 text-red-700 whitespace-nowrap shrink-0 dark:bg-red-950/50 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/50 border border-red-200/70 dark:border-red-800 text-sm font-semibold transition-all duration-200 shadow-sm active:scale-95">
-          <span class="material-symbols-outlined text-[18px] text-red-600 dark:text-red-400">emergency</span>
+        <a href="lapor.blade.php" class="hidden xs:inline-flex inline-flex items-center gap-1.5 xl:gap-2 px-2.5 sm:px-3 xl:px-4 py-1.5 sm:py-2 rounded-xl bg-red-50 text-red-700 whitespace-nowrap shrink-0 dark:bg-red-950/50 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/50 border border-red-200/70 dark:border-red-800 text-xs sm:text-sm font-semibold transition-all duration-200 shadow-sm active:scale-95">
+          <span class="material-symbols-outlined text-[16px] sm:text-[18px] text-red-600 dark:text-red-400">emergency</span>
           <span class="hidden sm:inline whitespace-nowrap">Lapor Darurat</span>
         </a>
 
@@ -126,13 +126,13 @@
         </a>
 
         <!-- Dark Mode Toggle -->
-        <button type="button" id="darkmode-toggle" aria-label="Ganti Mode Tampilan" class="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500">
-          <span class="material-symbols-outlined text-xl" id="darkmode-icon">dark_mode</span>
+        <button type="button" id="darkmode-toggle" aria-label="Ganti Mode Tampilan" class="p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <span class="material-symbols-outlined text-lg sm:text-xl" id="darkmode-icon">dark_mode</span>
         </button>
 
         <!-- Mobile Hamburger Menu Button -->
-        <button type="button" id="mobile-menu-btn" aria-label="Buka Menu Navigasi" aria-expanded="false" class="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500">
-          <span class="material-symbols-outlined text-2xl" id="menu-icon">menu</span>
+        <button type="button" id="mobile-menu-btn" aria-label="Buka Menu Navigasi" aria-expanded="false" class="lg:hidden p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <span class="material-symbols-outlined text-xl sm:text-2xl" id="menu-icon">menu</span>
         </button>
       </div>
 
@@ -309,43 +309,43 @@
 
             <!-- Result Header -->
             <div id="result-header-divider" class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-red-200/60 dark:border-red-800/40">
-              <div class="flex items-start sm:items-center gap-3">
-                <div id="result-icon-box" class="w-12 h-12 rounded-xl bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-300 flex items-center justify-center shrink-0">
+              <div class="flex items-start sm:items-center gap-3 w-full sm:w-auto">
+                <div id="result-icon-box" class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-300 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
                   <span class="material-symbols-outlined text-2xl" id="result-icon">warning</span>
                 </div>
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span id="result-category-badge" class="badge px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-red-200 dark:bg-red-800/80 text-red-900 dark:text-red-100">
+                <div class="min-w-0 flex-1">
+                  <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 mb-1">
+                    <span id="result-category-badge" class="badge inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-red-200 dark:bg-red-800/80 text-red-900 dark:text-red-100 whitespace-nowrap">
                       Terindikasi Judi Online
                     </span>
-                    <span class="text-xs text-slate-500 dark:text-slate-400" id="result-scanned-time">Waktu Pindai: Barusan (Realtime)</span>
+                    <span class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap" id="result-scanned-time">Waktu Pindai: Barusan (Realtime)</span>
                   </div>
-                  <h3 id="result-main-title" class="font-display font-bold text-xl text-red-950 dark:text-red-100 mt-1">
+                  <h3 id="result-main-title" class="font-display font-bold text-lg sm:text-xl text-red-950 dark:text-red-100 leading-snug">
                     Waspada: Terindikasi Tautan Investasi Palsu Mengarah ke Judi Online
                   </h3>
                 </div>
               </div>
 
               <!-- Score Pill (Sistem Skor Biner: Aman vs Berbahaya) -->
-              <div id="result-score-pill" class="result-inner-box bg-white dark:bg-slate-800 px-4 py-2.5 rounded-xl shadow-xs border border-red-200/70 dark:border-red-800/50 flex items-center gap-3 self-end sm:self-auto transition-colors">
-                <div class="text-right flex flex-col items-end">
-                  <div class="flex items-center justify-end gap-1 mb-1">
+              <div id="result-score-pill" class="result-inner-box bg-white dark:bg-slate-800 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl shadow-xs border border-red-200/70 dark:border-red-800/50 flex items-center gap-3 self-stretch sm:self-auto justify-between sm:justify-start transition-colors">
+                <div class="text-left sm:text-right flex flex-col items-start sm:items-end">
+                  <div class="flex items-center gap-1 mb-0.5 sm:mb-1">
                     <span id="result-score-label" class="text-[10px] text-slate-400 dark:text-slate-400 uppercase tracking-wider font-semibold block">Tingkat Bahaya</span>
                     <div class="relative group inline-block">
                       <button type="button" class="text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors p-0.5 inline-flex items-center focus:outline-none focus:ring-1 focus:ring-emerald-500 rounded" aria-label="Informasi Perhitungan Skor">
                         <span class="material-symbols-outlined text-[14px]">info</span>
                       </button>
-                      <div id="result-score-tooltip" class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full right-0 mb-2 w-64 p-2.5 bg-slate-900 text-slate-100 text-[11px] rounded-xl shadow-xl z-50 text-left pointer-events-none leading-normal font-normal">
+                      <div id="result-score-tooltip" class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-0 sm:left-auto sm:right-0 mb-2 w-64 p-2.5 bg-slate-900 text-slate-100 text-[11px] rounded-xl shadow-xl z-50 text-left pointer-events-none leading-normal font-normal">
                         Tingkat Bahaya mengukur persentase potensi risiko kejahatan siber, indikasi pola taruhan maysir, kedok investasi bodong, dan anomali muatan tautan.
                       </div>
                     </div>
                   </div>
-                  <div class="flex flex-col items-end">
-                    <span id="result-score-text" class="font-display font-black text-2xl leading-none text-red-700 dark:text-red-300">95%</span>
-                    <span id="result-score-status" class="text-[11px] font-bold uppercase tracking-wider mt-1 text-red-700 dark:text-red-300">Sangat Berbahaya</span>
+                  <div class="flex flex-col items-start sm:items-end">
+                    <span id="result-score-text" class="font-display font-black text-xl sm:text-2xl leading-none text-red-700 dark:text-red-300">95%</span>
+                    <span id="result-score-status" class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider mt-0.5 sm:mt-1 text-red-700 dark:text-red-300">Sangat Berbahaya</span>
                   </div>
                 </div>
-                <div id="result-score-icon-box" class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-950/70 flex items-center justify-center text-red-700 dark:text-red-300 shrink-0">
+                <div id="result-score-icon-box" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-red-100 dark:bg-red-950/70 flex items-center justify-center text-red-700 dark:text-red-300 shrink-0">
                   <span class="material-symbols-outlined text-[20px]" id="result-score-icon">gpp_bad</span>
                 </div>
               </div>
