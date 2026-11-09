@@ -58,7 +58,7 @@ Aswaja CyberShield dibangun dengan pendekatan **Recognize, Learn, & Act** yang m
 ```mermaid
 flowchart TD
     User(["Pengguna / Warga Siber"]) -->|"Input URL Mencurigakan"| UI["Frontend AI Tabayyun (tabayyun.blade.php)"]
-    UI -->|"POST /api/tabayyun/analyze (Teks URL Saja)"| Controller["AiOrchestratorService"]
+    UI -->|"POST /api/analyze-link (Teks URL Saja)"| Controller["AiOrchestratorService"]
 
     subgraph Layer1["Tahap 1: Validasi Struktur URL & SSRF Guard (UrlValidationService)"]
         Controller --> SSRF["Validasi Skema, Normalisasi & SSRF Guard"]
@@ -81,29 +81,38 @@ flowchart TD
         Controller --> Gemini["Google Gemini AI (gemini-3.5-flash-lite)\n• Prompt Injection Protection\n• Analisis Semantik & Leetspeak\n• Evaluasi Kaidah Fiqih 4T"]
     end
 
-    TierMatch --> RiskEngine["Tahap 5: Sintesis Risiko Terbobot & Keputusan 2-State\n(35% Threat + 30% Suricata + 30% Gemini + 5% URL)"]
+    TierMatch --> RiskEngine["Tahap 5: Sintesis Risiko Terbobot & Matriks 4 Tingkat Risiko\n(35% Threat + 30% Suricata + 30% Gemini + 5% URL)"]
     ThreatEngine --> RiskEngine
     SigRules --> RiskEngine
     Gemini --> RiskEngine
 
-    RiskEngine --> VerdictRed["🔴 Berbahaya (Tingkat Bahaya 0%–100%)\n(Badge Merah, Teknik Terdeteksi, 'Sangat Berbahaya' jika ≥85%)"]
-    RiskEngine --> VerdictGreen["🟢 Aman (Tingkat Keamanan 0%–100%)\n(Badge Emerald, Rekomendasi Tabayyun)"]
+    RiskEngine --> V1["🟢 Rendah (0%–25%)\n(Emerald #059669 • Status 'Rendah (Aman)' • 3 Poin Verifikasi)"]
+    RiskEngine --> V2["🟡 Sedang (26%–50%)\n(Amber #D97706 • Status 'Sedang / Perlu Waspada' • Kedok Trading/TLD)"]
+    RiskEngine --> V3["🟠 Tinggi (51%–84%)\n(Orange #EA580C • Status 'Tinggi / Perlu Pemeriksaan' • Fitur Judi/Anomali)"]
+    RiskEngine --> V4["🔴 Berat / Kritis (85%–100%)\n(Red #DC2626 • Status 'Sangat Berbahaya (Berat)' • Defacement/Phishing)"]
 
-    VerdictRed --> History["Tahap 6: Simpan Riwayat ke Database (link_scans)"]
-    VerdictGreen --> History
+    V1 --> History["Tahap 6: Simpan Riwayat ke Database (link_scans)"]
+    V2 --> History
+    V3 --> History
+    V4 --> History
 
     History --> ResponseUI["Render Hasil ke Layar Pengguna & Tombol Salin/Lapor"]
 ```
 
 ---
 
-## 3. Formulasi Sintesis Risiko & Skor 2-State
+## 3. Formulasi Sintesis Risiko & Matriks 4 Tingkat Risiko
 
 $$\text{RiskScore} = \text{round}\Big((0.35 \times S_{\text{Threat}}) + (0.30 \times S_{\text{Suricata}}) + (0.30 \times S_{\text{Gemini}}) + (0.05 \times S_{\text{URL}})\Big)$$
 
-Sistem mengadopsi panduan biner yang tegas dan jelas:
-- **Tautan Aman**: Menampilkan **Tingkat Keamanan** ($0\% - 100\%$, hijau emerald).
-- **Tautan Berbahaya**: Menampilkan **Tingkat Bahaya** ($0\% - 100\%$, merah danger). Label penegas *"Sangat Berbahaya"* disematkan hanya jika skor bahaya $\ge 85\%$.
+Sistem mengadopsi satu skala terpadu yang konsisten (**Tingkat Risiko: 0% – 100%**) dengan visualisasi berjenjang 4 tingkat:
+
+| Tingkat Risiko | Rentang Skor | Warna & Token | Status & Ikon | Karakteristik & Rekomendasi |
+| :--- | :--- | :--- | :--- | :--- |
+| **🟢 Rendah** | **0% – 25%** | Emerald (`#059669`) | `Rendah (Aman)`<br>`verified_user` | Domain sah terverifikasi, bebas muatan maysir/judi, dilengkapi 3 poin verifikasi aman. |
+| **🟡 Sedang** | **26% – 50%** | Amber (`#D97706`) | `Sedang / Perlu Waspada`<br>`warning` | Indikasi domain bebas/promosi, kedok investasi bodong/trading berisiko, atau anomali URL. |
+| **🟠 Tinggi** | **51% – 84%** | Orange (`#EA580C`) | `Tinggi / Perlu Pemeriksaan`<br>`gpp_maybe` | Ditemukan kata kunci judi daring (maxwin, jackpot, scatter) atau anomali sensor teknis. |
+| **🔴 Berat** | **85% – 100%** | Crimson Red (`#DC2626`) | `Sangat Berbahaya (Berat)`<br>`gpp_bad` | Terindikasi kuat jaringan judi online aktif, web defacement instansi, atau phishing pencurian data. |
 
 ---
 
@@ -127,33 +136,54 @@ php -S localhost:3000 index.php
 ## 5. Daftar Variabel Environment Penting (`backend/.env`)
 
 ```env
-# Database Supabase PostgreSQL (IPv4 Session Pooler)
+# Konfigurasi Aplikasi & Serverless Storage
+APP_NAME="Aswaja CyberShield"
+APP_ENV=production
+APP_KEY=base64:your_app_key_here
+APP_DEBUG=false
+APP_URL=http://localhost:3000
+APP_STORAGE=/tmp/storage
+
+# Database Supabase PostgreSQL
 DB_CONNECTION=pgsql
 DB_HOST=aws-0-ap-southeast-1.pooler.supabase.com
 DB_PORT=5432
 DB_DATABASE=postgres
-DB_USERNAME=postgres.tffadqzdhltroeuuckjw
-DB_PASSWORD=AswajaCyber3*
+DB_USERNAME=postgres.your_project_id
+DB_PASSWORD=your_db_password_here
 DB_SSLMODE=require
 
-# AI Engine Utama (Google Gemini)
+# AI Engine Utama (Google Gemini AI)
 GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL=gemini-3.5-flash-lite
 GEMINI_TIMEOUT=30
 
-# Threat Intelligence & RDAP (Zero-Fetch)
-THREAT_RDAP_ENABLED=false
-THREAT_RDAP_TIMEOUT=2
+# Konfigurasi Email / SMTP (Notifikasi Laporan & Reset Password)
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your_email@gmail.com
+MAIL_PASSWORD=your_app_password
+MAIL_FROM_ADDRESS="no-reply@aswajacyber.id"
+MAIL_FROM_NAME="Aswaja CyberShield"
 
-# Suricata NIDS Integration
-SURICATA_ENABLED=true
-SURICATA_EVE_PATH=storage/logs/suricata/eve.json
+# Session & Cache Driver
+SESSION_DRIVER=file
+CACHE_STORE=file
+QUEUE_CONNECTION=sync
 ```
 
 ---
 
+## 6. Integrasi Sensor Keamanan Jaringan (Suricata NIDS)
 
----
+Platform mengintegrasikan sensor deterministik **Suricata NIDS** untuk memeriksa paket pada level protokol jaringan:
+* **Log Telemetri EVE:** [`storage/logs/suricata/eve.json`](file:///d:/cybershield/storage/logs/suricata/eve.json)
+* **Aturan Signature Khusus:** [`suricata.rules`](file:///d:/cybershield/suricata.rules) & [`infra/suricata/rules/aswaja-local.rules`](file:///d:/cybershield/infra/suricata/rules/aswaja-local.rules) (SID 1000000–1000103)
+* **Mode Uji Sintaks Rule:**
+  ```bash
+  suricata -T -c /etc/suricata/suricata.yaml -S infra/suricata/rules/aswaja-local.rules
+  ```
 
 ## 7. Hasil Pengujian Otomatis
 
