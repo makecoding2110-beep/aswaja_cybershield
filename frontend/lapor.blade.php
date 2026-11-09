@@ -4,11 +4,10 @@
   $prefilledUrl = htmlspecialchars(trim($_GET['url'] ?? $_GET['q'] ?? ''), ENT_QUOTES, 'UTF-8');
   
   $kategoriList = [
-      'Promosi Situs Judi Online / Slot',
+      'Promosi Situs Judi Online/Slot',
       'Investasi Bodong & Trading Ilegal',
-      'Web Defacement / Subdomain Instansi Diretas',
-      'Phishing & Pencurian Data (APK/Formulir Palsu)',
-      'Grup Arisan & Undangan Investasi Menyesatkan',
+      'Domain Instansi Diretas',
+      'Undangan Investasi Menyesatkan',
       'Iklan Cuan Kilat Bersyarat Deposit',
       'Lainnya'
   ];
