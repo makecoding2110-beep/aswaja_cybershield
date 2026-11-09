@@ -114,7 +114,7 @@
       <!-- Right Action Button & Mobile Hamburger -->
       <div class="flex items-center gap-1.5 sm:gap-2 xl:gap-3 shrink-0">
         <!-- Emergency Report CTA Button -->
-        <a href="lapor.blade.php" class="hidden xs:inline-flex inline-flex items-center gap-1.5 xl:gap-2 px-2.5 sm:px-3 xl:px-4 py-1.5 sm:py-2 rounded-xl bg-red-50 text-red-700 whitespace-nowrap shrink-0 dark:bg-red-950/50 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/50 border border-red-200/70 dark:border-red-800 text-xs sm:text-sm font-semibold transition-all duration-200 shadow-sm active:scale-95">
+        <a href="lapor.blade.php" class="inline-flex items-center gap-1.5 xl:gap-2 px-2.5 sm:px-3 xl:px-4 py-1.5 sm:py-2 rounded-xl bg-red-50 text-red-700 whitespace-nowrap shrink-0 dark:bg-red-950/50 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/50 border border-red-200/70 dark:border-red-800 text-xs sm:text-sm font-semibold transition-all duration-200 shadow-sm active:scale-95">
           <span class="material-symbols-outlined text-[16px] sm:text-[18px] text-red-600 dark:text-red-400">emergency</span>
           <span class="hidden sm:inline whitespace-nowrap">Lapor Darurat</span>
         </a>
