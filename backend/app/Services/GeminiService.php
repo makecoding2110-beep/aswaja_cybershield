@@ -222,7 +222,7 @@ class GeminiService
         // Validasi daftar teknik ancaman yang terdeteksi
         $techniques = [];
         if (isset($data['techniques']) && is_array($data['techniques'])) {
-            $allowedTechniques = ['web_defacement', 'open_redirect', 'typosquatting', 'kamuflase_investasi', 'url_masking', 'domain_rebouncer'];
+            $allowedTechniques = ['web_defacement', 'open_redirect', 'typosquatting', 'kamuflase_investasi', 'url_masking', 'domain_rebouncer', 'seo_cloaking'];
             foreach ($data['techniques'] as $t) {
                 $tLower = strtolower(trim((string)$t));
                 if (in_array($tLower, $allowedTechniques, true)) {
@@ -272,10 +272,14 @@ FOKUS KHUSUS PADA TEKNIK MANIPULASI / PENYUSUPAN TAUTAN:
    - Subdomain tidak wajar bertema judol/angka (misal: slot88.instansi.go.id, gacor777.desa.id).
 5. Typosquatting / URL Spoofing ("typosquatting"):
    - Peniruan nama instansi resmi (OJK, Bappebti, Kominfo, Kemkes, bank resmi) pada domain komersial/TLD murah (.com, .vip, .xyz) dengan manipulasi huruf/homoglif (0->o, 1->l, rn->m) dan embel-embel deceptive (-resmi, -bantuan, -login).
+6. SEO Cloaking / Defacement Tersembunyi ("seo_cloaking"):
+   - Domain resmi pemerintah (.go.id) atau akademik (.ac.id) yang membedakan respons: jika dibuka oleh manusia biasa menampilkan berita resmi instansi, namun jika dirayapi oleh mesin pencari Googlebot atau diakses via Google Search, menyuntikkan judul/snippet/konten judi online aktif (seperti slot gacor, CUMI787, maxwin, togel) untuk mendongkrak visibilitas sindikat di hasil pencarian.
+   - Jika terindikasi Cloaking pada domain resmi: Berikan status "judol" dengan tingkat risiko TINGGI (75% - 95%) dan teknik "seo_cloaking" serta "web_defacement". Jelaskan bahwa situs asli memang milik instansi resmi, namun telah disusupi skrip berbahaya yang hanya muncul di mesin pencari.
 
 ATURAN EVALUASI TAUTAN TERSELUBUNG / UNMASKED TARGET:
 Jika data analisis teknis melampirkan "unmasked_url" atau "unmasked_host" (alamat asli yang disembunyikan di balik share.google atau shortener/rebouncer), evaluasi muatan ancaman situs tujuan asli tersebut!
 Jika situs tujuan akhir adalah platform judi online atau platform trading binary options / investasi menyesatkan (seperti olymptrade.com), maka tautan pembungkus WAJIB dikategorikan berbahaya ("investasi_menyesatkan" atau "judol"), dengan skor risiko tinggi (70-85+), dan menyertakan teknik "url_masking" serta "domain_rebouncer".
+Jika hanya menerima tautan pembungkus (shortener/wrapper) tanpa tujuan akhir yang jelas, DILARANG memberi status Aman (0%). Berikan status "suspicious" dengan risiko SEDANG (45% - 60%).
 
 ATURAN TIGA TINGKAT PENCOCOKAN KATA KUNCI JUDOL (Mencegah False Positive pada Website Biasa):
 - Tingkat KUAT (slot gacor, situs togel, casino online, judi slot, bandar togel, maxwin, slot88, slot777, depo slot): Indikator kuat -> Langsung terindikasi judol.
@@ -289,7 +293,7 @@ Format JSON yang wajib dipatuhi:
   "category": "judol" | "investasi_menyesatkan" | "normal" | "suspicious" | "unknown",
   "risk_level": "low" | "medium" | "high" | "critical",
   "risk_score": (integer 0-100),
-  "techniques": ["url_masking", "domain_rebouncer", "kamuflase_investasi", "web_defacement", "open_redirect", "typosquatting"],
+  "techniques": ["url_masking", "domain_rebouncer", "seo_cloaking", "kamuflase_investasi", "web_defacement", "open_redirect", "typosquatting"],
   "indicators": [
     {
       "name": "nama_indikator_teknis",

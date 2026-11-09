@@ -134,6 +134,9 @@ class AiOrchestratorService
                 ];
             }
 
+            $hasSeoCloaking = in_array('seo_cloaking', $storedTechniques, true);
+            $hasUrlMasking = in_array('url_masking', $storedTechniques, true);
+
             $alertClass = match (true) {
                 $cachedRecord->risk_score >= 85 => 'red',
                 $cachedRecord->risk_score >= 51 => 'orange',
@@ -141,19 +144,22 @@ class AiOrchestratorService
                 default => 'emerald'
             };
 
-            $title = match ($cachedRecord->final_category) {
-                'terindikasi_judol' => 'Waspada: Terindikasi Judi Online',
-                'terindikasi_investasi' => 'Peringatan: Terindikasi Investasi Bodong / Ilegal',
-                'mencurigakan' => 'Perhatian: Terdeteksi Pola Tautan Mencurigakan',
-                'normal' => 'Bersih: Tidak Ditemukan Pola Signature Berbahaya',
+            $title = match (true) {
+                $hasSeoCloaking => 'Waspada: Terindikasi Penyusupan (SEO Cloaking)',
+                $hasUrlMasking => 'Waspada: Terindikasi URL Masking / Pengalihan Tautan',
+                $cachedRecord->final_category === 'terindikasi_judol' => 'Waspada: Terindikasi Judi Online',
+                $cachedRecord->final_category === 'terindikasi_investasi' => 'Peringatan: Terindikasi Investasi Bodong / Ilegal',
+                $cachedRecord->final_category === 'mencurigakan' => 'Perhatian: Terdeteksi Pola Tautan Mencurigakan',
+                $cachedRecord->final_category === 'normal' => 'Bersih: Tidak Ditemukan Pola Signature Berbahaya',
                 default => 'Hasil Pemeriksaan Forensik Tautan'
             };
 
-            $statusAlert = match ($cachedRecord->final_category) {
-                'terindikasi_judol' => 'Berat (Sangat Berbahaya)',
-                'terindikasi_investasi' => 'Peringatan Bahaya Tinggi',
-                'mencurigakan' => 'Tinggi (Perlu Pemeriksaan)',
-                'normal' => 'Aman (Risiko Rendah)',
+            $statusAlert = match (true) {
+                $hasSeoCloaking => 'Berat (Penyusupan SEO Cloaking)',
+                $cachedRecord->final_category === 'terindikasi_judol' => 'Berat (Sangat Berbahaya)',
+                $cachedRecord->final_category === 'terindikasi_investasi' => 'Peringatan Bahaya Tinggi',
+                $cachedRecord->final_category === 'mencurigakan' => 'Tinggi (Perlu Pemeriksaan)',
+                $cachedRecord->final_category === 'normal' => 'Aman (Risiko Rendah)',
                 default => 'Hasil Analisis'
             };
 
@@ -199,6 +205,7 @@ class AiOrchestratorService
                 'kamuflase_investasi' => 'Kamuflase Finansial:',
                 'url_masking' => 'URL Masking Tautan:',
                 'domain_rebouncer' => 'Domain Rebouncer / Proxy:',
+                'seo_cloaking' => 'SEO Cloaking / Penyusupan:',
                 default => 'Analisis Pola Tautan:'
             };
             $urlFindings[] = [

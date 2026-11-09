@@ -19,7 +19,8 @@ return [
         'depo-pulsa', 'depo-10k', 'bonus-new-member', 'sabung-ayam', 'mauslot',
         'startogel', 'semuahoki', 'kpktoto', 'araitoto', 'dewacukong', 'cukong88',
         'hokibet', 'hokibet88', 'hoki88', 'dewaslot88', 'bet88', 'anti-rungkad',
-        'ibiza168', 'ibiza', 'slotmaxwin', 'rtp-winrate', 'link-resmi-gacor', 'mahjong-ways'
+        'ibiza168', 'ibiza', 'slotmaxwin', 'rtp-winrate', 'link-resmi-gacor', 'mahjong-ways',
+        'cumi787', 'cumi-787', 'dewacumi', 'cumi-slot', 'cumi88'
     ],
 
     // Frasa Konten Halaman Live (Mendeteksi situs judol yang bersembunyi di balik nama domain normal)

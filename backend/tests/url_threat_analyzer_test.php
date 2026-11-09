@@ -188,6 +188,28 @@ runTest(
     "Indicators count: " . count($resCodepolitan['indicators']) . ", Score: {$resCodepolitan['threat_score']}"
 );
 
+// -----------------------------------------------------------------------------
+// Test Case 10: Deteksi Dual-Persona SEO Cloaking pada Domain Resmi Pemerintah (.go.id)
+// -----------------------------------------------------------------------------
+$urlKemendagri = 'https://bbpkapdn1.kemendagri.go.id/';
+$resKemendagri = $analyzer->analyze($urlKemendagri);
+
+$hasCloakingTech = in_array('seo_cloaking', $resKemendagri['techniques'], true);
+$hasDefacementTech = in_array('web_defacement', $resKemendagri['techniques'], true);
+$hasCloakingIndicator = false;
+foreach ($resKemendagri['indicators'] as $ind) {
+    if (($ind['name'] ?? '') === 'seo_cloaking_detected') {
+        $hasCloakingIndicator = true;
+        break;
+    }
+}
+
+runTest(
+    "10. Deteksi Dual-Persona SEO Cloaking pada domain resmi pemerintah (kemendagri.go.id) terdeteksi dengan skor tinggi",
+    $hasCloakingTech && $hasDefacementTech && $hasCloakingIndicator && $resKemendagri['threat_score'] >= 90,
+    "Techniques: " . json_encode($resKemendagri['techniques']) . ", Cloaking Ind: " . ($hasCloakingIndicator ? 'YES' : 'NO') . ", Score: {$resKemendagri['threat_score']}"
+);
+
 echo "\n" . str_repeat("=", 60) . "\n";
 echo "HASIL PENGUJIAN THREAT ANALYZER: {$testsPassed} DARI {$totalTests} PENGUJIAN LULUS (" . round(($testsPassed / $totalTests) * 100) . "%)\n";
 echo str_repeat("=", 60) . "\n";

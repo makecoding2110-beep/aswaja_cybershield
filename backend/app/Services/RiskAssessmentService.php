@@ -355,7 +355,14 @@ class RiskAssessmentService
         }
 
         if (!($suricataResult['isWhitelist'] ?? false) && $threatScore >= 60) {
-            if ($hasInvestInd || $geminiCat === 'investasi_menyesatkan') {
+            if (in_array('seo_cloaking', $detectedTechniques, true)) {
+                $finalCategory = 'terindikasi_judol';
+                $categoryLabel = 'Terindikasi Penyusupan (SEO Cloaking)';
+                $alertClass = 'red';
+                $title = 'Waspada: Terindikasi Penyusupan (SEO Cloaking)';
+                $reasoning = "Situs resmi instansi pemerintah/akademik terbukti disusupi skrip SEO Cloaking sindikat judi online yang memanipulasi tampilan khusus untuk mesin pencari Googlebot.";
+                $decisionSource = 'threat_analyzer';
+            } elseif ($hasInvestInd || $geminiCat === 'investasi_menyesatkan') {
                 $finalCategory = 'terindikasi_investasi';
                 $categoryLabel = 'Terindikasi Investasi Menyesatkan';
                 $alertClass = 'orange';

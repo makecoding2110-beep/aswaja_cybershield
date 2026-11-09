@@ -52,7 +52,11 @@ return [
         'url_masking_detected' => 85,
         'domain_rebouncer_detected' => 80,
         'binary_options_illegal_investment' => 85,
-        'unmasked_threat_inherited' => 85
+        'unmasked_threat_inherited' => 85,
+
+        // SEO Cloaking (Penyusupan Domain Resmi Pemerintah / Akademik yang Dimanipulasi untuk Mesin Pencari)
+        'seo_cloaking_detected' => 95,
+        'seo_cloaking_snippet_judol' => 92
     ],
 
     // Nilai Ambang Minimal jika terjadi Kombinasi Berbahaya
@@ -62,6 +66,9 @@ return [
 
         // URL Masking / Domain Rebouncer yang menyembunyikan situs judol atau investasi menyesatkan -> Minimal 80 (Berbahaya)
         'url_masking_with_threat_dest' => 80,
+
+        // SEO Cloaking pada domain resmi pemerintah/akademik -> Minimal 90 (Kritis / Sangat Berbahaya)
+        'seo_cloaking_gov_edu' => 90,
 
         // Domain lembaga pemerintah / pendidikan (.go.id/.ac.id/.desa.id) + path judol -> Minimal 85 (Berbahaya)
         'defacement_gov_with_judol' => 85,

@@ -368,7 +368,28 @@ document.addEventListener('DOMContentLoaded', () => {
     let points = [];
 
     if (resolvedColor === 'red') {
-      if (techniques.includes('kamuflase_investasi') || findingsText.includes('kamuflase') || findingsText.includes('cuan') || findingsText.includes('trading')) {
+      if (techniques.includes('seo_cloaking') || findingsText.includes('cloaking') || findingsText.includes('googlebot')) {
+        points = [
+          {
+            icon: 'domain_disabled',
+            color: 'text-amber-600 dark:text-amber-400',
+            title: 'Situs Resmi Disusupi',
+            desc: 'Alamat web ini memang milik instansi pemerintah/akademik resmi, namun sistemnya telah disusupi skrip licik (SEO Cloaking) sindikat perjudian.'
+          },
+          {
+            icon: 'travel_explore',
+            color: 'text-red-600 dark:text-red-400',
+            title: 'Manipulasi Mesin Pencari',
+            desc: 'Situs sengaja menampilkan berita resmi bagi pengunjung manusia, tetapi menyajikan halaman promosi judi online kepada mesin pencari (Googlebot).'
+          },
+          {
+            icon: 'front_hand',
+            color: 'text-rose-600 dark:text-rose-400',
+            title: 'Langkah Aman',
+            desc: 'JANGAN mengeklik tautan atau tombol hasil pencarian terkait judi tersebut, dan laporkan insiden pembajakan ini kepada pengelola instansi terkait.'
+          }
+        ];
+      } else if (techniques.includes('kamuflase_investasi') || findingsText.includes('kamuflase') || findingsText.includes('cuan') || findingsText.includes('trading')) {
         points = [
           {
             icon: 'masks',
@@ -680,6 +701,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .replace(/Analisis Struktur URL/gi, 'Pemeriksaan Ciri Alamat')
         .replace(/URL Masking Tautan/gi, 'URL Masking (Penyembunyian Tautan)')
         .replace(/Domain Rebouncer \/ Proxy/gi, 'Domain Rebouncer / Proxy Link')
+        .replace(/SEO Cloaking \/ Penyusupan/gi, 'SEO Cloaking (Penyusupan Tersembunyi)')
         .replace(/Inspeksi Konten & Penyusupan/gi, 'Pemeriksaan Modus Halaman')
         .replace(/Analisis Pola & Konten/gi, 'Pemeriksaan Modus Halaman')
         .replace(/Deteksi Google Gemini/gi, 'Analisis Muatan Digital')
@@ -728,6 +750,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (text.includes('typosquatting') || text.includes('meniru')) {
           if (!list.includes('typosquatting')) list.push('typosquatting');
+        }
+        if (text.includes('cloaking') || text.includes('googlebot') || text.includes('penyusupan tersembunyi')) {
+          if (!list.includes('seo_cloaking')) list.push('seo_cloaking');
         }
       });
     }
@@ -820,6 +845,17 @@ document.addEventListener('DOMContentLoaded', () => {
           const matched = (findings || []).find(f => (f.label || '').includes('Rebouncer') || (f.detail || '').includes('Rebouncer') || (f.detail || '').includes('Jembatan'));
           if (matched) return matched.detail || matched.desc;
           return 'Memanfaatkan fitur share/proxy layanan pihak ketiga sebagai jembatan pelompat URL otomatis.';
+        }
+      },
+      seo_cloaking: {
+        badgeTitle: 'SEO Cloaking / Defacement Tersembunyi',
+        badgeColor: 'bg-rose-100 text-rose-900 border-rose-300/80 dark:bg-rose-950/70 dark:text-rose-200 dark:border-rose-700/60',
+        icon: 'travel_explore',
+        explanation: 'Situs resmi instansi (seperti domain pemerintah .go.id atau kampus .ac.id) telah disusupi oleh skrip licik yang menampilkan konten resmi normal kepada pengunjung manusia, namun menyajikan promosi judi online aktif ketika dirayapi oleh mesin pencari Googlebot.',
+        findEvidence: () => {
+          const matched = (findings || []).find(f => (f.label || '').includes('SEO Cloaking') || (f.detail || '').includes('SEO Cloaking') || (f.detail || '').includes('Googlebot') || (f.detail || '').includes('Penyusupan'));
+          if (matched) return matched.detail || matched.desc;
+          return 'Tampilan halaman berbeda secara kontras antara peramban biasa dengan robot mesin pencari (Googlebot).';
         }
       }
     };
