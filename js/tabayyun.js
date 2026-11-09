@@ -1095,7 +1095,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const titleLow = (result.title || '').toLowerCase();
           const catLow = (result.category || result.statusAlert || '').toLowerCase();
           if (titleLow.includes('judi') || catLow.includes('judi') || titleLow.includes('slot')) {
-            suggestedCategory = 'Promosi Situs Judi Online / Slot';
+            suggestedCategory = 'Promosi Situs Judi Online/Slot';
           } else if (titleLow.includes('defacement') || titleLow.includes('subdomain') || titleLow.includes('diretas')) {
             suggestedCategory = 'Domain Instansi Diretas';
           } else if (titleLow.includes('cuan') || titleLow.includes('deposit')) {
