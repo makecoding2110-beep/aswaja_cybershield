@@ -243,26 +243,6 @@
         </button>
       </div>
 
-      <!-- Banner Card: Kelola Prinsip 4T Fiqih Siber (Materi Utama Web) -->
-      <div class="rounded-2xl p-6 bg-gradient-to-r from-emerald-950 via-emerald-900 to-slate-900 text-white shadow-sm border border-emerald-800/40 space-y-4">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-emerald-800/50">
-          <div>
-            <div class="flex items-center gap-2 mb-1">
-  
-            </div>
-            <h2 class="text-lg font-display font-bold text-white">Kelola Prinsip 4T dalam Literasi Siber</h2>
-          </div>
-          <span class="text-xs text-slate-300">
-            <i class="bi bi-info-circle me-1 text-emerald-400"></i> Klik kartu untuk memperbarui penjelasan kaidah
-          </span>
-        </div>
-
-        <!-- 4 Grid Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="prinsip-4t-grid">
-          <!-- Populated by JS -->
-        </div>
-      </div>
-
       <!-- Filter Kategori dan Search Bar Khusus Artikel (Semantic Form) -->
       <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm">
         <form id="filter-article-form" class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3" onsubmit="event.preventDefault(); applyFilter();">
@@ -491,52 +471,6 @@
     </div>
   </div>
 
-  <!-- Modal Edit Prinsip 4T Fiqih Siber -->
-  <div id="modal-4t" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
-    <div class="min-h-full flex items-center justify-center p-4">
-      <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-        <h4 class="font-display font-bold text-base text-slate-900 flex items-center gap-2">
-          <i class="bi bi-shield-check text-emerald-600"></i>
-          <span>Edit Kaidah Prinsip 4T</span>
-        </h4>
-        <button type="button" onclick="close4TModal()" class="text-slate-400 hover:text-slate-700 p-1 rounded-lg">
-          <i class="bi bi-x-lg text-lg"></i>
-        </button>
-      </div>
-
-      <form id="form-4t" method="POST" onsubmit="handleSave4T(event)">
-        <input type="hidden" name="pillar_id" id="p4t-id">
-        <div class="space-y-3 text-xs">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">Nama Kaidah</label>
-              <input type="text" name="title" id="p4t-title" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white text-slate-800 font-bold">
-            </div>
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">Teks / Kaligrafi Arab</label>
-              <input type="text" name="arabic" id="p4t-arabic" placeholder="Contoh: تَوَقُّفْ" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white text-emerald-800 font-serif font-bold text-sm text-right" dir="rtl">
-            </div>
-          </div>
-          <div>
-            <label class="block font-semibold text-slate-700 mb-1">Subjudul / Makna</label>
-            <input type="text" name="subtitle" id="p4t-subtitle" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white text-slate-800">
-          </div>
-          <div>
-            <label class="block font-semibold text-slate-700 mb-1">Penjelasan Kaidah</label>
-            <textarea name="description" id="p4t-desc" rows="3" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white text-slate-800 leading-relaxed"></textarea>
-          </div>
-        </div>
-
-        <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-end gap-2">
-          <button type="button" onclick="close4TModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl">Batal</button>
-          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow-sm">Simpan Perubahan Kaidah</button>
-        </div>
-      </form>
-    </div>
-    </div>
-  </div>
-
   <!-- API Layer & Scripts -->
   <script src="../../js/api.js?v=20261109v2"></script>
   <script src="../../js/ui-kit.js?v=20261109v3"></script>
@@ -624,16 +558,7 @@
         notifMenu?.classList.add('hidden');
       });
 
-      // 2. Data Management: Articles & 4T
-      function getFallback4T() {
-        return [
-          { id: 1, code: 'T1', title: 'Tawaqquf', name: 'Tawaqquf', arabic: 'تَوَقُّف', subtitle: 'Tahan Diri & Jeda Reflektif', tagline: 'Tahan Diri & Jeda Reflektif', description: 'Menahan jempol saat menerima tautan sensasional berbau cuan instan. Menghentikan penyebaran sebelum fakta teruji.' },
-          { id: 2, code: 'T2', title: 'Tastabbus', name: 'Tastabbus', arabic: 'تَثَبُّت', subtitle: 'Telusuri Sanad & Fakta Digital', tagline: 'Telusuri Sanad & Fakta Digital', description: 'Melacak jejak digital domain, memverifikasi perizinan regulator OJK/Bappebti, dan membongkar kedok samaran tautan.' },
-          { id: 3, code: 'T3', title: 'Tatsabbut', name: 'Tatsabbut', arabic: 'تَبَيُّن', subtitle: 'Konfirmasi Otoritas & Fatwa', tagline: 'Konfirmasi Otoritas & Fatwa', description: 'Menguji kesesuaian muamalah dengan fatwa alim ulama dan hukum fiqih untuk memastikan tiadanya unsur judi (maysir).' },
-          { id: 4, code: 'T4', title: "Ta'aqqul", name: "Ta'aqqul", arabic: 'تَعَقُّل', subtitle: 'Pertimbangan Maslahat & Mudharat', tagline: 'Pertimbangan Maslahat & Mudharat', description: 'Menimbang apakah konten valid tersebut jika disebarkan membawa kemaslahatan atau malah memicu kegaduhan.' }
-        ];
-      }
-
+      // 2. Data Management: Articles
       function getFallbackArticles() {
         try {
           const stored = localStorage.getItem('aswaja_mock_articles');
@@ -656,31 +581,18 @@
       }
 
       let articlesList = getFallbackArticles();
-      let prinsip4tList = getFallback4T();
       let currentPage = 1;
       const itemsPerPage = 4;
 
       async function loadInitialData() {
-        // Tampilkan kartu 4T dan daftar artikel secara instan dari cache/lokal tanpa menunggu jaringan
-        renderPrinsip4TGrid();
         applyFilter();
 
         // Ambil data terbaru secara asinkron dan paralel tanpa memblokir rendering UI
         try {
-          const [p4tResult, articlesResult, reportsResult] = await Promise.allSettled([
-            withTimeout(window.ApiService.getPrinsip4T(), 3500),
+          const [articlesResult, reportsResult] = await Promise.allSettled([
             withTimeout(window.ApiService.getArticles(), 3500),
             withTimeout(window.ApiService.getReports(), 3500)
           ]);
-
-          if (p4tResult.status === 'fulfilled' && p4tResult.value) {
-            const p4tRes = p4tResult.value;
-            const items = Array.isArray(p4tRes) ? p4tRes : (p4tRes?.data || []);
-            if (items && items.length > 0) {
-              prinsip4tList = items;
-              renderPrinsip4TGrid();
-            }
-          }
 
           if (articlesResult.status === 'fulfilled' && articlesResult.value) {
             const articlesRes = articlesResult.value;
@@ -702,36 +614,6 @@
         } catch (err) {
           console.warn('[Admin Artikel] Background refresh error:', err);
         }
-      }
-
-      // Render Prinsip 4T Cards
-      function renderPrinsip4TGrid() {
-        const grid = document.getElementById('prinsip-4t-grid');
-        if (!grid) return;
-        const listToRender = (prinsip4tList && prinsip4tList.length > 0) ? prinsip4tList : getFallback4T();
-
-        grid.innerHTML = listToRender.map(item => `
-          <div class="p-4 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-emerald-500/20 hover:border-emerald-400/60 transition-all group flex flex-col justify-between cursor-pointer hover:scale-[1.01] active:scale-[0.99] shadow-sm" onclick="openEdit4TModal('${item.id || item.code}')" title="Klik untuk edit kaidah ${escapeHtml(item.title || item.name || '')}">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 font-mono font-bold text-xs flex items-center justify-center border border-emerald-400/30">
-                  ${escapeHtml(item.code || item.id)}
-                </span>
-                <span class="font-serif text-sm font-semibold text-emerald-300" dir="rtl">${escapeHtml(item.arabic || '')}</span>
-              </div>
-              <h4 class="font-display font-bold text-white text-sm group-hover:text-emerald-300 transition-colors">${escapeHtml(item.title || item.name || 'Kaidah 4T')}</h4>
-              <p class="text-[11px] text-emerald-400 font-medium mt-0.5 truncate">${escapeHtml(item.subtitle || item.tagline || '')}</p>
-              <p class="text-[11px] text-slate-300 line-clamp-2 mt-1.5 leading-snug">${escapeHtml(item.description || '')}</p>
-            </div>
-            
-            <div class="pt-3 mt-3 border-t border-emerald-900/60 flex items-center justify-end" onclick="event.stopPropagation()">
-              <button type="button" onclick="event.stopPropagation(); openEdit4TModal('${item.id || item.code}')" class="px-3 py-1.5 text-[11px] font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs transition-all inline-flex items-center gap-1.5 cursor-pointer">
-                <i class="bi bi-pencil-square text-[10px]"></i>
-                <span>Edit Kaidah 4T</span>
-              </button>
-            </div>
-          </div>
-        `).join('');
       }
 
       // Filter & Pagination Logic
@@ -1162,97 +1044,6 @@
             await loadInitialData();
           }
         });
-      };
-      // 4T Pillar Modal Handlers
-      window.openEdit4TModal = function(id) {
-        const item = (prinsip4tList || []).find(p => p.id == id || p.code == id || (p.code && id && String(p.code).toUpperCase() === String(id).toUpperCase()));
-        if (!item) return;
-
-        document.getElementById('p4t-id').value = item.code || item.id;
-        document.getElementById('p4t-title').value = item.title || item.name || '';
-        document.getElementById('p4t-arabic').value = item.arabic || '';
-        document.getElementById('p4t-subtitle').value = item.subtitle || item.tagline || '';
-        document.getElementById('p4t-desc').value = item.description || '';
-
-        document.getElementById('modal-4t').classList.remove('hidden');
-      };
-
-      window.close4TModal = function() {
-        document.getElementById('modal-4t').classList.add('hidden');
-      };
-
-      window.openEditArticleForPillar = function(code) {
-        const codeUpper = String(code || '').toUpperCase();
-        const slugMap = {
-          'T1': 'prinsip-tawaqquf',
-          'T2': 'prinsip-tastabbus',
-          'T3': 'prinsip-tatsabbut',
-          'T4': 'prinsip-taaqqul'
-        };
-        const targetSlug = slugMap[codeUpper] || slugMap[code] || 'prinsip-tawaqquf';
-        const article = (articlesList || []).find(a => (a.slug || '').toLowerCase() === targetSlug.toLowerCase());
-        if (article) {
-          openEditArticleModal(article.id);
-        } else {
-          // Fallback pencarian kata kunci di judul
-          const keyword = targetSlug.replace('prinsip-', '');
-          const fallback = (articlesList || []).find(a => (a.title || '').toLowerCase().includes(keyword));
-          if (fallback) {
-            openEditArticleModal(fallback.id);
-          } else {
-            alert('Artikel edukasi untuk kaidah ini belum tersedia di basis data.');
-          }
-        }
-      };
-
-      window.openPillarArticleEditor = function() {
-        const id = document.getElementById('p4t-id').value;
-        close4TModal();
-        openEditArticleForPillar(id);
-      };
-
-      window.handleSave4T = async function(e) {
-        e.preventDefault();
-        const id = document.getElementById('p4t-id').value;
-        const title = document.getElementById('p4t-title').value.trim();
-        const arabic = document.getElementById('p4t-arabic').value.trim();
-        const subtitle = document.getElementById('p4t-subtitle').value.trim();
-        const description = document.getElementById('p4t-desc').value.trim();
-
-        // 1. Instant local update for seamless UX
-        const idx = (prinsip4tList || []).findIndex(p => p.id == id || p.code == id || (p.code && id && String(p.code).toUpperCase() === String(id).toUpperCase()));
-        if (idx !== -1) {
-          prinsip4tList[idx] = {
-            ...prinsip4tList[idx],
-            title,
-            name: title,
-            arabic,
-            subtitle,
-            tagline: subtitle,
-            description
-          };
-          renderPrinsip4TGrid();
-        }
-
-        close4TModal();
-
-        // 2. Persist to API & Database
-        try {
-          await window.ApiService.updatePrinsip4T(id, { title, arabic, subtitle, description });
-          const p4tRes = await window.ApiService.getPrinsip4T();
-          if (p4tRes && (Array.isArray(p4tRes) || Array.isArray(p4tRes.data))) {
-            prinsip4tList = Array.isArray(p4tRes) ? p4tRes : p4tRes.data;
-            renderPrinsip4TGrid();
-          }
-          if (window.showToast) {
-            showToast('Kaidah Prinsip 4T berhasil diperbarui!', 'success');
-          }
-        } catch (err) {
-          console.warn('[Admin 4T] Error persisting:', err);
-          if (window.showToast) {
-            showToast('Kaidah diperbarui secara lokal', 'success');
-          }
-        }
       };
 
       function renderNotificationList(reports) {
