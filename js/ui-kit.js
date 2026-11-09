@@ -893,10 +893,10 @@
 
   /* ── Editor teks kaya (aman) ────────────────────────────────────────────── */
 
-  var RTE_ALLOWED = { P: 1, BR: 1, STRONG: 1, B: 1, EM: 1, I: 1, U: 1, H2: 1, H3: 1, UL: 1, OL: 1, LI: 1, BLOCKQUOTE: 1, A: 1, CODE: 1 };
+  var RTE_ALLOWED = { P: 1, BR: 1, STRONG: 1, B: 1, EM: 1, I: 1, U: 1, H1: 1, H2: 1, H3: 1, UL: 1, OL: 1, LI: 1, BLOCKQUOTE: 1, A: 1, CODE: 1, SPAN: 1 };
   var RTE_DROP = { SCRIPT: 1, STYLE: 1, IFRAME: 1, OBJECT: 1, EMBED: 1, NOSCRIPT: 1, TEMPLATE: 1, LINK: 1, META: 1, SVG: 1, MATH: 1, FORM: 1, INPUT: 1, BUTTON: 1, TEXTAREA: 1, SELECT: 1 };
 
-  /** Sanitasi HTML dengan daftar putih tag; semua atribut dibuang kecuali href aman. */
+  /** Sanitasi HTML dengan daftar putih tag; mendukung perataan teks, ukuran font, dan tautan aman. */
   function sanitizeHtml(html) {
     var parsed = new DOMParser().parseFromString('<body>' + String(html || '') + '</body>', 'text/html');
     var out = doc.createElement('div');
@@ -906,9 +906,11 @@
         if (ch.nodeType !== 1) return;
         var tag = ch.tagName;
         if (RTE_DROP[tag]) return;
-        var outTag = tag === 'DIV' ? 'P' : tag;
+        var outTag = tag === 'DIV' ? 'P' : (tag === 'FONT' ? 'SPAN' : tag);
         if (!RTE_ALLOWED[outTag]) { walk(ch, dest); return; }
         var n = doc.createElement(outTag.toLowerCase());
+
+        // Sanitasi tautan aman
         if (outTag === 'A') {
           var href = (ch.getAttribute('href') || '').trim();
           if (/^(https?:|mailto:)/i.test(href)) {
@@ -917,6 +919,38 @@
             n.setAttribute('target', '_blank');
           }
         }
+
+        // Simpan perataan teks aman (left, center, right, justify)
+        var textAlign = (ch.style && ch.style.textAlign) || ch.getAttribute('align') || '';
+        if (/^(left|center|right|justify)$/i.test(textAlign.trim())) {
+          n.style.textAlign = textAlign.trim().toLowerCase();
+        }
+
+        // Simpan ukuran font aman (px, rem, atau font tag size 1..7)
+        var fontSize = (ch.style && ch.style.fontSize) || '';
+        if (tag === 'FONT') {
+          var fSize = ch.getAttribute('size');
+          var sizeMap = {
+            '1': '12px',
+            '2': '14px',
+            '3': '16px',
+            '4': '18px',
+            '5': '20px',
+            '6': '24px',
+            '7': '32px'
+          };
+          if (sizeMap[fSize]) fontSize = sizeMap[fSize];
+        }
+        if (fontSize && /^(0\.[0-9]+rem|[1-3](\.[0-9]+)?rem|[1-4]?[0-9]px|small|medium|large|x-large|xx-large)$/i.test(fontSize.trim())) {
+          n.style.fontSize = fontSize.trim();
+        }
+
+        // Jika tag SPAN tidak memiliki style valid, unwrap agar tidak meninggalkan wrapper kosong
+        if (outTag === 'SPAN' && !n.getAttribute('style')) {
+          walk(ch, dest);
+          return;
+        }
+
         walk(ch, n);
         dest.appendChild(n);
       });
@@ -942,22 +976,204 @@
       'data-placeholder': opts.placeholder || textarea.getAttribute('placeholder') || ''
     });
     var bar = el('div', { class: 'ui-rte__bar', role: 'toolbar', 'aria-label': 'Format teks' });
-    var cmds = [
-      { label: 'B', title: 'Tebal', run: function () { doc.execCommand('bold'); } },
-      { label: 'I', title: 'Miring', run: function () { doc.execCommand('italic'); } },
-      { label: 'H2', title: 'Judul bagian', run: function () { doc.execCommand('formatBlock', false, 'h2'); } },
-      { label: 'H3', title: 'Sub judul', run: function () { doc.execCommand('formatBlock', false, 'h3'); } },
-      { label: '• Daftar', title: 'Daftar poin', run: function () { doc.execCommand('insertUnorderedList'); } },
-      { label: '1. Daftar', title: 'Daftar angka', run: function () { doc.execCommand('insertOrderedList'); } },
-      { label: '“ Kutipan', title: 'Kutipan', run: function () { doc.execCommand('formatBlock', false, 'blockquote'); } },
-      { label: 'Paragraf', title: 'Kembali ke paragraf biasa', run: function () { doc.execCommand('formatBlock', false, 'p'); } }
-    ];
-    cmds.forEach(function (c) {
-      var b = el('button', { type: 'button', class: 'ui-rte__btn', title: c.title, 'aria-label': c.title, text: c.label });
-      b.addEventListener('mousedown', function (e) { e.preventDefault(); }); // jaga seleksi teks
-      b.addEventListener('click', function () { area.focus(); c.run(); sync(); });
-      bar.appendChild(b);
+
+    // Simpan & kembalikan seleksi teks agar aksi toolbar tidak merusak posisi kursor
+    var savedRange = null;
+    function saveSelection() {
+      var sel = global.getSelection ? global.getSelection() : null;
+      if (sel && sel.rangeCount > 0) {
+        var range = sel.getRangeAt(0);
+        if (area.contains(range.commonAncestorContainer) || area === range.commonAncestorContainer) {
+          savedRange = range.cloneRange();
+        }
+      }
+    }
+    function restoreSelection() {
+      if (savedRange) {
+        var sel = global.getSelection ? global.getSelection() : null;
+        if (sel) {
+          sel.removeAllRanges();
+          sel.addRange(savedRange);
+        }
+      }
+    }
+    area.addEventListener('keyup', saveSelection);
+    area.addEventListener('mouseup', saveSelection);
+    area.addEventListener('touchend', saveSelection);
+
+    // Dropdown Ukuran Font
+    var sizeSelect = el('select', {
+      class: 'ui-rte__select',
+      'aria-label': 'Pilih ukuran font'
     });
+    var fontSizes = [
+      { label: 'Ukuran Font', value: '', size: '' },
+      { label: '12px (Kecil)', value: '12px', size: '1' },
+      { label: '14px (Sedang Kecil)', value: '14px', size: '2' },
+      { label: '16px (Normal)', value: '16px', size: '3' },
+      { label: '18px (Sedang Besar)', value: '18px', size: '4' },
+      { label: '20px (Besar)', value: '20px', size: '5' },
+      { label: '24px (Ekstra Besar)', value: '24px', size: '6' },
+      { label: '32px (Jumbo)', value: '32px', size: '7' }
+    ];
+    fontSizes.forEach(function (s) {
+      var opt = el('option', { value: s.value, text: s.label });
+      if (s.size) opt.setAttribute('data-size', s.size);
+      sizeSelect.appendChild(opt);
+    });
+
+    sizeSelect.addEventListener('mousedown', function () { saveSelection(); });
+    sizeSelect.addEventListener('focus', function () { saveSelection(); });
+    sizeSelect.addEventListener('change', function () {
+      var val = sizeSelect.value;
+      if (!val) return;
+      var selectedOpt = sizeSelect.options[sizeSelect.selectedIndex];
+      var execSize = selectedOpt ? selectedOpt.getAttribute('data-size') : '3';
+      area.focus();
+      restoreSelection();
+
+      doc.execCommand('fontSize', false, execSize);
+
+      var fontEls = area.querySelectorAll('font[size="' + execSize + '"]');
+      Array.prototype.forEach.call(fontEls, function (f) {
+        var span = doc.createElement('span');
+        span.style.fontSize = val;
+        while (f.firstChild) span.appendChild(f.firstChild);
+        f.parentNode.replaceChild(span, f);
+      });
+
+      sizeSelect.value = '';
+      saveSelection();
+      sync();
+    });
+
+    // Grup alat format teks
+    var groups = [
+      // 1. Gaya Teks (Bold, Italic, Underline)
+      [
+        {
+          label: 'B',
+          html: '<strong class="font-bold">B</strong>',
+          title: 'Tebal (Bold)',
+          run: function () { doc.execCommand('bold'); }
+        },
+        {
+          label: 'I',
+          html: '<em class="italic font-serif">I</em>',
+          title: 'Miring (Italic)',
+          run: function () { doc.execCommand('italic'); }
+        },
+        {
+          label: 'U',
+          html: '<span class="underline font-bold">U</span>',
+          title: 'Garis Bawah (Underline)',
+          run: function () { doc.execCommand('underline'); }
+        }
+      ],
+      // 2. Ukuran Font
+      'FONT_SIZE',
+      // 3. Perataan Teks (Left, Center, Right, Justify)
+      [
+        {
+          label: 'Left',
+          html: '<i class="bi bi-text-left text-sm pointer-events-none"></i>',
+          title: 'Rata Kiri (Left)',
+          run: function () { doc.execCommand('justifyLeft'); }
+        },
+        {
+          label: 'Center',
+          html: '<i class="bi bi-text-center text-sm pointer-events-none"></i>',
+          title: 'Rata Tengah (Center)',
+          run: function () { doc.execCommand('justifyCenter'); }
+        },
+        {
+          label: 'Right',
+          html: '<i class="bi bi-text-right text-sm pointer-events-none"></i>',
+          title: 'Rata Kanan (Right)',
+          run: function () { doc.execCommand('justifyRight'); }
+        },
+        {
+          label: 'Justify',
+          html: '<i class="bi bi-justify text-sm pointer-events-none"></i>',
+          title: 'Rata Kiri-Kanan (Justify)',
+          run: function () { doc.execCommand('justifyFull'); }
+        }
+      ],
+      // 4. Struktur Teks (H1, H2, H3, Paragraf)
+      [
+        {
+          label: 'H1',
+          title: 'Judul Utama (H1)',
+          run: function () { doc.execCommand('formatBlock', false, 'h1'); }
+        },
+        {
+          label: 'H2',
+          title: 'Judul Bagian (H2)',
+          run: function () { doc.execCommand('formatBlock', false, 'h2'); }
+        },
+        {
+          label: 'H3',
+          title: 'Sub Judul (H3)',
+          run: function () { doc.execCommand('formatBlock', false, 'h3'); }
+        },
+        {
+          label: 'Paragraf',
+          title: 'Kembali ke paragraf biasa',
+          run: function () { doc.execCommand('formatBlock', false, 'p'); }
+        }
+      ],
+      // 5. Daftar & Kutipan
+      [
+        {
+          label: '• Daftar',
+          title: 'Daftar Poin (Unordered List)',
+          run: function () { doc.execCommand('insertUnorderedList'); }
+        },
+        {
+          label: '1. Daftar',
+          title: 'Daftar Angka (Ordered List)',
+          run: function () { doc.execCommand('insertOrderedList'); }
+        },
+        {
+          label: '“ Kutipan',
+          title: 'Kutipan (Blockquote)',
+          run: function () { doc.execCommand('formatBlock', false, 'blockquote'); }
+        }
+      ]
+    ];
+
+    groups.forEach(function (grp, idx) {
+      if (idx > 0) {
+        bar.appendChild(el('div', { class: 'ui-rte__divider', 'aria-hidden': 'true' }));
+      }
+      if (grp === 'FONT_SIZE') {
+        bar.appendChild(sizeSelect);
+      } else if (Array.isArray(grp)) {
+        grp.forEach(function (c) {
+          var b = el('button', {
+            type: 'button',
+            class: 'ui-rte__btn',
+            title: c.title,
+            'aria-label': c.title,
+            html: c.html,
+            text: c.html ? null : c.label
+          });
+          b.addEventListener('mousedown', function (e) {
+            e.preventDefault(); // jaga seleksi teks
+            saveSelection();
+          });
+          b.addEventListener('click', function () {
+            area.focus();
+            restoreSelection();
+            c.run();
+            saveSelection();
+            sync();
+          });
+          bar.appendChild(b);
+        });
+      }
+    });
+
     var wrap = el('div', { class: 'ui-rte' }, [bar, area]);
 
     textarea.setAttribute('hidden', '');

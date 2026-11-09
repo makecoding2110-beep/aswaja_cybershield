@@ -5228,5 +5228,72 @@ html.dark .cyber-mesh-grid {
   }
 }
 
+/* 12. Tipografi Pembaca Konten Artikel Edukasi */
+#article-body h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.3;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  color: #0f172a;
+}
+.dark #article-body h1,
+[data-theme="dark"] #article-body h1 {
+  color: #f8fafc;
+}
+#article-body h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-top: 1.5rem;
+  margin-bottom: 0.65rem;
+  color: #0f172a;
+}
+.dark #article-body h2,
+[data-theme="dark"] #article-body h2 {
+  color: #f8fafc;
+}
+#article-body h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #0f172a;
+}
+.dark #article-body h3,
+[data-theme="dark"] #article-body h3 {
+  color: #f8fafc;
+}
+#article-body u {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+#article-body blockquote {
+  border-left: 4px solid #059669;
+  padding-left: 1rem;
+  margin: 1.25rem 0;
+  font-style: italic;
+  color: #475569;
+}
+.dark #article-body blockquote,
+[data-theme="dark"] #article-body blockquote {
+  color: #94a3b8;
+}
+#article-body ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+#article-body ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+#article-body li {
+  margin: 0.35rem 0;
+}
+
+
 
 

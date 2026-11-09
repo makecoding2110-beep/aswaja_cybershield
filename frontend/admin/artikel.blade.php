@@ -49,7 +49,7 @@
     }
   </script>
   <link rel="stylesheet" href="../../css/style.css">
-  <link rel="stylesheet" href="../../css/ui-kit.css">
+  <link rel="stylesheet" href="../../css/ui-kit.css?v=20261109v3">
 </head>
 <body class="h-full bg-slate-50 font-sans text-slate-800 antialiased flex flex-row overflow-x-hidden">
 
@@ -539,7 +539,7 @@
 
   <!-- API Layer & Scripts -->
   <script src="../../js/api.js?v=20261109v2"></script>
-  <script src="../../js/ui-kit.js?v=20261109v2"></script>
+  <script src="../../js/ui-kit.js?v=20261109v3"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // 1. Auth Guard
