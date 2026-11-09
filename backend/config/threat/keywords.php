@@ -13,7 +13,7 @@ return [
     'strong_judol' => [
         'slot', 'gacor', 'togel', 'toto', 'maxwin', 'jackpot', 'scatter', 'sbobet',
         'casino', 'kasino', 'parlay', 'mix-parlay', 'joker123', 'pragmatic', 'pgsoft', 'habanero',
-        'depo', 'deposit', 'judol', 'taruhan', 'roulette', 'baccarat', 'sicbo',
+        'depo-slot', 'depo-dana', 'deposit-slot', 'deposit-pulsa', 'deposit', 'judol', 'taruhan', 'roulette', 'baccarat', 'sicbo',
         'colok', 'free-spin', 'freespin', 'rtp-live', 'rtp-slot', 'pola-gacor',
         'agen-slot', 'bandar-togel', 'slot88', 'slot777', 'gacor88', 'gacor777',
         'depo-pulsa', 'depo-10k', 'bonus-new-member', 'sabung-ayam', 'mauslot',

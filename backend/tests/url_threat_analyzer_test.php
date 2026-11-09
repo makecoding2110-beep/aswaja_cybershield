@@ -171,6 +171,23 @@ runTest(
     "Techniques: " . json_encode($resMasked['techniques']) . ", Target: {$resMasked['unmasked_url']}, Score: {$resMasked['threat_score']}"
 );
 
+// -----------------------------------------------------------------------------
+// Test Case 9: Portal Edukasi Resmi Indonesia (Codepolitan) Normal (Zero False Positive)
+// -----------------------------------------------------------------------------
+$urlCodepolitan = 'https://www.codepolitan.com/bootcamp/';
+$resCodepolitan = $analyzer->analyze($urlCodepolitan);
+
+$isCodepolitanClean = empty($resCodepolitan['indicators']) &&
+                      empty($resCodepolitan['techniques']) &&
+                      $resCodepolitan['threat_score'] === 0 &&
+                      !$resCodepolitan['has_threat'];
+
+runTest(
+    "9. Portal edukasi resmi (codepolitan.com) normal TIDAK DITANDAI (False Positive = 0)",
+    $isCodepolitanClean,
+    "Indicators count: " . count($resCodepolitan['indicators']) . ", Score: {$resCodepolitan['threat_score']}"
+);
+
 echo "\n" . str_repeat("=", 60) . "\n";
 echo "HASIL PENGUJIAN THREAT ANALYZER: {$testsPassed} DARI {$totalTests} PENGUJIAN LULUS (" . round(($testsPassed / $totalTests) * 100) . "%)\n";
 echo str_repeat("=", 60) . "\n";

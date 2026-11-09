@@ -840,7 +840,8 @@ class UrlThreatAnalyzer
         $trustedSafeDomains = [
             'ojk.go.id', 'bi.go.id', 'bappebti.go.id', 'kominfo.go.id', 'komdigi.go.id',
             'unmul.ac.id', 'unukaltim.ac.id', 'ugm.ac.id', 'ui.ac.id', 'itb.ac.id', 'kompas.com', 'detik.com', 'nu.or.id',
-            'muhammadiyah.or.id', 'google.com', 'youtube.com', 'wikipedia.org'
+            'muhammadiyah.or.id', 'google.com', 'youtube.com', 'wikipedia.org',
+            'codepolitan.com', 'dicoding.com', 'petanikode.com', 'buildwithangga.com', 'bwa.id', 'duniailkom.com', 'hacktiv8.com', 'glints.com'
         ];
         foreach ($trustedSafeDomains as $td) {
             if ($cleanHost === $td || str_ends_with($cleanHost, '.' . $td)) {
@@ -1160,7 +1161,8 @@ class UrlThreatAnalyzer
         $trustedSafeDomains = [
             'ojk.go.id', 'bi.go.id', 'bappebti.go.id', 'kominfo.go.id', 'komdigi.go.id',
             'unmul.ac.id', 'unukaltim.ac.id', 'ugm.ac.id', 'ui.ac.id', 'itb.ac.id', 'kompas.com', 'detik.com', 'nu.or.id',
-            'muhammadiyah.or.id', 'google.com', 'youtube.com', 'wikipedia.org'
+            'muhammadiyah.or.id', 'google.com', 'youtube.com', 'wikipedia.org',
+            'codepolitan.com', 'dicoding.com', 'petanikode.com', 'buildwithangga.com', 'bwa.id', 'duniailkom.com', 'hacktiv8.com', 'glints.com'
         ];
         foreach ($trustedSafeDomains as $td) {
             if ($host === $td || str_ends_with($host, '.' . $td)) {
@@ -1379,19 +1381,34 @@ class UrlThreatAnalyzer
                 }
             }
 
-            // B. Deteksi Popup Overlay Penyusupan (#popup-situs) & Tautan Keluar Bandar Judol
+            // B. Deteksi Popup Overlay Penyusupan (#popup-situs) & Tautan Navigasi Keluar Bandar Judol
             $hasSuspiciousPopup = str_contains($htmlSlice, '#popup-situs') || str_contains($htmlSlice, 'popup-situs');
             $outboundJudolLinks = [];
 
-            if (preg_match_all('/(?:href|src)=["\'](https?:\/\/[^"\']+)["\']/i', $htmlSlice, $mLinks)) {
+            // Hanya periksa tautan anchor (<a href="...">) atau form action, BUKAN tag gambar <img src="...">
+            if (preg_match_all('/(?:<a[^>]+href=|<form[^>]+action=)["\'](https?:\/\/[^"\']+)["\']/i', $htmlSlice, $mLinks)) {
+                $knownJudolBrands = ['araitoto', 'kpktoto', 'adskpk', 'startogel', 'mauslot', 'hokibet88', 'referral_code=googleads'];
+                $checkKeywords = array_merge($strongKeywords, $knownJudolBrands);
+
                 foreach (array_unique($mLinks[1]) as $extLink) {
                     $extLinkLower = strtolower($extLink);
                     $extHost = strtolower(parse_url($extLink, PHP_URL_HOST) ?? '');
-                    if ($extHost === '' || $extHost === $host) {
+                    if ($extHost === '' || $extHost === $host || str_ends_with($extHost, '.' . $cleanHost)) {
                         continue;
                     }
-                    foreach (array_merge($strongKeywords, ['araitoto', 'kpktoto', 'adskpk', 'startogel', 'mauslot', 'hokibet88', 'referral_code=googleads']) as $kw) {
-                        if (str_contains($extLinkLower, $kw)) {
+                    // Abaikan domain sosial media dan CDN resmi umum
+                    if (preg_match('/(google|facebook|twitter|instagram|linkedin|youtube|whatsapp|telegram|tiktok|github)\.com$/i', $extHost)) {
+                        continue;
+                    }
+
+                    foreach ($checkKeywords as $kw) {
+                        $kwLower = strtolower($kw);
+                        // Untuk kata kunci pendek (<= 4 karakter seperti 'slot', 'toto'), gunakan delimiter boundary
+                        $matched = strlen($kwLower) <= 4
+                            ? (bool) preg_match('/(?:^|[._\-\/])' . preg_quote($kwLower, '/') . '(?:[._\-\/]|\d|$)/i', $extLinkLower)
+                            : str_contains($extLinkLower, $kwLower);
+
+                        if ($matched) {
                             $outboundJudolLinks[] = $extLink;
                             break;
                         }
