@@ -551,18 +551,6 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         ];
       }
-            color: 'text-amber-600 dark:text-amber-400',
-            title: 'Kondisi Keamanan',
-            desc: 'Tidak ditemukan transaksi taruhan judi online, permainan slot, maupun indikasi pencurian data pada halaman ini.'
-          },
-          {
-            icon: 'security',
-            color: 'text-emerald-600 dark:text-emerald-400',
-            title: 'Langkah Aman',
-            desc: 'Cukup berhati-hati saat mengakses, dan jangan pernah membagikan kata sandi pribadi atau informasi rekening bank.'
-          }
-        ];
-      }
     } else if (resolvedColor === 'slate') {
       points = [
         {
