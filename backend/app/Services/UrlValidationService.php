@@ -218,18 +218,16 @@ class UrlValidationService
 
         // 5. Analisis Huruf Berulang (Repetitive Characters)
         // Mendeteksi 3+ karakter berulang (misal: slooot, gacooor) atau 2 karakter berulang tidak wajar (misal: investasii, cuannn)
-        // Abaikan prefix standar web seperti 'www.' dan abaikan ekstensi TLD (misal: .cc, .gg, .tt) agar tidak memicu false positive
+        // Abaikan prefix standar web seperti 'www.' agar tidak memicu false positive
         $cleanHostForRepetition = preg_replace('/^www\d*\./i', '', $host);
-        $hostWithoutTld = !empty($tld) ? (string) preg_replace('/(\.' . preg_quote($tld, '/') . ')+$/i', '', $cleanHostForRepetition) : $cleanHostForRepetition;
-
-        if (preg_match('/([a-zA-Z])\1{2,}|(ii|uu|jj|vv|qq|yy)|([a-z])\3(?=\d{2,}|[-_.]|$)/i', $hostWithoutTld, $m)) {
+        if (preg_match('/([a-zA-Z])\1{2,}|(ii|uu|jj|vv|qq|yy)|([a-z])\3(?=\d{2,}|[-_.]|$)/i', $cleanHostForRepetition, $m)) {
             $matchedEvidence = $m[0];
             if (strtolower($matchedEvidence) !== 'www') {
                 $indicators[] = [
                     'name' => 'repetitive_characters',
                     'evidence' => $matchedEvidence,
                     'severity' => 'medium',
-                    'explanation' => "Nama domain memuat variasi karakter berulang ('{$matchedEvidence}'), tipikal pola kamuflase nama domain."
+                    'explanation' => "Domain menggunakan pengulangan karakter tidak wajar ('{$matchedEvidence}'), tipikal typosquatting atau penyamaran domain."
                 ];
             }
         }

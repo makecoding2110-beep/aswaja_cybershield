@@ -455,11 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
       }
     } else if (resolvedColor === 'orange') {
-      const directJudolKeywords = ['slot', 'gacor', 'togel', 'toto', 'maxwin', 'jackpot', 'scatter', 'judol', 'taruhan', 'bet88', 'hoki88', 'sbobet', 'casino', 'kasino', 'parlay'];
-      const hasDirectJudolInUrl = directJudolKeywords.some(kw => urlLower.includes(kw));
-      const hasJudolTech = techniques.includes('web_defacement') || techniques.includes('kamuflase_investasi');
-      const isJudolKeyword = hasDirectJudolInUrl || hasJudolTech;
-
+      const isJudolKeyword = findingsText.includes('slot') || findingsText.includes('judi') || findingsText.includes('taruhan') || urlLower.includes('maxwin') || urlLower.includes('jackpot') || urlLower.includes('scatter');
       if (isJudolKeyword) {
         points = [
           {
@@ -493,7 +489,7 @@ document.addEventListener('DOMContentLoaded', () => {
             icon: 'lock_open_right',
             color: 'text-red-600 dark:text-red-400',
             title: 'Bahaya Nyata',
-            desc: 'Halaman ini belum memiliki reputasi yang terpercaya dan berisiko menyembunyikan konten yang merugikan atau iklan pihak ketiga.'
+            desc: 'Halaman ini belum memiliki reputasi yang terpercaya dan berisiko menyembunyikan konten yang merugikan.'
           },
           {
             icon: 'gpp_maybe',
@@ -504,7 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
       }
     } else if (resolvedColor === 'amber') {
-      const isInvest = category.includes('investasi') || (category.includes('trading') && !urlLower.includes('film') && !urlLower.includes('movie'));
+      const isInvest = category.includes('investasi') || findingsText.includes('investasi') || findingsText.includes('trading') || findingsText.includes('cuan');
       if (isInvest) {
         points = [
           {
@@ -527,27 +523,25 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         ];
       } else {
-        // Non-gambling site with cheap/disposable TLD or promo link (e.g. cat community forum, personal blog, streaming site)
-        const tldMatch = urlLower.match(/\.([a-z0-9]+)(?:\/|$)/);
-        const tldName = tldMatch ? '.' + tldMatch[1] : 'bebas';
+        // Non-gambling site with cheap/disposable TLD or promo link (e.g. cat community forum, personal blog)
         points = [
           {
             icon: 'info',
             color: 'text-amber-600 dark:text-amber-400',
             title: 'Ciri Alamat',
-            desc: `Alamat web menggunakan ekstensi domain berisiko (${tldName}), namun tidak ditemukan kata kunci perjudian pada URL.`
+            desc: 'Alamat web menggunakan ekstensi domain bebas atau murah (seperti .club atau .site), namun bersih dari konten perjudian.'
           },
           {
             icon: 'gpp_maybe',
             color: 'text-amber-600 dark:text-amber-400',
             title: 'Kondisi Keamanan',
-            desc: 'Tidak ditemukan transaksi taruhan judi online maupun peniruan instansi resmi pada struktur utama halaman ini.'
+            desc: 'Tidak ditemukan transaksi taruhan judi online, permainan slot, maupun indikasi pencurian data pada halaman ini.'
           },
           {
             icon: 'security',
             color: 'text-emerald-600 dark:text-emerald-400',
             title: 'Langkah Aman',
-            desc: 'Cukup berhati-hati saat mengakses, hindari mengunduh berkas mencurigakan, dan jangan pernah membagikan kata sandi pribadi.'
+            desc: 'Cukup berhati-hati saat mengakses, dan jangan pernah membagikan kata sandi pribadi atau informasi rekening bank.'
           }
         ];
       }
@@ -708,41 +702,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ─── Render Detected Techniques (Web Defacement, Open Redirect, Typosquatting) ───
-  function renderTechniques(techniques, findings, rawUrl, resolvedColor = 'emerald') {
+  function renderTechniques(techniques, findings, rawUrl) {
     if (!elResultTechniquesBox || !elResultTechniquesList) return;
-
-    // 1. Jika vonis aman / bersih (emerald), jangan pernah tampilkan kartu teknik kejahatan siber
-    if (resolvedColor === 'emerald') {
-      elResultTechniquesBox.classList.add('hidden');
-      elResultTechniquesList.innerHTML = '';
-      return;
-    }
 
     let list = Array.isArray(techniques) ? [...techniques] : [];
 
-    // 2. Jika techniques kosong dari response utama, telusuri HANYA dari f.technique eksplisit atau f.label
+    // Jika techniques kosong dari response utama, coba telusuri dari findings/indikator
     if (!list.length && Array.isArray(findings)) {
       findings.forEach(f => {
-        const tech = (f.technique || '').toLowerCase();
-        const label = (f.label || '').toLowerCase();
-        const name = (f.name || '').toLowerCase();
-
-        if (tech === 'kamuflase_investasi' || label.includes('kamuflase finansial') || name === 'kamuflase_investasi_judol') {
+        const text = ((f.label || '') + ' ' + (f.detail || '') + ' ' + (f.desc || '')).toLowerCase();
+        if (text.includes('kamuflase') || (text.includes('investasi') && text.includes('deposit')) || (text.includes('trading') && text.includes('slot'))) {
           if (!list.includes('kamuflase_investasi')) list.push('kamuflase_investasi');
         }
-        if (tech === 'web_defacement' || label.includes('defacement') || name === 'defacement_path' || name === 'subdomain_asing') {
+        if ((text.includes('defacement') || text.includes('subdomain asing')) && !text.includes('kamuflase')) {
           if (!list.includes('web_defacement')) list.push('web_defacement');
         }
-        if (tech === 'open_redirect' || label.includes('open redirect') || name === 'open_redirect_param' || name === 'dua_host_dalam_url') {
+        if (text.includes('open redirect') || text.includes('dua host')) {
           if (!list.includes('open_redirect')) list.push('open_redirect');
         }
-        if (tech === 'url_masking' || label.includes('url masking') || name === 'url_masking_detected') {
+        if (text.includes('masking') || text.includes('penyembunyian tautan')) {
           if (!list.includes('url_masking')) list.push('url_masking');
         }
-        if (tech === 'domain_rebouncer' || label.includes('domain rebouncer') || name === 'domain_rebouncer_detected') {
+        if (text.includes('rebouncer') || text.includes('proxy link') || text.includes('jembatan pengalihan')) {
           if (!list.includes('domain_rebouncer')) list.push('domain_rebouncer');
         }
-        if (tech === 'typosquatting' || label.includes('typosquatting') || name === 'typosquatting_mirip_instansi') {
+        if (text.includes('typosquatting') || text.includes('meniru')) {
           if (!list.includes('typosquatting')) list.push('typosquatting');
         }
       });
@@ -1119,7 +1103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Render bagian Teknik yang Terdeteksi (Defacement, Open Redirect, Typosquatting)
     currentResultTechniques = Array.isArray(result.techniques) ? result.techniques : [];
-    renderTechniques(currentResultTechniques, result.findings, rawUrl, resolvedColor);
+    renderTechniques(currentResultTechniques, result.findings, rawUrl);
 
     updateIslamicQuote(resolvedColor);
 
