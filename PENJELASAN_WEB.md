@@ -13,7 +13,7 @@ Ruang digital Indonesia saat ini berada dalam kondisi darurat penipuan siber dan
 Sindikat kejahatan siber modern telah berevolusi dengan menerapkan **3 Teknik Penyusupan Tautan**:
 1. **Web Defacement & Subdomain Hijacking:** Menunggangi otoritas domain resmi (`.go.id`, `.ac.id`, `.desa.id`) dengan menyusupkan halaman judi pada direktori CMS rentan atau membuat subdomain liar berangka hoki judol (`88`, `138`, `777`).
 2. **Open Redirect (Cloaking):** Memanfaatkan parameter pengalihan resmi (`?url=`, `?redirect=`) untuk membelokkan pengunjung ke situs taruhan secara otomatis.
-3. **Typosquatting & Homoglif:** Meniru nama instansi resmi negara dan perbankan menggunakan karakter serupa (`0` $\to$ `o`, `1` $\to$ `l/i`, `rn` $\to$ `m`) dan embel-embel tipuan (`-resmi`, `-login`, `-bansos`).
+3. **Typosquatting & Homoglif:** Meniru nama instansi resmi negara dan perbankan menggunakan karakter serupa (`0` $\to$ `o`, `1` $\to$ `l/i`, `rn` $\to$ `m`, `vv` $\to$ `w`) dan embel-embel tipuan (`-resmi`, `-login`, `-bansos`).
 
 ### B. Beban Ganda Generasi Muda di Era Digital
 Generasi muda menghadapi dilema ganda:
@@ -22,7 +22,7 @@ Generasi muda menghadapi dilema ganda:
 
 ### C. Lahirnya Aswaja CyberShield: Menjembatani Keamanan Siber & Kearifan Aswaja
 **Aswaja CyberShield** hadir menjembatani kesenjangan tersebut dengan memadukan:
-1. **Teknologi Deteksi Berlapis (*Multi-Layer Hybrid Detection*):** Menggabungkan **Sensor Jaringan Suricata NIDS (`eve.json`)**, **UrlThreatAnalyzer (Zero-Fetch)**, **Heuristik Struktur URL 3 Tingkat**, dan **Google Gemini AI**.
+1. **Teknologi Deteksi Berlapis (*Multi-Layer Hybrid Detection*):** Menggabungkan **Sensor Jaringan Suricata NIDS (`eve.json`)**, **UrlThreatAnalyzer (Zero-Fetch)**, **Heuristik Struktur URL 3 Tingkat**, dan **Google Gemini AI (`gemini-3.5-flash-lite`)**.
 2. **Media Belajar & Dakwah Kultural Berbasis Ahlussunnah wal Jama'ah (Aswaja):** Mengontekstualisasikan perintah *Tabayyun* (QS. Al-Hujurat: 6), **4 Pilar Wasathiyah Aswaja** (*Tawasuth, Tawazun, I'tidal, Tasamuh*), serta metodologi kritik sanad **Prinsip 4T** (*Tawaqquf, Tastabbus, Tatsabbut, Ta'aqqul*).
 
 ---
@@ -48,7 +48,7 @@ Generasi muda menghadapi dilema ganda:
 | :--- | :--- | :--- | :--- |
 | **1. Tawasuth** (*Moderat*) | Sikap objektif, verifikasi data silang tanpa tuduhan membabi buta. | 🤖 **AI Tabayyun Checker** (`/tabayyun`) | Korelasi bukti Suricata NIDS, UrlThreatAnalyzer, dan Google Gemini AI secara transparan. |
 | **2. Tawazun** (*Keseimbangan*) | Keseimbangan antara kewaspadaan teknis dan ketenangan batin. | 📖 **Etika Fiqih Siber (4T)** (`/etika`) | Edukasi 4 Kaidah Tabayyun (*Tawaqquf, Tastabbus, Tatsabbut, Ta'aqqul*) dan kajian muamalah digital. |
-| **3. I'tidal** (*Keadilan*) | Bertindak adil, proporsional, dan menempatkan sesuatu pada haknya. | 📢 **Portal Lapor Siber** (`/lapor`) | Saluran partisipasi masyarakat untuk melaporkan tautan berbahaya dengan penerbitan tiket aduan `LPRxxx`. |
+| **3. I'tidal** (*Keadilan*) | Bertindak adil, proporsional, dan menempatkan sesuatu pada haknya. | 📢 **Portal Lapor Siber** (`/lapor`) | Saluran partisipasi masyarakat untuk melaporkan tautan berbahaya dengan penerbitan tiket aduan `LPRxxx` (opsi anonim terlindungi). |
 | **4. Tasamuh** (*Toleransi*) | Edukasi ramah tanpa mempermalukan korban penipuan. | 🛡️ **Cyber Guard Test** (`/cyber-guard`) | Simulasi studi kasus interaktif untuk mengasah refleks dengan pembahasan fiqih yang santun. |
 
 ---
@@ -63,28 +63,35 @@ Generasi muda menghadapi dilema ganda:
 | **3. Kontekstual (`contextual`)** | `zeus`, `dewa`, `thor`, `dragon`, `olympus` | **Pemeriksaan kontekstual** | 🟢 **`aman`** | 🔴 **`terindikasi_judol`** / 🟡 **`mencurigakan`** |
 
 ### B. Indikator Kognitif Google Gemini AI (`GeminiService.php`)
+- Menggunakan model `gemini-3.5-flash-lite` dengan latensi di bawah 1 detik.
 - Mendeteksi penyamaran huruf (*leetspeak*: `sl0t`, `g4c0r`, `m4xw1n`).
 - Mendeteksi bahasa manipulasi gamifikasi (*"bocoran pola gacor"*, *"RTP live 98% anti-rungkad"*, *"bonus new member"*).
 - Menilai klaim palsu *"resmi OJK/Bappebti"* dan skema Ponzi.
 
 ---
 
-## 5. Rumus Sintesis Risiko & Sistem Skor 2-State
+## 5. Rumus Sintesis Risiko & Matriks 4 Tingkat Risiko Resmi
 
+Kalkulasi skor risiko dilakukan menggunakan formula sintesis terbobot:
 $$\text{RiskScore} = \text{round}\Big((0.35 \times S_{\text{Threat}}) + (0.30 \times S_{\text{Suricata}}) + (0.30 \times S_{\text{Gemini}}) + (0.05 \times S_{\text{URL}})\Big)$$
 
-Sistem menghasilkan **panduan biner 2-state**:
-- **Aman:** Menampilkan **"Tingkat Keamanan"** ($0\% - 100\%$, hijau emerald).
-- **Berbahaya:** Menampilkan **"Tingkat Bahaya"** ($0\% - 100\%$, merah danger). Label penegas *"Sangat Berbahaya"* disematkan hanya bila skor bahaya $\ge 85\%$.
+Hasil skor numerik ($0 - 100$) dipetakan ke dalam **4 Tingkat Risiko Resmi**:
+
+| Tingkat Risiko | Rentang Skor | Warna Token / UI | Ikon Perisai | Keterangan & Modul Tampilan |
+| :--- | :---: | :---: | :---: | :--- |
+| **🟢 Rendah (Aman)** | **0% – 25%** | **Emerald Green** (`#059669`) | `verified_user` | Domain legal dan bersih. Menampilkan label *"Tingkat Keamanan"* ($75\% - 100\%$) dan 3 poin verifikasi. |
+| **🟡 Sedang** | **26% – 50%** | **Amber Yellow** (`#D97706`) | `warning` | Menggunakan kedok trading/investasi atau TLD promosi. Menampilkan *"Tingkat Bahaya"*, rangkuman awam, dan alasan verifikasi. |
+| **🟠 Tinggi** | **51% – 84%** | **Orange Alert** (`#EA580C`) | `gpp_maybe` | Terdeteksi kata kunci fitur judi daring atau anomali URL. Menampilkan breakdown teknik dan temuan teknis. |
+| **🔴 Berat (Kritis)** | **85% – 100%** | **Crimson Red** (`#DC2626`) | `gpp_bad` | Terindikasi kuat jaringan judi online, defacement web instansi pemerintah, atau pencurian data. |
 
 ---
 
 ## 6. Naskah Video Demo / Pitch Singkat
 
-> *"Anak muda Indonesia hari ini menghadapi beban ganda di ruang siber: diri mereka digempur promosi Judi Online berkedok game slot dan robot trading bodong, sementara orang tua mereka kerap bertanya saat menerima broadcast tautan mencurigakan di grup WhatsApp keluarga.*
+> *"Anak muda Indonesia setiap hari berhadapan dengan tawaran kerja palsu, giveaway penipuan, akun yang menyamar sebagai pihak resmi, tawaran pinjaman atau investasi menyesatkan, hingga tautan phishing berkedok judi online. Dalam situasi nyata, sulit membedakan tautan tepercaya dari yang menipu.*
 >
-> *Aswaja CyberShield hadir memberdayakan pemuda sebagai Digital Guardian melalui siklus Recognize, Learn, dan Act:*
-> 1. *Recognize: Fitur AI Tabayyun memeriksa tautan berbasis Zero-Fetch, memadukan UrlThreatAnalyzer (deteksi defacement, open redirect, typosquatting), Sensor Suricata NIDS, dan Google Gemini AI dengan sistem skor tegas: Aman atau Berbahaya.*
+> *Aswaja CyberShield hadir memberdayakan masyarakat sebagai Digital Guardian melalui siklus Recognize, Learn, dan Act:*
+> 1. *Recognize: Fitur AI Tabayyun memeriksa tautan berbasis Zero-Fetch, memadukan UrlThreatAnalyzer (deteksi defacement, open redirect, typosquatting), Sensor Suricata NIDS, dan Google Gemini AI dengan 4 tingkat risiko resmi yang terukur transparan.*
 > 2. *Learn: Modul Etika 4T dan Cyber Guard melatih refleks ketahanan digital berlandaskan nilai moderasi Ahlussunnah wal Jama'ah.*
 > 3. *Act: Portal Lapor Siber memfasilitasi aduan masyarakat dengan nomor tiket resmi untuk ditindaklanjuti tim analis.*
 >
@@ -95,10 +102,10 @@ Sistem menghasilkan **panduan biner 2-state**:
 ## 7. Struktur Slide Presentasi (8 Slide Penjurian)
 
 - **Slide 1:** Cover & Identitas — Aswaja CyberShield (Suricata NIDS, UrlThreatAnalyzer, Google Gemini AI, & Kaidah Tabayyun 4T).
-- **Slide 2:** Latar Belakang & 3 Modus Penyusupan Judol Modern.
-- **Slide 3:** Nilai Pembeda — 4 Pilar Wasathiyah & Kaidah 4T.
-- **Slide 4:** Arsitektur Mesin Deteksi Zero-Fetch (UrlThreatAnalyzer + Suricata NIDS + Gemini AI).
-- **Slide 5:** Rumus Matematika Terbobot & Sistem Skor 2-State (Aman vs Berbahaya).
+- **Slide 2:** Latar Belakang & 3 Modus Penyusupan Judol Modern (*Defacement, Open Redirect, Typosquatting*).
+- **Slide 3:** Nilai Pembeda — 4 Pilar Wasathiyah (*Tawasuth, Tawazun, I'tidal, Tasamuh*) & Kaidah 4T.
+- **Slide 4:** Arsitektur Mesin Deteksi Zero-Fetch (UrlThreatAnalyzer + Sensor Suricata NIDS + Google Gemini AI).
+- **Slide 5:** Rumus Matematika Terbobot & Matriks 4 Tingkat Risiko Resmi (Rendah, Sedang, Tinggi, Berat).
 - **Slide 6:** Live Demo Aplikasi (AI Tabayyun, Cyber Guard, Portal Lapor, & Panel Admin Terpadu).
 - **Slide 7:** Kualitas Kode, Kontrak Database PostgreSQL Supabase, & Keamanan Sesi Admin.
 - **Slide 8:** Dampak Nyata & Penutup: *"Literasi digital adalah adab dan ikhtiar menjaga sesama."*
@@ -122,11 +129,9 @@ Sistem menghasilkan **panduan biner 2-state**:
 
 ---
 
-## 9. Kesiapan Infrastruktur Cloud Vercel (Opsi 1 Full-Stack)
+## 9. Kesiapan Infrastruktur Cloud Vercel (Docker & FrankenPHP)
 
-1. **Monorepo Serverless Modern:** Menggabungkan antarmuka Blade PHP dan backend Laravel ke dalam satu repositori terpadu via runtime `vercel-php@0.7.3`.
-2. **Serverless Bridge (`api/index.php`):** Mengatasi sistem berkas read-only serverless dengan mengalihkan cache dan storage Laravel ke `/tmp/storage`.
-3. **Koneksi Pooler Berkecepatan Tinggi:** Terhubung ke basis data Supabase PostgreSQL Singapore via pooler IPv4 (`aws-0-ap-southeast-1.pooler.supabase.com:5432`) untuk latensi minimal.
-4. **Global Edge CDN:** Aset antarmuka (`css/`, `js/`, gambar) disajikan langsung dari jaringan tepi Vercel secara instan dan bebas latensi.
-
-
+1. **Container Modern PHP 8.4:** Menggunakan image resmi `dunglas/frankenphp:1-php8.4` di atas Vercel Container Runtime (`{"framework": "container"}`), memenuhi kebutuhan dependensi Laravel PHP $\ge$ 8.4.1.
+2. **Otomatisasi Composer Build:** Binary Composer 2 disalin langsung ke dalam container untuk menjalankan `composer install --no-dev` secara terisolasi tanpa memerlukan dependensi Node.js.
+3. **Koneksi Pooler Supabase PostgreSQL:** Terhubung ke basis data Supabase PostgreSQL Singapore via pooler IPv4 (`aws-0-ap-southeast-1.pooler.supabase.com:5432`) dengan keamanan SSL (`require`).
+4. **Smart Front Controller & Caddy Server:** Menyajikan aset statis via HTTP compression (`zstd`/`gzip`) dengan proteksi cache script mobile, serta mengarahkan rute dinamis secara mulus ke `/index.php`.
