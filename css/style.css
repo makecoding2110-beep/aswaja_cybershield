@@ -1867,6 +1867,7 @@ div {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 .block {
   display: block;
@@ -5047,6 +5048,7 @@ html.dark .cyber-mesh-grid {
   padding: 1.5px;
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.45), transparent 45%, rgba(5, 150, 105, 0.35));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: 0;
