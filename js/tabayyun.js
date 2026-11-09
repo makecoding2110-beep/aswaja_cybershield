@@ -1091,13 +1091,19 @@ document.addEventListener('DOMContentLoaded', () => {
             ? result.findings.map(f => `${(f.label || '').replace(/:$/, '')}: ${f.desc || f.detail || ''}`).join('; ')
             : (result.description || '');
 
-          let suggestedCategory = 'Investasi Berkedok Trading';
+          let suggestedCategory = 'Investasi Bodong & Trading Ilegal';
           const titleLow = (result.title || '').toLowerCase();
           const catLow = (result.category || result.statusAlert || '').toLowerCase();
           if (titleLow.includes('judi') || catLow.includes('judi') || titleLow.includes('slot')) {
-            suggestedCategory = 'Promosi Judi Online / Slot';
-          } else if (titleLow.includes('apk') || titleLow.includes('phishing')) {
-            suggestedCategory = 'Tautan Phishing / Malware APK';
+            suggestedCategory = 'Promosi Situs Judi Online / Slot';
+          } else if (titleLow.includes('apk') || titleLow.includes('phishing') || titleLow.includes('malware')) {
+            suggestedCategory = 'Phishing & Pencurian Data (APK/Formulir Palsu)';
+          } else if (titleLow.includes('defacement') || titleLow.includes('subdomain') || titleLow.includes('diretas')) {
+            suggestedCategory = 'Web Defacement / Subdomain Instansi Diretas';
+          } else if (titleLow.includes('cuan') || titleLow.includes('deposit')) {
+            suggestedCategory = 'Iklan Cuan Kilat Bersyarat Deposit';
+          } else if (titleLow.includes('arisan') || titleLow.includes('grup')) {
+            suggestedCategory = 'Grup Arisan & Undangan Investasi Menyesatkan';
           } else if (titleLow.includes('cuan') || titleLow.includes('deposit')) {
             suggestedCategory = 'Iklan Cuan Kilat Bersyarat Deposit';
           }

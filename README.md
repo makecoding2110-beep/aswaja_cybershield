@@ -37,7 +37,7 @@ Aswaja CyberShield dibangun dengan pendekatan **Recognize, Learn, & Act** yang m
    * **Evaluasi & Pembahasan Real-time**: Pembahasan etis dan teknis langsung muncul setelah opsi jawaban dipilih, diakhiri dengan skor kalkulasi otomatis.
 
 4. **Portal Lapor Siber (`/lapor`)**:
-   * **Pengaduan URL & Rekening Penipu**: Formulir laporan aduan masyarakat yang dilengkapi upload tangkapan layar dan opsi pelapor anonim (*Hamba Allah*).
+   * **Pengaduan URL & Rekening Penipu**: Formulir laporan aduan masyarakat yang dilengkapi upload tangkapan layar dan opsi pelapor anonim (*Anonim*).
    * **Generator ID Tiket Otomatis**: Memberikan nomor tiket unik 3 digit (contoh: `LPR081`) untuk pemantauan tindak lanjut secara transparan.
 
 ---

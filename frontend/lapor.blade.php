@@ -4,11 +4,12 @@
   $prefilledUrl = htmlspecialchars(trim($_GET['url'] ?? $_GET['q'] ?? ''), ENT_QUOTES, 'UTF-8');
   
   $kategoriList = [
-      'Investasi Berkedok Trading',
-      'Iklan Cuan Kilat Bersyarat Deposit Judi',
-      'Tautan Promosi Slot/Kasino Berkedok Game Finansial',
-      'Tautan Undangan Grup Investasi/Arisan Bodong',
-      'Situs Afiliasi & Referral Judi Online',
+      'Promosi Situs Judi Online / Slot',
+      'Investasi Bodong & Trading Ilegal',
+      'Web Defacement / Subdomain Instansi Diretas',
+      'Phishing & Pencurian Data (APK/Formulir Palsu)',
+      'Grup Arisan & Undangan Investasi Menyesatkan',
+      'Iklan Cuan Kilat Bersyarat Deposit',
       'Lainnya'
   ];
 ?>
@@ -261,7 +262,7 @@
           <form id="form-lapor-siber" class="space-y-5" novalidate>
             <div>
               <label for="lapor-nama" class="ui-label">Nama Pelapor (Opsional/Boleh Samaran):</label>
-              <input type="text" id="lapor-nama" name="nama" maxlength="100" autocomplete="off" placeholder="Hamba Allah / Anonim" class="ui-input">
+              <input type="text" id="lapor-nama" name="nama" maxlength="100" autocomplete="off" placeholder="Anonim / Boleh Samaran" class="ui-input">
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 stagger-children">

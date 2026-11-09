@@ -250,8 +250,8 @@ const MockDatabase = {
       id: 'LPR081',
       url: 'https://cuan-trading-harian-vip88.vip/deposit-slot',
       date: '02 Nov 2026, 14:20 WITA',
-      reporter: 'Hamba Allah',
-      category: 'Investasi Berkedok Trading / Crypto',
+      reporter: 'Anonim',
+      category: 'Investasi Bodong & Trading Ilegal',
       description: 'Grup Telegram mengklaim sinyal trading robot otomatis dengan profit 30% per hari, tetapi tautan pendaftarannya dialihkan ke deposit situs slot online luar negeri.',
       status: 'Diproses', // Masuk | Diproses | Selesai
       verificationNotes: 'Domain terdaftar 4 hari lalu di luar yurisdiksi RI. Server merujuk pada jaringan situs judi slot tanpa izin OJK/Bappebti.',
@@ -748,7 +748,7 @@ const ApiService = {
     // Menerima field berbahasa Indonesia (form Lapor) maupun Inggris (API).
     const payload = {
       url: String(data.url || '').trim(),
-      reporter: String(data.reporter || data.nama || '').trim() || 'Hamba Allah',
+      reporter: String(data.reporter || data.nama || '').trim() || 'Anonim',
       category: String(data.category || data.kategori || '').trim(),
       description: String(data.description || data.deskripsi || '').trim()
     };
@@ -816,7 +816,7 @@ const ApiService = {
   async createAdminReport(data) {
     const payload = {
       url: String(data.url || '').trim(),
-      reporter: String(data.reporter || data.nama || '').trim() || 'Hamba Allah',
+      reporter: String(data.reporter || data.nama || '').trim() || 'Anonim',
       category: String(data.category || data.kategori || '').trim(),
       description: String(data.description || data.deskripsi || '').trim(),
       status: data.status || 'Pending',

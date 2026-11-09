@@ -318,10 +318,13 @@
             <select name="category" id="filter-category"
               class="px-3 py-2 text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-700">
               <option value="">Semua Kategori</option>
-              <option value="Trading">Investasi Berkedok Trading</option>
-              <option value="Cuan">Iklan Cuan Kilat</option>
-              <option value="Slot">Slot / Kasino Berkedok Game</option>
-              <option value="Arisan">Grup Arisan / Investasi</option>
+              <option value="Judi Online">Promosi Situs Judi Online / Slot</option>
+              <option value="Investasi Bodong">Investasi Bodong & Trading Ilegal</option>
+              <option value="Defacement">Web Defacement / Subdomain Diretas</option>
+              <option value="Phishing">Phishing & Pencurian Data</option>
+              <option value="Arisan">Grup Arisan & Undangan Menyesatkan</option>
+              <option value="Cuan Kilat">Iklan Cuan Kilat Bersyarat Deposit</option>
+              <option value="Lainnya">Lainnya</option>
             </select>
 
             <button type="button" id="btn-reset-filter"
@@ -537,12 +540,13 @@
               <select id="add-report-category" required
                 class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-800 font-semibold">
                 <option value="">-- Pilih Kategori --</option>
-                <option value="Investasi Berkedok Trading / Crypto">Investasi Berkedok Trading / Crypto</option>
-                <option value="Promosi Judi Online / Slot">Promosi Judi Online / Slot</option>
-                <option value="Tautan Phishing / Malware APK">Tautan Phishing / Malware APK</option>
+                <option value="Promosi Situs Judi Online / Slot">Promosi Situs Judi Online / Slot</option>
+                <option value="Investasi Bodong & Trading Ilegal">Investasi Bodong & Trading Ilegal</option>
+                <option value="Web Defacement / Subdomain Instansi Diretas">Web Defacement / Subdomain Instansi Diretas</option>
+                <option value="Phishing & Pencurian Data (APK/Formulir Palsu)">Phishing & Pencurian Data (APK/Formulir Palsu)</option>
+                <option value="Grup Arisan & Undangan Investasi Menyesatkan">Grup Arisan & Undangan Investasi Menyesatkan</option>
                 <option value="Iklan Cuan Kilat Bersyarat Deposit">Iklan Cuan Kilat Bersyarat Deposit</option>
-                <option value="Tautan Undangan Grup Arisan Bodong">Tautan Undangan Grup Arisan Bodong</option>
-                <option value="Pencatutan Tokoh / Hoaks Donasi">Pencatutan Tokoh / Hoaks Donasi</option>
+                <option value="Lainnya">Lainnya</option>
               </select>
             </div>
 
@@ -947,7 +951,7 @@
               <td class="px-4 py-4 whitespace-nowrap">
                 <div class="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
                   <i class="bi bi-person text-slate-400"></i>
-                  <span>${escapeHtml(r.reporter || r.reporter_name || 'Hamba Allah')}</span>
+                  <span>${escapeHtml(r.reporter || r.reporter_name || 'Anonim')}</span>
                 </div>
               </td>
 
@@ -1171,7 +1175,7 @@
         const rawUrl = urlInput.value.trim();
         const category = catInput.value.trim();
         const status = statusInput.value.trim();
-        const reporter = reporterInput.value.trim() || 'Hamba Allah';
+        const reporter = reporterInput.value.trim() || 'Anonim';
         const description = descInput.value.trim();
 
         // 1. Validasi Input

@@ -68,8 +68,8 @@ class DatabaseSeeder extends Seeder
             [
                 'id' => 'LPR081',
                 'url' => 'https://cuan-trading-harian-vip88.vip/deposit-slot',
-                'reporter' => 'Hamba Allah',
-                'category' => 'Investasi Berkedok Trading / Crypto',
+                'reporter' => 'Anonim',
+                'category' => 'Investasi Bodong & Trading Ilegal',
                 'description' => 'Grup Telegram mengklaim sinyal trading robot otomatis dengan profit 30% per hari, tetapi tautan pendaftarannya dialihkan ke deposit situs slot online luar negeri.',
                 'status' => 'Diproses',
                 'verification_notes' => 'Domain terdaftar 4 hari lalu di luar yurisdiksi RI. Server merujuk pada jaringan situs judi slot tanpa izin OJK/Bappebti.',

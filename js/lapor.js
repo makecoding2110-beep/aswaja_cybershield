@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
         if (!selectKategori.value) {
-          selectKategori.value = 'Investasi Berkedok Trading';
+          selectKategori.value = 'Promosi Situs Judi Online / Slot';
         }
       }
 
@@ -539,7 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
         title: 'Kirim laporan ini?',
         message: 'Pastikan data berikut sudah benar. Laporan tidak dapat diubah setelah dikirim.',
         summary: [
-          { label: 'Pelapor', value: nama || 'Anonim (Hamba Allah)' },
+          { label: 'Pelapor', value: nama || 'Anonim' },
           { label: 'Kategori', value: kategori },
           { label: 'URL', value: target },
           { label: 'Kronologi', value: deskripsi ? (deskripsi.length > 140 ? deskripsi.slice(0, 140) + '…' : deskripsi) : 'Tidak diisi' },

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->string('id', 50)->primary(); // Format tiket: LPR081, LPR082, dst.
             $table->string('url', 2048);
-            $table->string('reporter', 150)->default('Hamba Allah');
+            $table->string('reporter', 150)->default('Anonim');
             $table->string('category', 255);
             $table->text('description');
             $table->string('evidence_path', 1024)->nullable();

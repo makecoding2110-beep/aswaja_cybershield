@@ -103,7 +103,7 @@ Saat pengguna memasukkan URL di [`frontend/tabayyun.blade.php`](file:///d:/cyber
 ### Tahap 4: Alur Kerja Pengaduan Masyarakat di Portal Lapor (`Act`)
 
 1. Pengguna membuka [`frontend/lapor.blade.php`](file:///d:/cybershield/frontend/lapor.blade.php).
-2. Memilih kategori insiden, kronologi, opsi pelapor anonim (*Hamba Allah*), dan mengunggah tangkapan layar.
+2. Memilih kategori insiden, kronologi, opsi pelapor anonim (*Anonim*), dan mengunggah tangkapan layar.
 3. **Proteksi Kuota (Rate Limiting 2x per 2 Jam):** Sistem menerapkan pembatasan frekuensi pengiriman laporan. Jika pelapor mengirimkan lebih dari 2 kali dalam 2 jam, sistem menampilkan pop-up peringatan edukatif dengan 4 alasan keamanan dan tombol kirim otomatis dinonaktifkan.
 4. Backend memproses aduan dan menerbitkan nomor tiket unik (contoh: **`LPR082`**) yang tercatat pada rekapitulasi pelaporan publik.
 

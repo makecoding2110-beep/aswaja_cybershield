@@ -19,8 +19,8 @@ class ReportDTO
     {
         return new self(
             url: $data['url'] ?? '',
-            reporter: $data['reporter'] ?? $data['nama'] ?? 'Hamba Allah',
-            category: $data['category'] ?? $data['kategori'] ?? 'Investasi Berkedok Trading / Crypto',
+            reporter: $data['reporter'] ?? $data['nama'] ?? 'Anonim',
+            category: $data['category'] ?? $data['kategori'] ?? 'Promosi Situs Judi Online / Slot',
             description: $data['description'] ?? $data['deskripsi'] ?? '',
             evidencePath: $evidencePath,
             status: $data['status'] ?? 'Masuk',
