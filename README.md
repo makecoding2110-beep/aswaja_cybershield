@@ -206,5 +206,13 @@ Platform mengintegrasikan sensor deterministik **Suricata NIDS** untuk memeriksa
 * [`PENJELASAN_WEB.md`](file:///d:/cybershield/PENJELASAN_WEB.md): Ringkasan konsep, perumusan masalah, arsitektur panel admin, dan naskah presentasi.
 
 ---
+---
+## 9. Akun untuk masuk sebagai admin
 
+aswaja-cybershield.vercel.app/login
+
+user: panitia
+password: paniti4m1tweek*
+
+---
 &copy; 2026 Aswaja CyberShield &bull; Inisiatif Ketahanan Digital Berbasis Tradisi Tabayyun dan Nilai-Nilai Islam Moderat.
