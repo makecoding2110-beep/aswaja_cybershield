@@ -282,17 +282,17 @@ Pada implementasi Supabase PostgreSQL:
 
 Seluruh logika deteksi telah diverifikasi secara ketat melalui test suite otomatis [`backend/tests/url_threat_analyzer_test.php`](file:///d:/cybershield/backend/tests/url_threat_analyzer_test.php):
 
-| No | Kasus Pengujian Unit Test | Target Sampel / Payload | Hasil & Indikator Verifikasi | Status |
+| No | Kasus Pengujian Unit Test | Target Sampel / Payload (Defanged) | Hasil & Indikator Verifikasi | Status |
 | :-: | :--- | :--- | :--- | :-: |
-| **1** | **Web Defacement Path (.go.id)** | `https://pemda-contoh.go.id/wp-content/uploads/2026/05/slot-gacor/` | Terdeteksi `web_defacement`, path upload CMS disusupi judol | ✅ **PASS** |
-| **2** | **Subdomain Hijacking (.desa.id)** | `https://slot88.desaku.desa.id/` | Terdeteksi `web_defacement`, subdomain memuat angka hoki 88 | ✅ **PASS** |
-| **3** | **Open Redirect ke TLD Sindikat (.vip)** | `https://portal-resmi.go.id/redirect?url=https%3A%2F%2Fjudol-gacor.vip%2Fdaftar` | Terdeteksi `open_redirect`, redirect ke domain disposable judol | ✅ **PASS** |
-| **4** | **Typosquatting Lembaga Negara** | `https://ojk-klaim-bansos.com/login` | Terdeteksi `typosquatting`, pencatutan OJK di domain komersial | ✅ **PASS** |
+| **1** | **Web Defacement Path (.go.id)** | `hxxps://pemda-contoh[.]go[.]id/wp-content/uploads/2026/05/slot-gacor/` | Terdeteksi `web_defacement`, path upload CMS disusupi judol | ✅ **PASS** |
+| **2** | **Subdomain Hijacking (.desa.id)** | `hxxps://slot88[.]desaku[.]desa[.]id/` | Terdeteksi `web_defacement`, subdomain memuat angka hoki 88 | ✅ **PASS** |
+| **3** | **Open Redirect ke TLD Sindikat (.vip)** | `hxxps://portal-resmi[.]go[.]id/redirect?url=hxxps%3A%2F%2Fjudol-gacor[.]vip%2Fdaftar` | Terdeteksi `open_redirect`, redirect ke domain disposable judol | ✅ **PASS** |
+| **4** | **Typosquatting Lembaga Negara** | `hxxps://ojk-klaim-bansos[.]com/login` | Terdeteksi `typosquatting`, pencatutan OJK di domain komersial | ✅ **PASS** |
 | **5** | **Zero False Positive Otoritas (OJK)** | `https://ojk.go.id/` | Bersih 100%, skor ancaman 0% Aman | ✅ **PASS** |
 | **6** | **Zero False Positive Kampus (UGM)** | `https://ugm.ac.id/` | Bersih 100%, skor ancaman 0% Aman | ✅ **PASS** |
-| **7** | **Kamuflase Finansial / Trading Judol** | `https://cuan-trading-harian-vip88.vip/deposit-slot` | Terdeteksi `kamuflase_investasi`, bukan defacement | ✅ **PASS** |
-| **8** | **URL Masking & Rebouncer (Google Share)** | `https://share.google/dZPBsDvJTBpwcuDLo` $\to$ `olymptrade.com` | Terdeteksi `url_masking` & `domain_rebouncer`, skor tinggi 80%+ | ✅ **PASS** |
+| **7** | **Kamuflase Finansial / Trading Judol** | `hxxps://cuan-trading-harian-vip88[.]vip/deposit-slot` | Terdeteksi `kamuflase_investasi`, bukan defacement | ✅ **PASS** |
+| **8** | **URL Masking & Rebouncer (Google Share)** | `hxxps://share.google/dZPBsDvJTBpwcuDLo` $\to$ `olymptrade[.]com` | Terdeteksi `url_masking` & `domain_rebouncer`, skor tinggi 80%+ | ✅ **PASS** |
 | **9** | **Zero False Positive Edukasi (Codepolitan)**| `https://www.codepolitan.com/bootcamp/` | Bersih 100%, skor ancaman 0% Aman | ✅ **PASS** |
-| **10**| **Dual-Persona SEO Cloaking (Kemendagri)** | `https://bbpkapdn1.kemendagri.go.id/` | Terdeteksi `seo_cloaking` & `web_defacement` (CUMI787 Slot), skor 95% | ✅ **PASS** |
+| **10**| **Dual-Persona SEO Cloaking (Kemendagri)** | `hxxps://bbpkapdn1.kemendagri[.]go[.]id/` | Terdeteksi `seo_cloaking` & `web_defacement` (CUMI787 Slot), skor 95% | ✅ **PASS** |
 
 > **Kesimpulan Pengujian:** 10 dari 10 pengujian berhasil lolos (100% akurasi) tanpa adanya *false positive* pada domain resmi dan tanpa kebocoran *false negative* pada teknik penyusupan tersembunyi.

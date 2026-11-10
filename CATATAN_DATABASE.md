@@ -291,8 +291,8 @@ DB_CONNECTION=pgsql
 DB_HOST=aws-0-ap-southeast-1.pooler.supabase.com
 DB_PORT=5432
 DB_DATABASE=postgres
-DB_USERNAME=postgres.tffadqzdhltroeuuckjw
-DB_PASSWORD=AswajaCyber3*
+DB_USERNAME=postgres.[PROJECT_REF]
+DB_PASSWORD=[YOUR_SUPABASE_PASSWORD]
 DB_SSLMODE=require
 ```
 

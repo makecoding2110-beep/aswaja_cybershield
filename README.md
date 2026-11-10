@@ -2,6 +2,10 @@
 
 Platform edukasi, verifikasi keabsahan tautan, dan pelaporan terpadu khusus **tautan investasi menyesatkan yang mengarah pada praktik judi online (*judol / maysir modern*)** berlandaskan tradisi Tabayyun dan nilai-nilai **Ahlussunnah wal Jama'ah (Aswaja)**.
 
+> [!NOTE]
+> **🛡️ Cybersecurity Research & Defensive Education Notice (GitHub Acceptable Use Policy Compliance)**  
+> This open-source repository is created strictly for **academic research, digital literacy education, and defensive cybersecurity analysis** by students of Universitas Nahdlatul Ulama Kalimantan Timur. All heuristic signatures, detection rules (Suricata NIDS), and defanged threat samples (`hxxps://`, `[.]`) are utilized solely for consumer protection against fraudulent schemes and illegal online gambling (*maysir*). This project does not host, distribute, or promote malicious content, malware, or gambling services.
+
 ---
 
 ## 1. Fitur Utama Platform
@@ -206,13 +210,14 @@ Platform mengintegrasikan sensor deterministik **Suricata NIDS** untuk memeriksa
 * [`PENJELASAN_WEB.md`](file:///d:/cybershield/PENJELASAN_WEB.md): Ringkasan konsep, perumusan masalah, arsitektur panel admin, dan naskah presentasi.
 
 ---
----
-## 9. Akun untuk masuk sebagai admin
 
-aswaja-cybershield.vercel.app/login
+## 9. Kredensial Uji Coba Demo Juri / Panitia
 
-user: panitia
-password: paniti4m1tweek*
+Untuk keperluan peninjauan dewan juri dan panitia MIT Week, telah disediakan akun demo pada lingkungan terisolasi (*sandboxed demo environment*):
+
+* **Portal Login:** [`aswajacybershield.vercel.app/login`](https://aswajacybershield.vercel.app/login)
+* **Akun Demo Juri:** `Username: panitia` | `Kata Sandi: paniti4m1tweek*`
+* *(Catatan: Akun ini merupakan akun demonstrasi publik terisolasi untuk evaluasi lomba, tanpa akses ke infrastruktur server inti).*
 
 ---
 &copy; 2026 Aswaja CyberShield &bull; Inisiatif Ketahanan Digital Berbasis Tradisi Tabayyun dan Nilai-Nilai Islam Moderat.

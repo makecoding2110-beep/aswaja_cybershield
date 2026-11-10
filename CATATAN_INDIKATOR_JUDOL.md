@@ -105,14 +105,14 @@ Sindikat modern menggunakan teknik rekayasa URL canggih agar tautan terlihat sep
 * **Mekanisme:** Membuat domain baru yang secara visual menyerupai lembaga resmi pengawas keuangan atau perbankan guna menjebak korban yang kurang teliti.
 * **Ciri & Bukti Teknis:**
   1. **Substitusi Karakter Homoglif (*Visual Impersonation*):** Mengganti karakter huruf dengan angka atau kombinasi huruf yang bentuk geometrisnya identik:
-     - Angka `0` untuk huruf `O` (contoh: `0jk-investasi.com` $\to$ meniru `ojk.go.id`).
-     - Angka `1` untuk huruf `l` atau `i` (contoh: `b1-resmi.com` $\to$ meniru `bi.go.id`).
-     - Huruf `rn` untuk huruf `m` (contoh: `bca-klaim.corn` $\to$ meniru `.com`).
+     - Angka `0` untuk huruf `O` (contoh: `0jk-investasi[.]com` $\to$ meniru `ojk.go.id`).
+     - Angka `1` untuk huruf `l` atau `i` (contoh: `b1-resmi[.]com` $\to$ meniru `bi.go.id`).
+     - Huruf `rn` untuk huruf `m` (contoh: `bca-klaim[.]corn` $\to$ meniru `.com`).
      - Huruf `vv` untuk huruf `w`.
   2. **Pencatutan Nama Lembaga pada TLD Komersial:**
      - Menggunakan nama lembaga negara yang seharusnya `.go.id`, tetapi didaftarkan pada ekstensi komersial bebas verifikasi:
-       - `ojk-investasi-amanah.com` (Palsu) vs `ojk.go.id` (Resmi).
-       - `bappebti-trading-syariah.net` (Palsu) vs `bappebti.go.id` (Resmi).
+       - `ojk-investasi-amanah[.]com` (Palsu) vs `ojk.go.id` (Resmi).
+       - `bappebti-trading-syariah[.]net` (Palsu) vs `bappebti.go.id` (Resmi).
   3. **Penyematan Embel-Embel Tipuan (*Deceptive Suffixes*):**
      - Menambahkan kata penenang psikologis: `-resmi`, `-info`, `-login`, `-daftar`, `-bansos`, `-bantuan`, `-dana`, `-klaim`.
 
@@ -139,7 +139,7 @@ Sindikat modern menggunakan teknik rekayasa URL canggih agar tautan terlihat sep
 
 | Dimensi Evaluasi | Ciri Kasat Mata (Konvensional) | 3 Teknik Penyusupan Siluman |
 | :--- | :--- | :--- |
-| **Bentuk Tautan URL** | `https://slot-gacor-vip88.vip/deposit` | `https://instansi.go.id/wp-content/uploads/slot/`<br>`https://portal.ac.id/out?url=https%3A%2F%2Fjudol.vip`<br>`https://0jk-bantuan-resmi.com` |
+| **Bentuk Tautan URL** | `hxxps://slot-gacor-vip88[.]vip/deposit` | `hxxps://instansi[.]go[.]id/wp-content/uploads/slot/`<br>`hxxps://portal[.]ac[.]id/out?url=hxxps%3A%2F%2Fjudol[.]vip`<br>`hxxps://0jk-bantuan-resmi[.]com` |
 | **Domain yang Digunakan** | Domain baru ber-TLD murah (`.vip`, `.top`, `.xyz`, `.cc`). | Domain resmi institusi (`.go.id`, `.ac.id`) atau domain tiruan ber-homoglif. |
 | **Metode Penyamaran** | Mengandalkan tanda hubung dan leetspeak sederhana (`sl0t`). | Eksploitasi celah server (CMS Defacement, Open Redirect, DNS Hijacking, Homoglif). |
 | **Tingkat Kemudahan Dideteksi** | **Sangat Mudah** (Dapat dilihat langsung oleh mata awam). | **Sangat Sulit** (Tampak 100% seperti link resmi jika tidak dianalisis secara struktural). |
@@ -198,5 +198,5 @@ Berikut adalah spesifikasi implementasi 4 tingkatan risiko yang telah diselarask
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | 🟢 **Rendah** | **0% – 25%** | **Hijau** (`emerald`)<br>`verified_user` | Domain resmi berizin, reputasi bersih, terdaftar di *whitelist* institusi pemerintah/akademik, tidak ada pola maysir. | `https://ojk.go.id/`<br>`https://unmul.ac.id/` | **Aman Dikunjungi:** Alamat situs resmi yang sah tanpa tanda perjudian atau pencurian data. Tetap terapkan kehati-hatian digital. |
 | 🟡 **Sedang** | **26% – 50%** | **Kuning** (`amber`)<br>`warning` | Domain menggunakan akhiran bebas/murah (`.club`, `.site`), tanda hubung promosi, atau klaim investasi/trading tanpa izin resmi, **namun bersih dari konten judi langsung**. | `https://komunitas-pecinta-kucing.club/forum`<br>`https://bisnis-cuan-harian.site/` | **Perlu Kewaspadaan:** Menggunakan domain bebas tanpa verifikasi atau klaim keuntungan instan, namun **tidak ditemukan transaksi judi slot**. Jangan bagikan sandi atau modal. |
-| 🟠 **Tinggi / Perlu Pemeriksaan** | **51% – 84%** | **Oranye** (`orange`)<br>`gpp_maybe` | Terdeteksi kata kunci fitur taruhan judi (seperti *maxwin, jackpot, scatter, rtp*) atau anomali sensor teknis ganda tanpa izin otoritas. | `https://maxwin.lc/`<br>`https://jackpot-scatter.site/` | **Perlu Pemeriksaan Lanjutan:** Tautan memuat fitur yang identik dengan taruhan daring. Berpotensi mengarahkan ke jaringan judi. Jangan tekan tombol pendaftaran. |
-| 🔴 **Berat / Sangat Berbahaya** | **85% – 100%** | **Merah** (`red`)<br>`gpp_bad` | Terbukti langsung sarana judi online aktif (slot gacor, togel, casino), penyusupan siber (*Web Defacement*), pemalsuan identitas (*Typosquatting/Phishing*), atau pengalihan tertutup (*Cloaking*). | `https://cuan-trading-harian-vip88.vip/deposit-slot`<br>`https://instansi.go.id/uploads/slotgacor/` | **Sangat Berbahaya:** Terbukti sebagai sarana perjudian ilegal atau pencurian data sandi/rekening. Jangan pernah mentransfer uang dan segera tutup halaman. |
+| 🟠 **Tinggi / Perlu Pemeriksaan** | **51% – 84%** | **Oranye** (`orange`)<br>`gpp_maybe` | Terdeteksi kata kunci fitur taruhan judi (seperti *maxwin, jackpot, scatter, rtp*) atau anomali sensor teknis ganda tanpa izin otoritas. | `hxxps://maxwin[.]lc/`<br>`hxxps://jackpot-scatter[.]site/` | **Perlu Pemeriksaan Lanjutan:** Tautan memuat fitur yang identik dengan taruhan daring. Berpotensi mengarahkan ke jaringan judi. Jangan tekan tombol pendaftaran. |
+| 🔴 **Berat / Sangat Berbahaya** | **85% – 100%** | **Merah** (`red`)<br>`gpp_bad` | Terbukti langsung sarana judi online aktif (slot gacor, togel, casino), penyusupan siber (*Web Defacement*), pemalsuan identitas (*Typosquatting/Phishing*), atau pengalihan tertutup (*Cloaking*). | `hxxps://cuan-trading-harian-vip88[.]vip/deposit-slot`<br>`hxxps://instansi[.]go[.]id/uploads/slotgacor/` | **Sangat Berbahaya:** Terbukti sebagai sarana perjudian ilegal atau pencurian data sandi/rekening. Jangan pernah mentransfer uang dan segera tutup halaman. |
