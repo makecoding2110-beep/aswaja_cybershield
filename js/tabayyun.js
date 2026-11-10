@@ -365,28 +365,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const findingsText = findings.map(f => (f.label || '') + ' ' + (f.detail || '')).join(' ').toLowerCase();
     const urlLower = String(rawUrl || result.url || '').toLowerCase();
 
+    // Deteksi cerdas jenis domain (Pemerintah, Kampus, atau Portal Web Publik)
+    const isGov = urlLower.includes('.go.id') || urlLower.includes('.desa.id') || urlLower.includes('.mil.id');
+    const isEdu = urlLower.includes('.ac.id') || urlLower.includes('.sch.id') || urlLower.includes('.edu');
+    const siteTypeDesc = isGov ? 'instansi pemerintah resmi' : (isEdu ? 'lembaga pendidikan / akademik' : 'portal web / situs publik (non-pemerintah)');
+    const siteTypeTitle = isGov ? 'Situs Pemerintah Disusupi' : (isEdu ? 'Situs Akademik Disusupi' : 'Situs / Portal Web Disusupi');
+
     let points = [];
 
     if (resolvedColor === 'red') {
-      if (techniques.includes('seo_cloaking') || findingsText.includes('cloaking') || findingsText.includes('googlebot')) {
+      if (techniques.includes('seo_cloaking') || findingsText.includes('seo cloaking') || findingsText.includes('googlebot')) {
         points = [
           {
             icon: 'domain_disabled',
             color: 'text-amber-600 dark:text-amber-400',
-            title: 'Situs Resmi Disusupi',
-            desc: 'Alamat web ini memang milik instansi pemerintah/akademik resmi, namun sistemnya telah disusupi skrip licik (SEO Cloaking) sindikat perjudian.'
+            title: siteTypeTitle,
+            desc: `Alamat web ini merupakan ${siteTypeDesc}, namun sistemnya telah disusupi skrip licik (SEO Cloaking) sindikat perjudian.`
           },
           {
             icon: 'travel_explore',
             color: 'text-red-600 dark:text-red-400',
             title: 'Manipulasi Mesin Pencari',
-            desc: 'Situs sengaja menampilkan berita resmi bagi pengunjung manusia, tetapi menyajikan halaman promosi judi online kepada mesin pencari (Googlebot).'
+            desc: 'Situs sengaja menampilkan konten normal bagi pengunjung manusia, tetapi menyajikan halaman promosi judi online kepada mesin pencari (Googlebot).'
           },
           {
             icon: 'front_hand',
             color: 'text-rose-600 dark:text-rose-400',
             title: 'Langkah Aman',
-            desc: 'JANGAN mengeklik tautan atau tombol hasil pencarian terkait judi tersebut, dan laporkan insiden pembajakan ini kepada pengelola instansi terkait.'
+            desc: 'JANGAN mengeklik tautan atau tombol hasil pencarian terkait judi tersebut, dan laporkan insiden pembajakan ini kepada pengelola situs terkait.'
           }
         ];
       } else if (techniques.includes('kamuflase_investasi') || findingsText.includes('kamuflase') || findingsText.includes('cuan') || findingsText.includes('trading')) {
@@ -410,25 +416,25 @@ document.addEventListener('DOMContentLoaded', () => {
             desc: 'JANGAN pernah mentransfer uang, JANGAN mendaftar atau mengisi nomor HP/rekening, dan segera tutup halaman ini.'
           }
         ];
-      } else if (techniques.includes('web_defacement') || findingsText.includes('defacement')) {
+      } else if (techniques.includes('web_defacement') || findingsText.includes('defacement') || findingsText.includes('penyusupan')) {
         points = [
           {
             icon: 'domain_disabled',
             color: 'text-amber-600 dark:text-amber-400',
-            title: 'Kedok Penipuan',
-            desc: 'Halaman situs resmi milik pemerintah atau lembaga pendidikan telah dibajak dan disusupi secara diam-diam oleh pelaku kejahatan.'
+            title: siteTypeTitle,
+            desc: `Halaman pada ${siteTypeDesc} ini telah disusupi atau disalahgunakan (Web Defacement) oleh pelaku kejahatan siber.`
           },
           {
-            icon: 'warning',
+            icon: 'casino',
             color: 'text-red-600 dark:text-red-400',
-            title: 'Bahaya Nyata',
-            desc: 'Halaman resmi tersebut disalahgunakan untuk menyembunyikan promosi judi online agar seolah-olah mendapat izin resmi.'
+            title: 'Konten Judi Aktif',
+            desc: 'Halaman memuat materi promosi taruhan/judi online aktif yang bertujuan menjebak pengunjung agar melakukan setoran dana.'
           },
           {
             icon: 'front_hand',
             color: 'text-rose-600 dark:text-rose-400',
             title: 'Langkah Aman',
-            desc: 'JANGAN mengeklik tombol pendaftaran apa pun dan laporkan halaman yang disusupi ini agar dapat segera dibersihkan.'
+            desc: 'JANGAN mengeklik tombol pendaftaran apa pun dan segera tutup halaman ini untuk melindungi keamanan data Anda.'
           }
         ];
       } else if (techniques.includes('typosquatting') || findingsText.includes('typosquatting') || findingsText.includes('meniru')) {
@@ -751,8 +757,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (text.includes('typosquatting') || text.includes('meniru')) {
           if (!list.includes('typosquatting')) list.push('typosquatting');
         }
-        if (text.includes('cloaking') || text.includes('googlebot') || text.includes('penyusupan tersembunyi')) {
+        if (text.includes('seo cloaking') || text.includes('googlebot') || text.includes('cloaking tersembunyi')) {
           if (!list.includes('seo_cloaking')) list.push('seo_cloaking');
+        }
+        if (text.includes('defacement') || text.includes('penyusupan konten') || text.includes('penyusupan web') || text.includes('penyusupan halaman')) {
+          if (!list.includes('web_defacement')) list.push('web_defacement');
         }
       });
     }
@@ -783,18 +792,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       },
       web_defacement: {
-        badgeTitle: 'Web Defacement / Subdomain Hijacking',
+        badgeTitle: 'Web Defacement / Penyusupan Halaman',
         badgeColor: 'bg-amber-100 text-amber-900 border-amber-300/80 dark:bg-amber-950/70 dark:text-amber-200 dark:border-amber-700/60',
         icon: 'language',
-        explanation: 'Tautan memanfaatkan celah keamanan atau menyusupi sub-halaman situs resmi (seperti domain pemerintah/pendidikan) untuk mengelabui filter dan menyembunyikan konten perjudian.',
+        explanation: 'Halaman situs web (seperti portal publik, domain pemerintah, atau institusi pendidikan) telah disusupi atau disalahgunakan untuk menyisipkan konten dan promosi judi online aktif.',
         findEvidence: () => {
-          const matched = (findings || []).find(f => (f.label || '').includes('Defacement') || (f.detail || '').includes('Defacement') || (f.detail || '').includes('Subdomain'));
+          const matched = (findings || []).find(f => (f.label || '').includes('Defacement') || (f.detail || '').includes('Defacement') || (f.detail || '').includes('Penyusupan') || (f.detail || '').includes('Subdomain'));
           if (matched) return matched.detail || matched.desc;
           try {
             const u = new URL(rawUrl.startsWith('http') ? rawUrl : 'https://' + rawUrl);
-            return `Jalur path '${u.pathname}' atau subdomain terindikasi memuat kata kunci judol.`;
+            return `Jalur path '${u.pathname}' atau halaman web terindikasi memuat materi judol.`;
           } catch {
-            return 'Jalur path atau subdomain resmi memuat indikator halaman judol.';
+            return 'Halaman situs web memuat indikator promosi judol aktif.';
           }
         }
       },
@@ -804,7 +813,7 @@ document.addEventListener('DOMContentLoaded', () => {
         icon: 'shortcut',
         explanation: 'Tautan menggunakan situs perantara untuk langsung mengalihkan pengunjung secara otomatis ke alamat web tujuan lain tanpa disadari.',
         findEvidence: () => {
-          const matched = (findings || []).find(f => (f.label || '').includes('Redirect') || (f.detail || '').includes('Redirect') || (f.detail || '').includes('dua host'));
+          const matched = (findings || []).find(f => (f.label || '').includes('Redirect') || (f.detail || '').includes('Redirect') || (f.detail || '').includes('Target Pengalihan') || (f.detail || '').includes('dua host'));
           if (matched) return matched.detail || matched.desc;
           const paramMatch = (rawUrl || '').match(/[?&](url|redirect|to|link|dest|next|goto|return)=([^&]+)/i);
           if (paramMatch) {
@@ -851,9 +860,9 @@ document.addEventListener('DOMContentLoaded', () => {
         badgeTitle: 'SEO Cloaking / Defacement Tersembunyi',
         badgeColor: 'bg-rose-100 text-rose-900 border-rose-300/80 dark:bg-rose-950/70 dark:text-rose-200 dark:border-rose-700/60',
         icon: 'travel_explore',
-        explanation: 'Situs resmi instansi (seperti domain pemerintah .go.id atau kampus .ac.id) telah disusupi oleh skrip licik yang menampilkan konten resmi normal kepada pengunjung manusia, namun menyajikan promosi judi online aktif ketika dirayapi oleh mesin pencari Googlebot.',
+        explanation: 'Situs web (termasuk domain resmi pemerintah .go.id, akademik .ac.id, maupun situs publik) telah disusupi oleh skrip licik yang menampilkan konten resmi/normal kepada pengunjung manusia, namun menyajikan promosi judi online aktif ketika dirayapi oleh mesin pencari Googlebot.',
         findEvidence: () => {
-          const matched = (findings || []).find(f => (f.label || '').includes('SEO Cloaking') || (f.detail || '').includes('SEO Cloaking') || (f.detail || '').includes('Googlebot') || (f.detail || '').includes('Penyusupan'));
+          const matched = (findings || []).find(f => (f.label || '').includes('SEO Cloaking') || (f.detail || '').includes('SEO Cloaking') || (f.detail || '').includes('Googlebot'));
           if (matched) return matched.detail || matched.desc;
           return 'Tampilan halaman berbeda secara kontras antara peramban biasa dengan robot mesin pencari (Googlebot).';
         }

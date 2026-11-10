@@ -135,6 +135,7 @@ class AiOrchestratorService
             }
 
             $hasSeoCloaking = in_array('seo_cloaking', $storedTechniques, true);
+            $hasWebDefacement = in_array('web_defacement', $storedTechniques, true);
             $hasUrlMasking = in_array('url_masking', $storedTechniques, true);
 
             $alertClass = match (true) {
@@ -146,6 +147,7 @@ class AiOrchestratorService
 
             $title = match (true) {
                 $hasSeoCloaking => 'Waspada: Terindikasi Penyusupan (SEO Cloaking)',
+                $hasWebDefacement => 'Waspada: Terindikasi Penyusupan Halaman (Web Defacement)',
                 $hasUrlMasking => 'Waspada: Terindikasi URL Masking / Pengalihan Tautan',
                 $cachedRecord->final_category === 'terindikasi_judol' => 'Waspada: Terindikasi Judi Online',
                 $cachedRecord->final_category === 'terindikasi_investasi' => 'Peringatan: Terindikasi Investasi Bodong / Ilegal',
@@ -156,6 +158,7 @@ class AiOrchestratorService
 
             $statusAlert = match (true) {
                 $hasSeoCloaking => 'Berat (Penyusupan SEO Cloaking)',
+                $hasWebDefacement => 'Berat (Penyusupan Web Defacement)',
                 $cachedRecord->final_category === 'terindikasi_judol' => 'Berat (Sangat Berbahaya)',
                 $cachedRecord->final_category === 'terindikasi_investasi' => 'Peringatan Bahaya Tinggi',
                 $cachedRecord->final_category === 'mencurigakan' => 'Tinggi (Perlu Pemeriksaan)',

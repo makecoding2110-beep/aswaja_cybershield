@@ -354,13 +354,25 @@ class RiskAssessmentService
             }
         }
 
+        $targetHost = strtolower($urlAnalysis->host ?? '');
+        $isGov = (bool) preg_match('/(\.go\.id|\.desa\.id|\.mil\.id)/i', $targetHost);
+        $isEdu = (bool) preg_match('/(\.ac\.id|\.sch\.id|\.edu)/i', $targetHost);
+        $domainTypeDesc = $isGov ? 'instansi pemerintah' : ($isEdu ? 'lembaga pendidikan' : 'portal web / situs publik');
+
         if (!($suricataResult['isWhitelist'] ?? false) && $threatScore >= 60) {
             if (in_array('seo_cloaking', $detectedTechniques, true)) {
                 $finalCategory = 'terindikasi_judol';
                 $categoryLabel = 'Terindikasi Penyusupan (SEO Cloaking)';
                 $alertClass = 'red';
                 $title = 'Waspada: Terindikasi Penyusupan (SEO Cloaking)';
-                $reasoning = "Situs resmi instansi pemerintah/akademik terbukti disusupi skrip SEO Cloaking sindikat judi online yang memanipulasi tampilan khusus untuk mesin pencari Googlebot.";
+                $reasoning = "Situs {$domainTypeDesc} terbukti disusupi skrip SEO Cloaking sindikat judi online yang memanipulasi tampilan khusus untuk mesin pencari Googlebot.";
+                $decisionSource = 'threat_analyzer';
+            } elseif (in_array('web_defacement', $detectedTechniques, true)) {
+                $finalCategory = 'terindikasi_judol';
+                $categoryLabel = 'Terindikasi Penyusupan Web (Defacement)';
+                $alertClass = 'red';
+                $title = 'Waspada: Terindikasi Penyusupan Halaman (Web Defacement)';
+                $reasoning = "Halaman pada situs {$domainTypeDesc} terbukti disusupi materi promosi judi online aktif (Web Defacement).";
                 $decisionSource = 'threat_analyzer';
             } elseif ($hasInvestInd || $geminiCat === 'investasi_menyesatkan') {
                 $finalCategory = 'terindikasi_investasi';

@@ -268,13 +268,15 @@ FOKUS KHUSUS PADA TEKNIK MANIPULASI / PENYUSUPAN TAUTAN:
 3. Kamuflase Finansial / Investasi Berkedok Judol & Binary Options ("kamuflase_investasi"):
    - Domain menggunakan istilah investasi, trading online spekulatif (seperti Binary Options: Olymp Trade, Binomo, Quotex yang dilarang Bappebti/OJK), cuan, crypto, atau titip dana yang menjanjikan keuntungan tidak wajar atau transaksi taruhan berbasis pergerakan grafik spekulatif (maysir).
 4. Web Defacement / Subdomain Hijacking ("web_defacement"):
-   - Domain lembaga resmi pemerintah (.go.id, .mil.id, .desa.id) atau pendidikan (.ac.id, .sch.id, .edu) yang disusupi kata kunci judol pada path atau folder unggahan CMS (/wp-content/uploads/, /journal/, dsb.).
+   - Halaman situs web apa pun (baik portal publik/komersial/berita/olahraga, domain pemerintah .go.id, maupun pendidikan .ac.id) yang disusupi kata kunci atau materi promosi judol langsung pada judul, path, atau konten halamannya.
+   - Jika pengunjung biasa membuka halaman dan langsung melihat judul slot/judi online aktif (seperti pada path /slot-resmi/), kategorikan sebagai "web_defacement" (bukan SEO Cloaking).
    - Subdomain tidak wajar bertema judol/angka (misal: slot88.instansi.go.id, gacor777.desa.id).
 5. Typosquatting / URL Spoofing ("typosquatting"):
    - Peniruan nama instansi resmi (OJK, Bappebti, Kominfo, Kemkes, bank resmi) pada domain komersial/TLD murah (.com, .vip, .xyz) dengan manipulasi huruf/homoglif (0->o, 1->l, rn->m) dan embel-embel deceptive (-resmi, -bantuan, -login).
 6. SEO Cloaking / Defacement Tersembunyi ("seo_cloaking"):
-   - Domain resmi pemerintah (.go.id) atau akademik (.ac.id) yang membedakan respons: jika dibuka oleh manusia biasa menampilkan berita resmi instansi, namun jika dirayapi oleh mesin pencari Googlebot atau diakses via Google Search, menyuntikkan judul/snippet/konten judi online aktif (seperti slot gacor, CUMI787, maxwin, togel) untuk mendongkrak visibilitas sindikat di hasil pencarian.
-   - Jika terindikasi Cloaking pada domain resmi: Berikan status "judol" dengan tingkat risiko TINGGI (75% - 95%) dan teknik "seo_cloaking" serta "web_defacement". Jelaskan bahwa situs asli memang milik instansi resmi, namun telah disusupi skrip berbahaya yang hanya muncul di mesin pencari.
+   - Halaman situs web (terutama domain resmi pemerintah .go.id atau akademik .ac.id) yang membedakan respons secara licik: jika dibuka oleh pengunjung manusia biasa menampilkan halaman resmi/normal yang bersih, NAMUN jika dirayapi oleh mesin pencari Googlebot atau diakses via Google Search, menyuntikkan judul/snippet/konten judi online aktif (seperti slot gacor, CUMI787, maxwin, togel) untuk mendongkrak peringkat sindikat di hasil pencarian.
+   - PENTING: Teknik "seo_cloaking" HANYA berlaku jika terdapat disparitas respons antara pengunjung biasa (tampilan bersih) dengan robot Googlebot (tampilan judol). Jika pengunjung biasa pun langsung melihat materi judol, gunakan teknik "web_defacement".
+   - Jika terindikasi Cloaking pada domain resmi/kampus: Berikan status "judol" dengan tingkat risiko TINGGI (75% - 95%) dan teknik "seo_cloaking" serta "web_defacement". Jelaskan bahwa situs asli memang milik instansi/lembaga resmi, namun telah disusupi skrip berbahaya yang hanya muncul di mesin pencari.
 
 ATURAN EVALUASI TAUTAN TERSELUBUNG / UNMASKED TARGET:
 Jika data analisis teknis melampirkan "unmasked_url" atau "unmasked_host" (alamat asli yang disembunyikan di balik share.google atau shortener/rebouncer), evaluasi muatan ancaman situs tujuan asli tersebut!

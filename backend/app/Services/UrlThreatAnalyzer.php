@@ -774,7 +774,7 @@ class UrlThreatAnalyzer
 
         // 5. URL Masking / Domain Rebouncer terdeteksi mengarahkan ke situs investasi ilegal / judol -> Minimal 80 (Berbahaya)
         if (in_array('url_masking_detected', $indNames, true) || in_array('domain_rebouncer_detected', $indNames, true)) {
-            if (in_array('binary_options_illegal_investment', $indNames, true) || in_array('kamuflase_investasi_judol', $indNames, true) || in_array('cloaked_live_judol_content', $indNames, true)) {
+            if (in_array('binary_options_illegal_investment', $indNames, true) || in_array('kamuflase_investasi_judol', $indNames, true) || in_array('cloaked_live_judol_content', $indNames, true) || in_array('live_judol_content_detected', $indNames, true)) {
                 $score = max($score, $combinationThresholds['url_masking_with_threat_dest'] ?? 80);
             } else {
                 $score = max($score, 75);
@@ -1176,6 +1176,7 @@ class UrlThreatAnalyzer
 
         $url = $norm['normalized_url'] ?? $norm['original_url'] ?? '';
         $host = strtolower($norm['host'] ?? '');
+        $cleanHost = (string) preg_replace('/^www\./i', '', $host);
 
         if ($url === '' || $host === '' || $host === 'localhost' || filter_var($host, FILTER_VALIDATE_IP)) {
             return ['indicators' => [], 'techniques' => []];
@@ -1389,33 +1390,33 @@ class UrlThreatAnalyzer
                 }
             }
 
+            $isGov = ($norm['matched_gov_tld'] !== null || (bool) preg_match('/(\.go\.id|\.desa\.id|\.mil\.id)/i', $host));
+            $isEdu = (bool) preg_match('/(\.ac\.id|\.sch\.id|\.edu)/i', $host);
+            $siteTypeLabel = $isGov ? 'instansi pemerintah resmi' : ($isEdu ? 'lembaga pendidikan / akademik' : 'portal web / situs publik (non-pemerintah)');
+
             if (!empty($matchedHeaderKeywords)) {
                 $kwList = implode(', ', array_slice(array_unique($matchedHeaderKeywords), 0, 5));
                 $displayTitle = $pageTitle !== '' ? substr($pageTitle, 0, 110) : substr($metaText, 0, 110);
                 
-                $titleTech = null;
+                $titleTech = 'web_defacement';
                 if (preg_match('/(cuan|trading|invest|profit|crypto|kripto|forex|saham|titip-dana|dana|arisan)/i', $host)) {
                     $titleTech = 'kamuflase_investasi';
-                } elseif ($norm['matched_gov_tld'] !== null || preg_match('/(\.go\.id|\.desa\.id|\.ac\.id|\.sch\.id|\.mil\.id|\.edu)/i', $host)) {
-                    $titleTech = 'web_defacement';
                 }
 
                 $indicators[] = [
-                    'name' => 'cloaked_live_judol_title',
+                    'name' => 'live_judol_title_detected',
                     'technique' => $titleTech,
                     'evidence' => "Judul Halaman: \"{$displayTitle}\" (Indikator: {$kwList})",
                     'severity' => 'critical',
-                    'explanation' => "Meskipun nama alamat domain ('{$host}') berkedok umum/finansial, saat halaman dibuka ditemukan judul dan identitas situs judi online aktif: \"{$displayTitle}\"."
+                    'explanation' => "Ditemukan indikasi penyusupan konten (Web Defacement): Halaman pada domain '{$host}' ({$siteTypeLabel}) memuat judul dan identitas situs judi online aktif: \"{$displayTitle}\"."
                 ];
-                if ($titleTech !== null) {
-                    $techniques[] = $titleTech;
-                }
+                $techniques[] = $titleTech;
             }
 
             // A.2 Deteksi Dual-Persona SEO Cloaking (Googlebot Crawler vs Normal Visitor)
-            // Memeriksa apakah domain (terutama .go.id / .ac.id) memanipulasi tampilan untuk mesin pencari Google
-            $isGovOrEduDomain = ($norm['matched_gov_tld'] !== null || preg_match('/(\.go\.id|\.desa\.id|\.ac\.id|\.sch\.id|\.mil\.id|\.edu)/i', $host));
-            if ($isGovOrEduDomain || empty($matchedHeaderKeywords)) {
+            // Teknik Cloaking HANYA dievaluasi jika tampilan normal pengunjung manusia BERSIH, namun robot mesin pencari Googlebot disuntikkan materi judol
+            $isNormalClean = empty($matchedHeaderKeywords);
+            if ($isNormalClean && ($isGov || $isEdu || str_contains($host, 'kemendagri.go.id'))) {
                 $botCurlOpts = $curlOpts;
                 $botCurlOpts[CURLOPT_USERAGENT] = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
                 $botCurlOpts[CURLOPT_TIMEOUT] = 4;
@@ -1461,7 +1462,7 @@ class UrlThreatAnalyzer
                             'technique' => 'seo_cloaking',
                             'evidence' => "Tampilan Mesin Pencari (Googlebot): \"{$dispBotTitle}\" (Tampilan Pengunjung Biasa: \"{$dispNormalTitle}\")",
                             'severity' => 'critical',
-                            'explanation' => "Teknik SEO Cloaking / Defacement Tersembunyi terdeteksi: Situs asli instansi ({$host}) telah disusupi oleh skrip licik. Situs sengaja menampilkan halaman resmi jika dibuka langsung oleh manusia ('{$dispNormalTitle}'), namun menyajikan judul dan promosi judi online aktif ('{$dispBotTitle}', indikator: {$botKwList}) ketika dirayapi oleh mesin pencari Googlebot untuk memanipulasi hasil pencarian masyarakat."
+                            'explanation' => "Teknik SEO Cloaking / Defacement Tersembunyi terdeteksi: Situs {$siteTypeLabel} ({$host}) telah disusupi oleh skrip licik. Situs sengaja menampilkan konten normal bagi pengunjung manusia ('{$dispNormalTitle}'), namun menyajikan judul dan promosi judi online aktif ('{$dispBotTitle}', indikator: {$botKwList}) ketika dirayapi oleh mesin pencari Googlebot untuk memanipulasi hasil pencarian masyarakat."
                         ];
                         $techniques[] = 'seo_cloaking';
                         $techniques[] = 'web_defacement';
@@ -1507,11 +1508,11 @@ class UrlThreatAnalyzer
             if ($hasSuspiciousPopup || !empty($outboundJudolLinks)) {
                 $sampleLink = !empty($outboundJudolLinks) ? substr($outboundJudolLinks[0], 0, 90) : 'Popup Overlay #popup-situs';
                 $indicators[] = [
-                    'name' => 'cloaked_outbound_judol_link',
+                    'name' => 'outbound_judol_link_detected',
                     'technique' => 'open_redirect',
-                    'evidence' => "Target Tersembunyi: {$sampleLink}",
+                    'evidence' => "Target Pengalihan: {$sampleLink}",
                     'severity' => 'critical',
-                    'explanation' => "Halaman web menyisipkan layar jebakan (popup overlay) atau tombol pendaftaran yang diam-diam mengarahkan pengunjung ke server bandar judi online ({$sampleLink})."
+                    'explanation' => "Halaman web menyisipkan layar jebakan (popup overlay) atau tombol pendaftaran yang mengarahkan pengunjung dari {$siteTypeLabel} ({$host}) ke server bandar judi online ({$sampleLink})."
                 ];
                 $techniques[] = 'open_redirect';
             }
@@ -1528,23 +1529,19 @@ class UrlThreatAnalyzer
             if (!empty($matchedBodyPhrases)) {
                 $phraseList = implode(', ', array_slice(array_unique($matchedBodyPhrases), 0, 6));
 
-                $bodyTech = null;
+                $bodyTech = 'web_defacement';
                 if (preg_match('/(cuan|trading|invest|profit|crypto|kripto|forex|saham|titip-dana|dana|arisan)/i', $host)) {
                     $bodyTech = 'kamuflase_investasi';
-                } elseif ($norm['matched_gov_tld'] !== null || preg_match('/(\.go\.id|\.desa\.id|\.ac\.id|\.sch\.id|\.mil\.id|\.edu)/i', $host)) {
-                    $bodyTech = 'web_defacement';
                 }
 
                 $indicators[] = [
-                    'name' => 'cloaked_live_judol_content',
+                    'name' => 'live_judol_content_detected',
                     'technique' => $bodyTech,
                     'evidence' => "Konten Halaman: {$phraseList}",
                     'severity' => 'critical',
-                    'explanation' => "Saat isi halaman diperiksa, ditemukan materi promosi taruhan dan judi online secara langsung ({$phraseList}) yang disamarkan di balik domain '{$host}'."
+                    'explanation' => "Saat isi halaman diperiksa, ditemukan materi promosi taruhan dan judi online secara langsung ({$phraseList}) pada domain '{$host}' ({$siteTypeLabel})."
                 ];
-                if ($bodyTech !== null) {
-                    $techniques[] = $bodyTech;
-                }
+                $techniques[] = $bodyTech;
             }
 
             // D. Jika halaman beranda tampak wajar & belum terdeteksi judol/blokir, selidiki jalur defacement aktif

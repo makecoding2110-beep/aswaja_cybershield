@@ -32,9 +32,12 @@ return [
 
         // Penyusupan Konten Judol Terselubung (Cloaking / Hijacked Commercial Domain / Malvertising)
         'cloaked_live_judol_title' => 95,
+        'live_judol_title_detected' => 95,
         'defaced_judol_subpath' => 95,
         'cloaked_live_judol_content' => 90,
+        'live_judol_content_detected' => 90,
         'cloaked_outbound_judol_link' => 92,
+        'outbound_judol_link_detected' => 92,
         'hijacked_path_judol' => 85,
         'kamuflase_investasi_judol' => 88,
         'direct_judol_path' => 85,
