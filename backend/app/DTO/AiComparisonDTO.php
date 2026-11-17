@@ -2,10 +2,6 @@
 
 namespace App\DTO;
 
-/**
- * Data Transfer Object untuk hasil perbandingan independen Analisis AI
- * Sesuai Dokumen Spesifikasi Bagian 5.3 & Bagian 6
- */
 class AiComparisonDTO
 {
     /**

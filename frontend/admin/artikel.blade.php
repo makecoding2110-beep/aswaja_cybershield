@@ -989,7 +989,6 @@
               author,
               image: image || null,
               cover_image: image || null,
-              readTime: '5 Menit Baca',
               status,
               summary,
               content

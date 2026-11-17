@@ -15,7 +15,6 @@ class Article extends Model
         'excerpt',
         'content',
         'author',
-        'read_time',
         'status',
         'cover_image',
     ];

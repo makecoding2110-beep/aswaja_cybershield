@@ -220,7 +220,7 @@
             <div class="text-xs sm:text-sm text-slate-500 mt-0.5">Akurasi Verifikasi Tautan</div>
           </div>
           <div>
-            <div id="stat-total-tautan" class="font-display font-bold text-2xl sm:text-3xl text-slate-900" data-counter="41" data-counter-suffix="+" data-counter-duration="1500">41+</div>
+            <div id="stat-total-tautan" class="font-display font-bold text-2xl sm:text-3xl text-slate-900" data-counter="43" data-counter-suffix="+" data-counter-duration="1500">43+</div>
             <div class="text-xs sm:text-sm text-slate-500 mt-0.5">Tautan Dianalisis &amp; Dilaporkan</div>
           </div>
           <div>

@@ -213,7 +213,6 @@ CREATE TABLE public.articles (
     excerpt VARCHAR(500) NULL,
     content TEXT NOT NULL,
     author VARCHAR(150) DEFAULT 'Tim Edukasi Aswaja',
-    read_time VARCHAR(50) DEFAULT '5 Menit Baca',
     status VARCHAR(50) DEFAULT 'Published' CHECK (status IN ('Published', 'Draft')),
     cover_image VARCHAR(1024) NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

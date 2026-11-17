@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   } catch (err) {
     // Fallback: nilai riil basis data terkini
-    statEl.setAttribute('data-counter', '41');
-    statEl.textContent = '41+';
+    statEl.setAttribute('data-counter', '43');
+    statEl.textContent = '43+';
   }
 });

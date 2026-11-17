@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Log;
 /**
  * Service Analisis Ancaman Tautan Tingkat Lanjut
 
- * 1. Web Defacement / Subdomain Hijacking (terutama pada domain .go.id, .ac.id, .desa.id)
+ * 1. Web Defacement (terutama pada domain .go.id, .ac.id, .desa.id)
  * 2. Open Redirect (ekstraksi URL sekunder dan parameter pengalihan)
- * 3. Typosquatting / URL Spoofing (kemiripan nama instansi resmi & homoglif)
+ * 3. Typosquatting (kemiripan nama instansi resmi & homoglif)
  */
 class UrlThreatAnalyzer
 {
@@ -33,7 +33,7 @@ class UrlThreatAnalyzer
     }
 
     /**
-     * Menganalisis URL terhadap indikator ancaman siber (Defacement, Open Redirect, Typosquatting, URL Masking, Domain Rebouncer)
+     * Menganalisis URL terhadap indikator ancaman siber (Defacement, Open Redirect, Typosquatting, URL Masking)
      *
      * @param string $rawUrl URL target yang ingin dianalisis
      * @param bool $isInternalUnmaskedCall Flag untuk mencegah rekursi tak berujung saat analisis target unmasked
@@ -70,7 +70,7 @@ class UrlThreatAnalyzer
             }
         }
 
-        // 1. Deteksi Teknik 1: Web Defacement / Subdomain Hijacking
+        // 1. Deteksi Teknik 1: Web Defacement
         $defacementResult = $this->detectWebDefacement($normalized);
         if (!empty($defacementResult['indicators'])) {
             $indicators = array_merge($indicators, $defacementResult['indicators']);
@@ -84,7 +84,7 @@ class UrlThreatAnalyzer
             $detectedTechniques[] = 'open_redirect';
         }
 
-        // 3. Deteksi Teknik 3: Typosquatting / URL Spoofing
+        // 3. Deteksi Teknik 3: Typosquatting
         $typosquattingResult = $this->detectTyposquatting($normalized);
         if (!empty($typosquattingResult['indicators'])) {
             $indicators = array_merge($indicators, $typosquattingResult['indicators']);
@@ -433,7 +433,7 @@ class UrlThreatAnalyzer
         $origHost = strtolower($parsed['host'] ?? '');
         $origPath = $parsed['path'] ?? '/';
 
-        $trustedMaskers = ['share.google', 'app.goo.gl', 'goo.gl', 'google.com', 'microsoft.com', 'msft.it', 'aka.ms'];
+        $trustedMaskers = ['share.google', 'app.goo.gl', 'goo.gl', 'msft.it', 'aka.ms'];
         $isTrustedMasker = false;
         foreach ($trustedMaskers as $tm) {
             if ($origHost === $tm || str_ends_with($origHost, '.' . $tm)) {
@@ -484,7 +484,10 @@ class UrlThreatAnalyzer
 
         $isMasked = false;
         if (!empty($unmaskedHost) && !empty($origHost) && $unmaskedHost !== $origHost) {
-            $isMasked = true;
+            // Jangan anggap masked jika hanya perpindahan subdomain/kanonikal dalam hierarki domain yang sama (misal youtube.com -> www.youtube.com)
+            if (!$this->isSameDomainHierarchy($origHost, $unmaskedHost)) {
+                $isMasked = true;
+            }
         }
 
         return [
@@ -497,6 +500,43 @@ class UrlThreatAnalyzer
             'http_code' => $httpCode,
             'is_trusted_masker' => $isTrustedMasker
         ];
+    }
+
+    /**
+     * Memeriksa apakah dua host berada dalam hierarki domain yang sama
+     * (misal: youtube.com <-> www.youtube.com, atau m.youtube.com <-> youtube.com)
+     */
+    public function isSameDomainHierarchy(string $host1, string $host2): bool
+    {
+        $h1 = strtolower(trim($host1));
+        $h2 = strtolower(trim($host2));
+
+        if ($h1 === $h2) {
+            return true;
+        }
+
+        // Buang prefix www standar
+        $clean1 = preg_replace('/^www\d*\./i', '', $h1);
+        $clean2 = preg_replace('/^www\d*\./i', '', $h2);
+
+        if ($clean1 === $clean2) {
+            return true;
+        }
+
+        if (empty($clean1) || empty($clean2)) {
+            return false;
+        }
+
+        // Suffix publik yang tidak boleh dianggap sebagai domain induk tunggal
+        $publicSuffixes = ['com', 'org', 'net', 'edu', 'gov', 'mil', 'id', 'co.id', 'ac.id', 'go.id', 'or.id', 'web.id', 'my.id', 'app', 'io', 'me', 'dev'];
+        if (!in_array($clean1, $publicSuffixes, true) && substr_count($clean1, '.') >= 1 && str_ends_with($clean2, '.' . $clean1)) {
+            return true;
+        }
+        if (!in_array($clean2, $publicSuffixes, true) && substr_count($clean2, '.') >= 1 && str_ends_with($clean1, '.' . $clean2)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -777,7 +817,8 @@ class UrlThreatAnalyzer
             if (in_array('binary_options_illegal_investment', $indNames, true) || in_array('kamuflase_investasi_judol', $indNames, true) || in_array('cloaked_live_judol_content', $indNames, true) || in_array('live_judol_content_detected', $indNames, true)) {
                 $score = max($score, $combinationThresholds['url_masking_with_threat_dest'] ?? 80);
             } else {
-                $score = max($score, 75);
+                // Jika masking ke situs umum tanpa konten jahat, tetapkan skor moderat (Waspada/Perlu Pemeriksaan), bukan langsung vonis judi
+                $score = max($score, 50);
             }
         }
 
@@ -961,6 +1002,21 @@ class UrlThreatAnalyzer
                 $scanUrl = strtolower((string) ($scan['normalized_url'] ?? $scan['original_url'] ?? ''));
                 $scanHost = $scanDomain !== '' ? $scanDomain : strtolower((string) parse_url($scanUrl, PHP_URL_HOST));
                 $scanCleanHost = (string) preg_replace('/^www\./i', '', $scanHost);
+
+                $scanActualHost = strtolower((string) parse_url($scanUrl, PHP_URL_HOST));
+                $scanCleanActualHost = (string) preg_replace('/^www\./i', '', $scanActualHost);
+
+                // Khusus domain institusi resmi pemerintah (.go.id, .desa.id, .mil.id) dan pendidikan (.ac.id, .sch.id):
+                // Jangan pernah mencocokkan domain induk secara global! Hanya cocokkan jika exact host sama dan bukan beranda resmi.
+                $isPublicInstitution = (bool) preg_match('/(\.go\.id|\.desa\.id|\.ac\.id|\.sch\.id|\.mil\.id)$/i', $cleanHost);
+                if ($isPublicInstitution) {
+                    if ($scanCleanActualHost !== $cleanHost) {
+                        continue;
+                    }
+                    if ($norm['path'] === '/' || $norm['path'] === '') {
+                        continue;
+                    }
+                }
 
                 // Pelajari kata kunci dari bukti indikator riwayat pemindaian
                 $scanIndicatorsJson = json_encode($scan['indicators'] ?? []);
@@ -1217,7 +1273,7 @@ class UrlThreatAnalyzer
                 ]);
                 $testHtml = (string) @curl_exec($chBlocked);
                 $testCode = (int) @curl_getinfo($chBlocked, CURLINFO_HTTP_CODE);
-                curl_close($chBlocked);
+                unset($chBlocked);
 
                 if ($testCode >= 200 && $testCode < 400 && $testHtml !== '') {
                     $lowerTest = strtolower(substr($testHtml, 0, 50000));
@@ -1242,7 +1298,7 @@ class UrlThreatAnalyzer
         }
 
         // Deteksi Pemblokiran DNS Komdigi TrustPositif RI (lamanlabuh.aduankonten.id / IP Sinkhole)
-        $sinkholeHosts = $this->keywords['trustpositif_sinkhole_hosts'] ?? ['lamanlabuh.aduankonten.id', 'aduankonten.id', 'trustpositif.kominfo.go.id'];
+        $sinkholeHosts = $this->keywords['trustpositif_sinkhole_hosts'] ?? ['lamanlabuh.aduankonten.id', 'aduankonten.id', 'trustpositif.komdigi.go.id'];
         $sinkholeIps = $this->keywords['trustpositif_sinkhole_ips'] ?? ['182.23.79.195', '139.255.196.196', '139.255.196.197', '36.86.63.185'];
 
         $isTrustPositifBlocked = in_array($resolvedIp, $sinkholeIps, true);
@@ -1443,16 +1499,27 @@ class UrlThreatAnalyzer
                     if (preg_match_all('/<meta[^>]+(?:name|property)=["\'](?:description|og:title|keywords)["\'][^>]+content=["\']([^"\']+)["\']/i', $htmlBotSlice, $mBotMeta)) {
                         $botMeta = implode(' | ', $mBotMeta[1]);
                     }
-                    $botHeaderCombined = strtolower($botTitle . ' ' . $botMeta . ' ' . substr(strip_tags($htmlBotSlice), 0, 10000));
+                    $botHeaderClean = preg_replace('/<(script|style)[^>]*>.*?<\/\1>/is', ' ', substr($htmlBotSlice, 0, 30000));
+                    $visibleBotText = strtolower(trim(preg_replace('/\s+/', ' ', strip_tags($botHeaderClean))));
+                    $botSearchable = strtolower($botTitle . ' ' . $botMeta) . ' ' . $visibleBotText;
 
                     $matchedBotKeywords = [];
-                    foreach (array_merge($strongKeywords, $livePhrases, ['cumi787', 'cumi', 'slot88', 'slot gacor', 'maxwin']) as $bKw) {
-                        if ($bKw !== '' && (preg_match('/\b' . preg_quote($bKw, '/') . '\b/i', $botHeaderCombined) || str_contains($botHeaderCombined, strtolower($bKw)))) {
-                            $matchedBotKeywords[] = $bKw;
-                        }
+                    $strongBotPatterns = '/\b(slot[-_ ]?gacor|slot88|slot777|gacor777|cumi787|judi[-_ ]?slot|situs[-_ ]?slot|judi[-_ ]?online|bandar[-_ ]?togel|togel4d|sbobet|pragmatic[-_ ]?play|pg[-_ ]?soft|maxwin|live[-_ ]?casino)\b/i';
+                    if (preg_match_all($strongBotPatterns, $botSearchable, $mBotPatt)) {
+                        $matchedBotKeywords = array_unique($mBotPatt[0]);
                     }
 
-                    if (!empty($matchedBotKeywords)) {
+                    // Cek disparitas nyata antara tampilan pengunjung biasa dengan robot Googlebot
+                    $titleSimilarity = 0.0;
+                    if ($botTitle !== '' && $pageTitle !== '') {
+                        similar_text(strtolower($botTitle), strtolower($pageTitle), $titleSimilarity);
+                    }
+                    $isDifferentTitle = ($botTitle !== '' && $pageTitle !== '' && $titleSimilarity < 70.0);
+
+                    // SEO Cloaking HANYA valid jika ada disparitas nyata (Dual-Persona) dan tampilan Googlebot terbukti memuat promosi judi aktif
+                    $isGenuineCloaking = !empty($matchedBotKeywords) && ($isDifferentTitle || preg_match('/\b(slot|gacor|cumi787|slot88)\b/i', $botTitle));
+
+                    if ($isGenuineCloaking) {
                         $dispNormalTitle = $pageTitle !== '' ? substr($pageTitle, 0, 90) : 'Halaman Resmi';
                         $dispBotTitle = $botTitle !== '' ? substr($botTitle, 0, 100) : substr($botMeta, 0, 100);
                         $botKwList = implode(', ', array_slice(array_unique($matchedBotKeywords), 0, 5));
@@ -1571,14 +1638,36 @@ class UrlThreatAnalyzer
                         if (preg_match('/<title[^>]*>(.*?)<\/title>/is', substr($subHtml, 0, 40000), $mSub)) {
                             $subTitle = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags($mSub[1]))));
                         }
-                        $subLower = strtolower($subTitle . ' ' . substr($subHtml, 0, 15000));
+
+                        // Buang tag script, style, dan elemen HTML sebelum memeriksa kata kunci agar tidak salah menangkap atribut tag (seperti data-slot pada shadcn/Tailwind atau Vue <slot>)
+                        $cleanSubHtml = preg_replace('/<(script|style)[^>]*>.*?<\/\1>/is', ' ', substr($subHtml, 0, 30000));
+                        $visibleSubText = strtolower(trim(preg_replace('/\s+/', ' ', strip_tags($cleanSubHtml))));
+                        $searchableSubText = strtolower($subTitle) . ' ' . $visibleSubText;
+
+                        // Deteksi pola eksplisit perjudian pada subpath
+                        $isDefacedJudol = false;
                         $foundSubKws = [];
-                        foreach (['slot', 'gacor', 'ibiza', 'ibiza168', 'maxwin', 'rtp', 'judi', 'togel', 'maysir', 'deposit', 'jackpot'] as $skw) {
-                            if (str_contains($subLower, $skw)) {
-                                $foundSubKws[] = $skw;
+
+                        // 1. Frasa eksplisit / kuat judi online
+                        if (preg_match('/\b(slot[-_ ]?gacor|judi[-_ ]?slot|situs[-_ ]?slot|slot88|slot777|gacor777|rtp[-_ ]?(slot|live)|judi[-_ ]?online|bandar[-_ ]?togel|togel4d|sbobet|pragmatic[-_ ]?play|pg[-_ ]?soft|habanero|sweet[-_ ]?bonanza|gates[-_ ]?of[-_ ]?olympus)\b/i', $searchableSubText, $mJudol)) {
+                            $isDefacedJudol = true;
+                            $foundSubKws[] = $mJudol[0];
+                        } else {
+                            // 2. Kombinasi minimal 2 indikator kontekstual judi mandiri (whole-word)
+                            foreach (['gacor', 'ibiza168', 'maxwin', 'togel', 'maysir', 'jackpot'] as $skw) {
+                                if (preg_match('/\b' . preg_quote($skw, '/') . '\b/i', $searchableSubText)) {
+                                    $foundSubKws[] = $skw;
+                                }
+                            }
+                            if (preg_match('/\bslot\b/i', $searchableSubText) && (preg_match('/\b(deposit|depo|withdraw|wd|taruhan|kasino|casino)\b/i', $searchableSubText) || count($foundSubKws) >= 1)) {
+                                $foundSubKws[] = 'slot';
+                                $isDefacedJudol = true;
+                            } elseif (count($foundSubKws) >= 2) {
+                                $isDefacedJudol = true;
                             }
                         }
-                        if (count($foundSubKws) >= 2 || str_contains($subLower, 'slot') || str_contains($subLower, 'ibiza') || str_contains($subLower, 'gacor')) {
+
+                        if ($isDefacedJudol) {
                             $subKwList = implode(', ', array_unique($foundSubKws));
                             $dispSubTitle = $subTitle !== '' ? substr($subTitle, 0, 95) : "Jalur {$subPath}";
                             $indicators[] = [

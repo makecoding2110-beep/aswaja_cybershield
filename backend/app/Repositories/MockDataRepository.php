@@ -607,7 +607,6 @@ class MockDataRepository
                         'content' => $a->content,
                         'author' => $a->author ?? 'Tim Edukasi Aswaja',
                         'date' => $a->created_at ? $a->created_at->translatedFormat('d M Y') : 'Hari ini',
-                        'readTime' => $a->read_time ?? '5 Menit Baca',
                         'status' => $a->status ?? 'Published',
                         'image' => $img,
                         'cover_image' => $img,
@@ -652,7 +651,6 @@ class MockDataRepository
                 'excerpt' => $newArticle['excerpt'],
                 'content' => $newArticle['content'],
                 'author' => $newArticle['author'],
-                'read_time' => $newArticle['readTime'],
                 'status' => $newArticle['status'],
                 'cover_image' => $newArticle['coverImage'],
             ]);
@@ -699,7 +697,6 @@ class MockDataRepository
                 if (isset($input['excerpt'])) $article->excerpt = $input['excerpt'];
                 if (isset($input['content'])) $article->content = $input['content'];
                 if (isset($input['author'])) $article->author = $input['author'];
-                if (isset($input['readTime'])) $article->read_time = $input['readTime'];
                 if (isset($input['status'])) $article->status = $input['status'];
                 if (array_key_exists('image', $input)) $article->cover_image = $input['image'];
                 if (array_key_exists('coverImage', $input)) $article->cover_image = $input['coverImage'];
@@ -722,7 +719,6 @@ class MockDataRepository
                     'content' => $article->content,
                     'author' => $article->author,
                     'date' => $article->created_at ? $article->created_at->translatedFormat('d M Y') : 'Hari ini',
-                    'readTime' => $article->read_time,
                     'status' => $article->status,
                     'image' => $article->cover_image,
                     'cover_image' => $article->cover_image,

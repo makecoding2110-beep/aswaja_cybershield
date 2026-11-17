@@ -730,38 +730,45 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ─── Render Detected Techniques (Web Defacement, Open Redirect, Typosquatting) ───
-  function renderTechniques(techniques, findings, rawUrl) {
+  function renderTechniques(techniques, findings, rawUrl, resolvedColor, riskScore) {
     if (!elResultTechniquesBox || !elResultTechniquesList) return;
+
+    // Jika situs berstatus AMAN (emerald / skor <= 25), jangan pernah tampilkan kotak peringatan teknik penyusupan
+    if (resolvedColor === 'emerald' || (typeof riskScore === 'number' && riskScore <= 25)) {
+      elResultTechniquesBox.classList.add('hidden');
+      elResultTechniquesList.innerHTML = '';
+      return;
+    }
 
     let list = Array.isArray(techniques) ? [...techniques] : [];
 
-    // Jika techniques kosong dari response utama, coba telusuri dari findings/indikator
+    // Jika techniques kosong dari response utama, coba telusuri dari findings/indikator teknik eksplisit
     if (!list.length && Array.isArray(findings)) {
       findings.forEach(f => {
+        const name = (f.name || '').toLowerCase();
+        const tech = (f.technique || '').toLowerCase();
         const text = ((f.label || '') + ' ' + (f.detail || '') + ' ' + (f.desc || '')).toLowerCase();
-        if (text.includes('kamuflase') || (text.includes('investasi') && text.includes('deposit')) || (text.includes('trading') && text.includes('slot'))) {
+
+        if (tech === 'kamuflase_investasi' || name.includes('kamuflase') || (text.includes('kamuflase') && text.includes('investasi'))) {
           if (!list.includes('kamuflase_investasi')) list.push('kamuflase_investasi');
         }
-        if ((text.includes('defacement') || text.includes('subdomain asing')) && !text.includes('kamuflase')) {
+        if (tech === 'web_defacement' || name.includes('defacement') || (text.includes('defacement') && !text.includes('kamuflase'))) {
           if (!list.includes('web_defacement')) list.push('web_defacement');
         }
-        if (text.includes('open redirect') || text.includes('dua host')) {
+        if (tech === 'open_redirect' || name.includes('open_redirect') || text.includes('open redirect')) {
           if (!list.includes('open_redirect')) list.push('open_redirect');
         }
-        if (text.includes('masking') || text.includes('penyembunyian tautan')) {
+        if (tech === 'url_masking' || name.includes('url_masking') || (text.includes('url masking') && text.includes('penyembunyian'))) {
           if (!list.includes('url_masking')) list.push('url_masking');
         }
-        if (text.includes('rebouncer') || text.includes('proxy link') || text.includes('jembatan pengalihan')) {
+        if (tech === 'domain_rebouncer' || name.includes('domain_rebouncer') || text.includes('domain rebouncer')) {
           if (!list.includes('domain_rebouncer')) list.push('domain_rebouncer');
         }
-        if (text.includes('typosquatting') || text.includes('meniru')) {
+        if (tech === 'typosquatting' || name === 'typosquatting_detection' || name === 'typosquatting_mirip_instansi' || text.includes('mencatut') || text.includes('peniruan lembaga')) {
           if (!list.includes('typosquatting')) list.push('typosquatting');
         }
-        if (text.includes('seo cloaking') || text.includes('googlebot') || text.includes('cloaking tersembunyi')) {
+        if (tech === 'seo_cloaking' || name.includes('seo_cloaking') || text.includes('seo cloaking') || text.includes('cloaking tersembunyi')) {
           if (!list.includes('seo_cloaking')) list.push('seo_cloaking');
-        }
-        if (text.includes('defacement') || text.includes('penyusupan konten') || text.includes('penyusupan web') || text.includes('penyusupan halaman')) {
-          if (!list.includes('web_defacement')) list.push('web_defacement');
         }
       });
     }
@@ -1148,7 +1155,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Render bagian Teknik yang Terdeteksi (Defacement, Open Redirect, Typosquatting)
     currentResultTechniques = Array.isArray(result.techniques) ? result.techniques : [];
-    renderTechniques(currentResultTechniques, result.findings, rawUrl);
+    renderTechniques(currentResultTechniques, result.findings, rawUrl, resolvedColor, result.risk_score ?? result.score);
 
     updateIslamicQuote(resolvedColor);
 

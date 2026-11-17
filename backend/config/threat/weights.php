@@ -9,7 +9,7 @@ return [
     */
 
     'indicator_weights' => [
-        // Web Defacement / Subdomain Hijacking
+        // Web Defacement
         'defacement_path' => 70,
         'subdomain_asing' => 65,
         'gov_edu_keyword_judol' => 75,
@@ -21,7 +21,7 @@ return [
         'open_redirect_judol_dest' => 80,
         'open_redirect_cheap_tld' => 65,
 
-        // Typosquatting / URL Spoofing
+        // Typosquatting
         'typosquatting_mirip_instansi' => 70,
         'tld_bukan_go_id' => 50,
         'domain_homoglif' => 65,
@@ -67,7 +67,7 @@ return [
         // Open redirect ke tujuan kata kunci judol atau TLD mencurigakan -> Minimal 80 (Berbahaya)
         'open_redirect_with_malicious_dest' => 80,
 
-        // URL Masking / Domain Rebouncer yang menyembunyikan situs judol atau investasi menyesatkan -> Minimal 80 (Berbahaya)
+        // URL Masking yang menyembunyikan situs judol atau investasi menyesatkan -> Minimal 80 (Berbahaya)
         'url_masking_with_threat_dest' => 80,
 
         // SEO Cloaking pada domain resmi pemerintah/akademik -> Minimal 90 (Kritis / Sangat Berbahaya)

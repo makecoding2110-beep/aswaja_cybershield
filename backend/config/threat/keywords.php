@@ -39,7 +39,7 @@ return [
 
     // Indikator DNS Sinkhole Pemblokiran Pemerintah (Komdigi TrustPositif RI)
     'trustpositif_sinkhole_hosts' => [
-        'lamanlabuh.aduankonten.id', 'aduankonten.id', 'trustpositif.kominfo.go.id', 'internetpositif.id'
+        'lamanlabuh.aduankonten.id', 'aduankonten.id', 'trustpositif.komdigi.go.id', 'internetpositif.id'
     ],
     'trustpositif_sinkhole_ips' => [
         '182.23.79.195', '139.255.196.196', '139.255.196.197', '36.86.63.185'
@@ -64,10 +64,10 @@ return [
 
     // Angka Khas Sindikat Perjudian
     'suspicious_numbers' => [
-        '88', '138', '777', '888', '999', '303', '168', '4d', '3d', '2d'
+        '88', '138', '777', '888', '999', '303', '168', '4d', '3d', '2d', '787', '68'
     ],
 
-    // Jalur Unggahan Rentan Web Defacement (WordPress, Joomla, OJS)
+    // Jalur Unggahan Rentan Web Defacement
     'vulnerable_upload_paths' => [
         'wp-content/uploads',
         'wp-includes',

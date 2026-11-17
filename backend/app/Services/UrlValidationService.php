@@ -5,10 +5,6 @@ namespace App\Services;
 use App\DTO\UrlAnalysisDTO;
 use InvalidArgumentException;
 
-/**
- * Service Validasi, Normalisasi, dan Analisis Struktur URL
- * Mengimplementasikan Spesifikasi Bagian 3.1 & 3.4.B
- */
 class UrlValidationService
 {
     /**
@@ -21,7 +17,7 @@ class UrlValidationService
     ];
 
     /**
-     * Layanan Pemendek Tautan (URL Shortener) & Masking/Rebouncer Populer
+     * Layanan Pemendek Tautan (URL Shortener) & Masking
      */
     protected const URL_SHORTENERS = [
         'share.google', 'app.goo.gl', 'goo.gl', 'bit.ly', 'tinyurl.com', 't.co', 's.id', 'cutt.ly', 'shorturl.at',
@@ -29,7 +25,7 @@ class UrlValidationService
     ];
 
     /**
-     * Database Entitas Lembaga Resmi & Platform Terdaftar untuk Deteksi Typosquatting/Impersonasi
+     * Database Entitas Lembaga Resmi & Platform Terdaftar untuk Deteksi Typosquatting
      */
     protected const OFFICIAL_BRANDS = [
         'ojk' => [
@@ -44,9 +40,9 @@ class UrlValidationService
             'name' => 'Bank Indonesia (BI)',
             'official_domains' => ['bi.go.id']
         ],
-        'kominfo' => [
-            'name' => 'Kementerian Komunikasi dan Digital (Komdigi/Kominfo)',
-            'official_domains' => ['kominfo.go.id', 'komdigi.go.id']
+        'komdigi' => [
+            'name' => 'Kementerian Komunikasi dan Digital (Komdigi)',
+            'official_domains' => ['komdigi.go.id']
         ],
         'bca' => [
             'name' => 'Bank Central Asia (BCA)',
@@ -217,17 +213,20 @@ class UrlValidationService
         }
 
         // 5. Analisis Huruf Berulang (Repetitive Characters)
-        // Mendeteksi 3+ karakter berulang (misal: slooot, gacooor) atau 2 karakter berulang tidak wajar (misal: investasii, cuannn)
-        // Abaikan prefix standar web seperti 'www.' agar tidak memicu false positive
+        // Mendeteksi 3+ karakter berulang (misal: slooot, gacooor, cuannn) atau pasangan tidak wajar (misal: investasii, vv, jj, qq)
+        // Abaikan prefix standar web (www.) dan ekstensi TLD resmi agar tidak memicu false-positive (.app, .cc, dll.)
         $cleanHostForRepetition = preg_replace('/^www\d*\./i', '', $host);
-        if (preg_match('/([a-zA-Z])\1{2,}|(ii|uu|jj|vv|qq|yy)|([a-z])\3(?=\d{2,}|[-_.]|$)/i', $cleanHostForRepetition, $m)) {
+        if (!empty($tld)) {
+            $cleanHostForRepetition = preg_replace('/\.' . preg_quote($tld, '/') . '$/i', '', $cleanHostForRepetition);
+        }
+        if (preg_match('/([a-zA-Z])\1{2,}|(ii|uu|jj|vv|qq|yy)(?=\d{2,}|[-_.]|$)/i', $cleanHostForRepetition, $m)) {
             $matchedEvidence = $m[0];
             if (strtolower($matchedEvidence) !== 'www') {
                 $indicators[] = [
                     'name' => 'repetitive_characters',
                     'evidence' => $matchedEvidence,
                     'severity' => 'medium',
-                    'explanation' => "Domain menggunakan pengulangan karakter tidak wajar ('{$matchedEvidence}'), tipikal typosquatting atau penyamaran domain."
+                    'explanation' => "Domain menggunakan pengulangan karakter tidak wajar ('{$matchedEvidence}'), indikator potensi manipulasi penamaan domain."
                 ];
             }
         }

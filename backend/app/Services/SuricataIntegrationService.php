@@ -4,11 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Log;
 
-/**
- * Service Integrasi Suricata NIDS (Network Intrusion Detection System)
- * Mengelola ingestion log EVE JSON, ekstraksi event jaringan, dan deteksi signature.
- * Sesuai Dokumen Spesifikasi Bagian 4.1, 4.2, 4.3, dan Aturan No. 8
- */
+
 class SuricataIntegrationService
 {
     protected string $eveLogPath;

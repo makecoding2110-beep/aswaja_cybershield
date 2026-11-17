@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('excerpt', 500)->nullable();
             $table->text('content');
             $table->string('author', 150)->default('Tim Edukasi Aswaja');
-            $table->string('read_time', 50)->default('5 Menit Baca');
             $table->string('status', 50)->default('Published');
             $table->string('cover_image', 1024)->nullable();
             $table->timestamps();
